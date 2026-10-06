@@ -1,9 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
-import 'onboarding_screen.dart';
 import '../theme/app_theme.dart';
+import '../utils/auth_state.dart';
+import 'customer/home_screen.dart';
+import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,14 +17,37 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () {
-      if (!mounted) return;
+    _checkLogin();
+  }
 
+  Future<void> _checkLogin() async {
+    // Splash screen display time
+    await Future.delayed(
+      const Duration(seconds: 2),
+    );
+
+    // Check previous login
+    final bool loggedIn = await AuthState.instance.restoreSession();
+
+    if (!mounted) return;
+
+    if (loggedIn) {
+      // Already logged in
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+        MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        ),
       );
-    });
+    } else {
+      // Not logged in
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const OnboardingScreen(),
+        ),
+      );
+    }
   }
 
   @override
@@ -35,40 +58,53 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Logo
             Container(
-              height: 110,
-              width: 110,
+              height: 115,
+              width: 115,
               decoration: BoxDecoration(
-                color: AppTheme.cream,
-                borderRadius: BorderRadius.circular(55),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
               ),
               child: const Icon(
                 Icons.coffee,
-                size: 55,
+                size: 65,
                 color: AppTheme.coffeeDark,
               ),
             ),
 
             const SizedBox(height: 25),
 
+            // App Name
             const Text(
               'CAFFIORA',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                letterSpacing: 5,
+                letterSpacing: 4,
               ),
             ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
 
             const Text(
-              'Crafted With Distinction',
+              'Brewed Fresh. Served with Elegance.',
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white70,
-                fontSize: 14,
-                letterSpacing: 3,
+                fontSize: 13,
+              ),
+            ),
+
+            const SizedBox(height: 35),
+
+            const SizedBox(
+              height: 25,
+              width: 25,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
               ),
             ),
           ],

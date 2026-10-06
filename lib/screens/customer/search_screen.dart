@@ -11,7 +11,62 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
+
+  // ==========================================================
+  // ALL PRODUCTS
+  // ==========================================================
+
+  final List<Map<String, dynamic>> products = [
+    {
+      'name': 'Italian Roast',
+      'price': 249.0,
+      'rating': 4.9,
+      'category': 'Espresso Bar',
+    },
+    {
+      'name': 'Caramel Macchiato',
+      'price': 319.0,
+      'rating': 4.8,
+      'category': 'Espresso Bar',
+    },
+    {
+      'name': 'Velvet Espresso',
+      'price': 279.0,
+      'rating': 4.9,
+      'category': 'Espresso Bar',
+    },
+    {
+      'name': 'Velvet Croissant',
+      'price': 239.0,
+      'rating': 4.9,
+      'category': 'Bakery',
+    },
+    {
+      'name': 'Cold Brew',
+      'price': 249.0,
+      'rating': 4.9,
+      'category': 'Cold Brew',
+    },
+    {
+      'name': 'Stroopwafel Cupcake',
+      'price': 289.0,
+      'rating': 4.7,
+      'category': 'Bakery',
+    },
+    {
+      'name': 'Iced Latte',
+      'price': 249.0,
+      'rating': 4.9,
+      'category': 'Cold Brew',
+    },
+    {
+      'name': 'Iced Matcha',
+      'price': 349.0,
+      'rating': 4.8,
+      'category': 'Cold Brew',
+    },
+  ];
 
   final List<String> popularSearches = [
     'Espresso',
@@ -28,22 +83,87 @@ class _SearchScreenState extends State<SearchScreen> {
     'Caramel Macchiato',
   ];
 
-  void openProduct(String name, double price) {
+  // ==========================================================
+  // SEARCH RESULTS
+  // ==========================================================
+
+  List<Map<String, dynamic>> get searchResults {
+    final query = searchController.text.trim().toLowerCase();
+
+    if (query.isEmpty) {
+      return [];
+    }
+
+    return products.where((product) {
+      final name = product['name'].toString().toLowerCase();
+
+      final category = product['category'].toString().toLowerCase();
+
+      return name.contains(query) || category.contains(query);
+    }).toList();
+  }
+
+  // ==========================================================
+  // OPEN PRODUCT
+  // ==========================================================
+
+  void openProduct(
+    String name,
+    double price,
+  ) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProductDetails(productName: name, price: price),
+        builder: (context) => ProductDetails(
+          productName: name,
+          price: price,
+        ),
       ),
     );
   }
 
+  // ==========================================================
+  // SELECT SEARCH
+  // ==========================================================
+
+  void selectSearch(String text) {
+    setState(() {
+      searchController.text = text;
+    });
+  }
+
+  // ==========================================================
+  // CLEAR SEARCH
+  // ==========================================================
+
+  void clearSearch() {
+    setState(() {
+      searchController.clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  // ==========================================================
+  // BUILD
+  // ==========================================================
+
   @override
   Widget build(BuildContext context) {
+    final results = searchResults;
+    final hasSearch = searchController.text.trim().isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Search',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -51,163 +171,390 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Search box
+            // ==================================================
+            // SEARCH BOX
+            // ==================================================
+
             TextField(
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search coffee...',
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    searchController.clear();
-                    setState(() {});
-                  },
-                  icon: const Icon(Icons.close),
-                ),
+                suffixIcon: searchController.text.isNotEmpty
+                    ? IconButton(
+                        onPressed: clearSearch,
+                        icon: const Icon(
+                          Icons.close,
+                        ),
+                      )
+                    : null,
               ),
-              onSubmitted: (value) {
-                if (value.trim().isNotEmpty) {
-                  openProduct(value.trim(), 249);
-                }
+              onChanged: (value) {
+                setState(() {});
               },
             ),
 
-            const SizedBox(height: 30),
+            const SizedBox(height: 25),
 
-            const Text(
-              'Popular Searches',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.coffeeDark,
-              ),
-            ),
+            // ==================================================
+            // SEARCH RESULTS
+            // ==================================================
 
-            const SizedBox(height: 15),
-
-            Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: popularSearches.map((item) {
-                return ActionChip(
-                  label: Text(item),
-                  onPressed: () {
-                    searchController.text = item;
-                  },
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 30),
-
-            const Text(
-              'Recent Searches',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.coffeeDark,
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            ...recentSearches.map(
-              (item) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.history, color: AppTheme.grey),
-                title: Text(item),
-                trailing: const Icon(Icons.arrow_forward_ios, size: 15),
-                onTap: () {
-                  searchController.text = item;
-                },
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            const Text(
-              'Trending Today',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.coffeeDark,
-              ),
-            ),
-
-            const SizedBox(height: 15),
-
-            GestureDetector(
-              onTap: () {
-                openProduct('Velvet Espresso', 279);
-              },
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(18),
-                decoration: BoxDecoration(
+            if (hasSearch) ...[
+              Text(
+                results.isEmpty
+                    ? 'No Products Found'
+                    : '${results.length} Product${results.length == 1 ? '' : 's'} Found',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: AppTheme.coffeeDark,
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 75,
-                      width: 75,
-                      decoration: BoxDecoration(
-                        color: AppTheme.coffeeLight,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: const Icon(
-                        Icons.coffee,
-                        color: Colors.white,
-                        size: 40,
-                      ),
-                    ),
-
-                    const SizedBox(width: 15),
-
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Velvet Espresso',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 7),
-                          Text(
-                            'Rich • Smooth • Premium',
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            '₹279',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ],
                 ),
               ),
+              const SizedBox(height: 15),
+              if (results.isEmpty)
+                _noResults()
+              else
+                ...results.map(
+                  (product) => _searchResultCard(product),
+                ),
+              const SizedBox(height: 20),
+            ],
+
+            // ==================================================
+            // NORMAL CONTENT
+            // ==================================================
+
+            if (!hasSearch) ...[
+              // ------------------------------------------------
+              // POPULAR SEARCHES
+              // ------------------------------------------------
+
+              const Text(
+                'Popular Searches',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: popularSearches.map(
+                  (item) {
+                    return ActionChip(
+                      label: Text(item),
+                      onPressed: () {
+                        selectSearch(item);
+                      },
+                    );
+                  },
+                ).toList(),
+              ),
+
+              const SizedBox(height: 30),
+
+              // ------------------------------------------------
+              // RECENT SEARCHES
+              // ------------------------------------------------
+
+              const Text(
+                'Recent Searches',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              ...recentSearches.map(
+                (item) => ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: const Icon(
+                    Icons.history,
+                    color: AppTheme.grey,
+                  ),
+                  title: Text(item),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 15,
+                  ),
+                  onTap: () {
+                    selectSearch(item);
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // ------------------------------------------------
+              // TRENDING TODAY
+              // ------------------------------------------------
+
+              const Text(
+                'Trending Today',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
+              ),
+
+              const SizedBox(height: 15),
+
+              GestureDetector(
+                onTap: () {
+                  openProduct(
+                    'Velvet Espresso',
+                    279,
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: AppTheme.coffeeDark,
+                    borderRadius: BorderRadius.circular(
+                      18,
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 75,
+                        width: 75,
+                        decoration: BoxDecoration(
+                          color: AppTheme.coffeeLight,
+                          borderRadius: BorderRadius.circular(
+                            15,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.coffee,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      const Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Velvet Espresso',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 7),
+                            Text(
+                              'Rich • Smooth • Premium',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              '₹279',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ==========================================================
+  // SEARCH RESULT CARD
+  // ==========================================================
+
+  Widget _searchResultCard(
+    Map<String, dynamic> product,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        openProduct(
+          product['name'],
+          product['price'],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 14),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Row(
+          children: [
+            // ==================================================
+            // PRODUCT IMAGE
+            // ==================================================
+
+            Container(
+              height: 85,
+              width: 85,
+              decoration: BoxDecoration(
+                color: AppTheme.cream,
+                borderRadius: BorderRadius.circular(
+                  15,
+                ),
+              ),
+              child: const Icon(
+                Icons.coffee,
+                size: 42,
+                color: AppTheme.coffee,
+              ),
+            ),
+
+            const SizedBox(width: 14),
+
+            // ==================================================
+            // PRODUCT INFO
+            // ==================================================
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    product['name'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.coffeeDark,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: 16,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text(
+                        '${product['rating']}',
+                        style: const TextStyle(
+                          color: AppTheme.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    product['category'],
+                    style: const TextStyle(
+                      color: AppTheme.grey,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ==================================================
+            // PRICE + ARROW
+            // ==================================================
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '₹${(product['price'] as double).toInt()}',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.coffeeDark,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 15,
+                  color: AppTheme.coffee,
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  // ==========================================================
+  // NO RESULTS
+  // ==========================================================
+
+  Widget _noResults() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        vertical: 40,
+        horizontal: 20,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        children: [
+          const Icon(
+            Icons.search_off,
+            size: 55,
+            color: AppTheme.coffeeLight,
+          ),
+          const SizedBox(height: 15),
+          const Text(
+            'No coffee found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.coffeeDark,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try searching for another coffee.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.grey,
+            ),
+          ),
+        ],
       ),
     );
   }

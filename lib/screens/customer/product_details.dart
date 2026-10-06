@@ -26,6 +26,45 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   double get totalPrice => widget.price * quantity;
 
+  // ==========================================================
+  // PRODUCT IMAGE
+  // ==========================================================
+
+  String getProductImage(String productName) {
+    switch (productName) {
+      case 'Italian Roast':
+        return 'assets/images/italian_roast.jpg';
+
+      case 'Caramel Macchiato':
+        return 'assets/images/caramel_macchiato.jpg';
+
+      case 'Velvet Espresso':
+        return 'assets/images/velvet_espresso.jpg';
+
+      case 'Velvet Croissant':
+        return 'assets/images/velvet_croissant.jpg';
+
+      case 'Cold Brew':
+        return 'assets/images/cold_brew.jpg';
+
+      case 'Stroopwafel Cupcake':
+        return 'assets/images/stroopwafel_cupcake.jpg';
+
+      case 'Iced Latte':
+        return 'assets/images/iced_latte.jpg';
+
+      case 'Iced Matcha':
+        return 'assets/images/iced_matcha.jpg';
+
+      default:
+        return 'assets/images/velvet_espresso.jpg';
+    }
+  }
+
+  // ==========================================================
+  // ADD TO CART
+  // ==========================================================
+
   void addToCart() {
     Navigator.push(
       context,
@@ -38,18 +77,53 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
+  // ==========================================================
+  // QUANTITY
+  // ==========================================================
+
+  void increaseQuantity() {
+    setState(() {
+      quantity++;
+    });
+  }
+
+  void decreaseQuantity() {
+    if (quantity > 1) {
+      setState(() {
+        quantity--;
+      });
+    }
+  }
+
+  // ==========================================================
+  // BUILD
+  // ==========================================================
+
   @override
   Widget build(BuildContext context) {
+    final String productImage = getProductImage(widget.productName);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Product Details',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
 
+      // ======================================================
+      // BOTTOM ADD TO CART
+      // ======================================================
+
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          12,
+          20,
+          20,
+        ),
         color: Colors.white,
         child: Row(
           children: [
@@ -58,7 +132,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Total', style: TextStyle(color: AppTheme.grey)),
+                  const Text(
+                    'Total',
+                    style: TextStyle(
+                      color: AppTheme.grey,
+                    ),
+                  ),
                   Text(
                     '₹${totalPrice.toInt()}',
                     style: const TextStyle(
@@ -70,35 +149,62 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ],
               ),
             ),
-
             Expanded(
               flex: 2,
               child: ElevatedButton(
                 onPressed: addToCart,
-                child: const Text('Add to Cart'),
+                child: const Text(
+                  'Add to Cart',
+                ),
               ),
             ),
           ],
         ),
       ),
 
+      // ======================================================
+      // BODY
+      // ======================================================
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product image
-            Container(
-              height: 250,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppTheme.coffeeLight,
-                borderRadius: BorderRadius.circular(25),
+            // ==================================================
+            // PRODUCT IMAGE
+            // ==================================================
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: Image.asset(
+                productImage,
+                height: 280,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 280,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppTheme.coffeeLight,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: const Icon(
+                      Icons.coffee,
+                      size: 110,
+                      color: Colors.white,
+                    ),
+                  );
+                },
               ),
-              child: const Icon(Icons.coffee, size: 110, color: Colors.white),
             ),
 
             const SizedBox(height: 25),
+
+            // ==================================================
+            // PRODUCT NAME
+            // ==================================================
 
             Text(
               widget.productName,
@@ -111,17 +217,54 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 8),
 
+            // ==================================================
+            // RATING
+            // ==================================================
+
             Row(
               children: const [
-                Icon(Icons.star, color: Colors.amber, size: 20),
+                Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                  size: 20,
+                ),
                 SizedBox(width: 5),
-                Text('4.9', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  '4.9',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(width: 8),
-                Text('(479 Reviews)', style: TextStyle(color: AppTheme.grey)),
+                Text(
+                  '(479 Reviews)',
+                  style: TextStyle(
+                    color: AppTheme.grey,
+                  ),
+                ),
               ],
             ),
 
             const SizedBox(height: 15),
+
+            // ==================================================
+            // PRICE
+            // ==================================================
+
+            Text(
+              '₹${widget.price.toInt()}',
+              style: const TextStyle(
+                fontSize: 23,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffee,
+              ),
+            ),
+
+            const SizedBox(height: 15),
+
+            // ==================================================
+            // DESCRIPTION
+            // ==================================================
 
             Text(
               'Rich Italian roast with deep aroma, '
@@ -134,231 +277,254 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
             ),
 
-            const SizedBox(height: 30),
-
-            _sectionTitle('Size'),
-
-            const SizedBox(height: 12),
-
-            _selectionRow(
-              options: ['Small 180ml', 'Medium 250ml', 'Large 400ml'],
-              selected: selectedSize,
-              onSelected: (value) {
-                setState(() {
-                  selectedSize = value;
-                });
-              },
-            ),
-
             const SizedBox(height: 25),
 
-            _sectionTitle('Milk'),
-
-            const SizedBox(height: 12),
-
-            _selectionRow(
-              options: ['Whole Milk', 'Almond Milk', 'Oat Milk'],
-              selected: selectedMilk,
-              onSelected: (value) {
-                setState(() {
-                  selectedMilk = value;
-                });
-              },
-            ),
-
-            const SizedBox(height: 25),
-
-            _sectionTitle('Sugar'),
-
-            const SizedBox(height: 12),
-
-            _selectionRow(
-              options: ['None', 'Less', 'Regular', 'Extra'],
-              selected: selectedSugar,
-              onSelected: (value) {
-                setState(() {
-                  selectedSugar = value;
-                });
-              },
-            ),
-
-            const SizedBox(height: 30),
-
-            // Quantity
-            Row(
-              children: [
-                const Text(
-                  'Quantity',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.coffeeDark,
-                  ),
-                ),
-
-                const Spacer(),
-
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (quantity > 1) {
-                            setState(() {
-                              quantity--;
-                            });
-                          }
-                        },
-                        icon: const Icon(Icons.remove),
-                      ),
-
-                      Text(
-                        '$quantity',
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      IconButton(
-                        onPressed: () {
-                          setState(() {
-                            quantity++;
-                          });
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 35),
+            // ==================================================
+            // SIZE
+            // ==================================================
 
             const Text(
-              'You may also like',
+              'Size',
               style: TextStyle(
-                fontSize: 21,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.coffeeDark,
               ),
             ),
 
-            const SizedBox(height: 15),
+            const SizedBox(height: 12),
 
-            SizedBox(
-              height: 140,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+            Row(
+              children: [
+                _optionButton(
+                  title: 'Small',
+                  selected: selectedSize == 'Small',
+                  onTap: () {
+                    setState(() {
+                      selectedSize = 'Small';
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                _optionButton(
+                  title: 'Medium',
+                  selected: selectedSize == 'Medium',
+                  onTap: () {
+                    setState(() {
+                      selectedSize = 'Medium';
+                    });
+                  },
+                ),
+                const SizedBox(width: 10),
+                _optionButton(
+                  title: 'Large',
+                  selected: selectedSize == 'Large',
+                  onTap: () {
+                    setState(() {
+                      selectedSize = 'Large';
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 25),
+
+            // ==================================================
+            // MILK
+            // ==================================================
+
+            const Text(
+              'Milk',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                _optionButton(
+                  title: 'Whole Milk',
+                  selected: selectedMilk == 'Whole Milk',
+                  onTap: () {
+                    setState(() {
+                      selectedMilk = 'Whole Milk';
+                    });
+                  },
+                ),
+                _optionButton(
+                  title: 'Almond Milk',
+                  selected: selectedMilk == 'Almond Milk',
+                  onTap: () {
+                    setState(() {
+                      selectedMilk = 'Almond Milk';
+                    });
+                  },
+                ),
+                _optionButton(
+                  title: 'Oat Milk',
+                  selected: selectedMilk == 'Oat Milk',
+                  onTap: () {
+                    setState(() {
+                      selectedMilk = 'Oat Milk';
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 25),
+
+            // ==================================================
+            // SUGAR
+            // ==================================================
+
+            const Text(
+              'Sugar',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Wrap(
+              spacing: 10,
+              children: [
+                _optionButton(
+                  title: 'Regular',
+                  selected: selectedSugar == 'Regular',
+                  onTap: () {
+                    setState(() {
+                      selectedSugar = 'Regular';
+                    });
+                  },
+                ),
+                _optionButton(
+                  title: 'Less',
+                  selected: selectedSugar == 'Less',
+                  onTap: () {
+                    setState(() {
+                      selectedSugar = 'Less';
+                    });
+                  },
+                ),
+                _optionButton(
+                  title: 'No Sugar',
+                  selected: selectedSugar == 'No Sugar',
+                  onTap: () {
+                    setState(() {
+                      selectedSugar = 'No Sugar';
+                    });
+                  },
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 25),
+
+            // ==================================================
+            // QUANTITY
+            // ==================================================
+
+            const Text(
+              'Quantity',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _suggestion('Iced Latte', 249),
-                  _suggestion('Cappuccino', 319),
-                  _suggestion('Velvet Croissant', 239),
-                  _suggestion('Stroopwafel Cupcake', 289),
+                  IconButton(
+                    onPressed: decreaseQuantity,
+                    icon: const Icon(
+                      Icons.remove,
+                    ),
+                    color: AppTheme.coffeeDark,
+                  ),
+                  Container(
+                    width: 35,
+                    alignment: Alignment.center,
+                    child: Text(
+                      '$quantity',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: increaseQuantity,
+                    icon: const Icon(
+                      Icons.add,
+                    ),
+                    color: AppTheme.coffeeDark,
+                  ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 100),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
 
-  Widget _sectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: AppTheme.coffeeDark,
-      ),
-    );
-  }
+  // ==========================================================
+  // OPTION BUTTON
+  // ==========================================================
 
-  Widget _selectionRow({
-    required List<String> options,
-    required String selected,
-    required Function(String) onSelected,
+  Widget _optionButton({
+    required String title,
+    required bool selected,
+    required VoidCallback onTap,
   }) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: options.map((option) {
-        final isSelected = selected == option;
-
-        return GestureDetector(
-          onTap: () => onSelected(option),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: isSelected ? AppTheme.coffeeDark : Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected ? AppTheme.coffeeDark : Colors.grey.shade300,
-              ),
-            ),
-            child: Text(
-              option,
-              style: TextStyle(
-                color: isSelected ? Colors.white : AppTheme.coffeeDark,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 11,
+        ),
+        decoration: BoxDecoration(
+          color: selected ? AppTheme.coffeeDark : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: selected ? AppTheme.coffeeDark : Colors.grey.shade300,
           ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _suggestion(String name, double price) {
-    return Container(
-      width: 145,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppTheme.cream,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(Icons.coffee, color: AppTheme.coffee),
-            ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: selected ? Colors.white : AppTheme.coffeeDark,
+            fontWeight: FontWeight.w600,
+            fontSize: 13,
           ),
-
-          const SizedBox(height: 7),
-
-          Text(
-            name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-          ),
-
-          Text(
-            '₹${price.toInt()}',
-            style: const TextStyle(
-              color: AppTheme.coffeeDark,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

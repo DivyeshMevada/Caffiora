@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../theme/app_theme.dart';
 import 'login_screen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  final String mobile;
+  final String email;
 
   const ResetPasswordScreen({
     super.key,
-    required this.mobile,
+    required this.email,
   });
 
   @override
@@ -15,208 +16,402 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-  final otpController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
-  bool otpVerified = false;
+  final TextEditingController passwordController = TextEditingController();
+
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+
   bool obscurePassword = true;
   bool obscureConfirmPassword = true;
-
-  // Demo OTP
-  final String demoOTP = "123456";
-
-  void verifyOTP() {
-    if (otpController.text.trim() != demoOTP) {
-      showMessage("Invalid OTP");
-      return;
-    }
-
-    setState(() {
-      otpVerified = true;
-    });
-
-    showMessage("OTP verified successfully");
-  }
-
-  void resetPassword() {
-    final password = passwordController.text;
-    final confirmPassword = confirmPasswordController.text;
-
-    if (!otpVerified) {
-      showMessage("Please verify OTP first");
-      return;
-    }
-
-    if (password.length < 6) {
-      showMessage(
-        "Password must contain at least 6 characters",
-      );
-      return;
-    }
-
-    if (password != confirmPassword) {
-      showMessage("Passwords do not match");
-      return;
-    }
-
-    showMessage("Password reset successfully");
-
-    Future.delayed(
-      const Duration(seconds: 1),
-      () {
-        if (!mounted) return;
-
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const LoginScreen(),
-          ),
-          (route) => false,
-        );
-      },
-    );
-  }
-
-  void showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
+  bool isSaving = false;
 
   @override
   void dispose() {
-    otpController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
     super.dispose();
   }
 
+  // ==========================================================
+  // RESET PASSWORD
+  // ==========================================================
+
+  Future<void> resetPassword() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      isSaving = true;
+    });
+
+    await Future.delayed(
+      const Duration(seconds: 1),
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      isSaving = false;
+    });
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          icon: const Icon(
+            Icons.check_circle,
+            size: 55,
+            color: Colors.green,
+          ),
+          title: const Text(
+            'Password Updated!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppTheme.coffeeDark,
+            ),
+          ),
+          content: const Text(
+            'Your password has been successfully changed. '
+            'You can now login with your new password.',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LoginScreen(),
+                    ),
+                    (route) => false,
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.coffeeDark,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text(
+                  'Go to Login',
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ==========================================================
+  // BUILD
+  // ==========================================================
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Reset Password"),
+        title: const Text(
+          'Reset Password',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 25),
-            const Icon(
-              Icons.lock_reset,
-              size: 70,
-              color: Color(0xFF6F4E37),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              "Reset Your Password",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "OTP sent to +91 ${widget.mobile}",
-              style: const TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 30),
-            if (!otpVerified) ...[
-              TextField(
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                maxLength: 6,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 22,
-                  letterSpacing: 6,
-                  fontWeight: FontWeight.bold,
-                ),
-                decoration: const InputDecoration(
-                  labelText: "Enter OTP",
-                  prefixIcon: Icon(Icons.password),
-                  counterText: "",
-                ),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: verifyOTP,
-                  child: const Text(
-                    "Verify OTP",
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+
+                // ==================================================
+                // ICON
+                // ==================================================
+
+                Center(
+                  child: Container(
+                    height: 95,
+                    width: 95,
+                    decoration: BoxDecoration(
+                      color: AppTheme.coffeeDark,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.lock_outline,
+                      size: 48,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 15),
-              const Center(
-                child: Text(
-                  "Demo OTP: 123456",
+
+                const SizedBox(height: 25),
+
+                const Center(
+                  child: Text(
+                    'Create New Password',
+                    style: TextStyle(
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.coffeeDark,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                Center(
+                  child: Text(
+                    'Create a strong new password for\n'
+                    '${widget.email}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: AppTheme.grey,
+                      height: 1.5,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 35),
+
+                // ==================================================
+                // NEW PASSWORD
+                // ==================================================
+
+                const Text(
+                  'New Password',
                   style: TextStyle(
-                    color: Colors.grey,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.coffeeDark,
                   ),
                 ),
-              ),
-            ],
-            if (otpVerified) ...[
-              TextField(
-                controller: passwordController,
-                obscureText: obscurePassword,
-                decoration: InputDecoration(
-                  labelText: "New Password",
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscurePassword ? Icons.visibility_off : Icons.visibility,
+
+                const SizedBox(height: 8),
+
+                TextFormField(
+                  controller: passwordController,
+                  obscureText: obscurePassword,
+                  decoration: InputDecoration(
+                    hintText: 'Enter new password',
+                    prefixIcon: const Icon(
+                      Icons.lock_outline,
+                      color: AppTheme.coffee,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        obscurePassword = !obscurePassword;
-                      });
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: confirmPasswordController,
-                obscureText: obscureConfirmPassword,
-                decoration: InputDecoration(
-                  labelText: "Confirm New Password",
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      obscureConfirmPassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obscurePassword = !obscurePassword;
+                        });
+                      },
+                      icon: Icon(
+                        obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
                     ),
-                    onPressed: () {
-                      setState(() {
-                        obscureConfirmPassword = !obscureConfirmPassword;
-                      });
-                    },
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        14,
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a password';
+                    }
+
+                    if (value.length < 8) {
+                      return 'Password must be at least 8 characters';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 20),
+
+                // ==================================================
+                // CONFIRM PASSWORD
+                // ==================================================
+
+                const Text(
+                  'Confirm Password',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.coffeeDark,
                   ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: resetPassword,
-                  child: const Text(
-                    "Reset Password",
-                    style: TextStyle(fontSize: 16),
+
+                const SizedBox(height: 8),
+
+                TextFormField(
+                  controller: confirmPasswordController,
+                  obscureText: obscureConfirmPassword,
+                  decoration: InputDecoration(
+                    hintText: 'Re-enter new password',
+                    prefixIcon: const Icon(
+                      Icons.lock_reset_outlined,
+                      color: AppTheme.coffee,
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          obscureConfirmPassword = !obscureConfirmPassword;
+                        });
+                      },
+                      icon: Icon(
+                        obscureConfirmPassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        14,
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please confirm your password';
+                    }
+
+                    if (value != passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+
+                    return null;
+                  },
+                ),
+
+                const SizedBox(height: 15),
+
+                // ==================================================
+                // PASSWORD RULE
+                // ==================================================
+
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.info_outline,
+                        size: 20,
+                        color: AppTheme.coffee,
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Password should contain at least '
+                          '8 characters.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppTheme.grey,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ],
+
+                const SizedBox(height: 28),
+
+                // ==================================================
+                // RESET BUTTON
+                // ==================================================
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 54,
+                  child: ElevatedButton(
+                    onPressed: isSaving ? null : resetPassword,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.coffeeDark,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          14,
+                        ),
+                      ),
+                    ),
+                    child: isSaving
+                        ? const SizedBox(
+                            height: 23,
+                            width: 23,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            'Reset Password',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                // ==================================================
+                // BRAND
+                // ==================================================
+
+                const Center(
+                  child: Text(
+                    'CAFFIORA',
+                    style: TextStyle(
+                      fontSize: 19,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 3,
+                      color: AppTheme.coffeeDark,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 5),
+
+                const Center(
+                  child: Text(
+                    'Brewed Fresh. Served with Elegance.',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: AppTheme.grey,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

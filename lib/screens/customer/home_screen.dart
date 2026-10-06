@@ -17,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
 
+  final List<int> tabHistory = [0];
+
   final List<Widget> screens = [
     const HomeContent(),
     const MenuScreen(),
@@ -25,55 +27,78 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   void changeTab(int index) {
+    if (index == selectedIndex) {
+      return;
+    }
+
     setState(() {
       selectedIndex = index;
+      tabHistory.add(index);
     });
+  }
+
+  Future<void> handleBack() async {
+    if (tabHistory.length > 1) {
+      setState(() {
+        tabHistory.removeLast();
+        selectedIndex = tabHistory.last;
+      });
+
+      return;
+    }
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[selectedIndex],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          return;
+        }
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedIndex,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppTheme.coffeeDark,
-        unselectedItemColor: Colors.grey,
-        backgroundColor: Colors.white,
-
-        onTap: changeTab,
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_outlined),
-            activeIcon: Icon(Icons.menu_book),
-            label: 'Menu',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag_outlined),
-            activeIcon: Icon(Icons.shopping_bag),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        handleBack();
+      },
+      child: Scaffold(
+        body: screens[selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: selectedIndex,
+          type: BottomNavigationBarType.fixed,
+          selectedItemColor: AppTheme.coffeeDark,
+          unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.white,
+          onTap: changeTab,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.menu_book_outlined),
+              activeIcon: Icon(Icons.menu_book),
+              label: 'Menu',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              activeIcon: Icon(Icons.shopping_bag),
+              label: 'Cart',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-
-// ---------------------------------------------------------
-// HOME CONTENT
-// ---------------------------------------------------------
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});
@@ -82,11 +107,16 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 15, 20, 25),
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          15,
+          20,
+          25,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // HEADER
             Row(
               children: [
                 Column(
@@ -104,56 +134,68 @@ class HomeContent extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       'Brewed Fresh. Served with Elegance.',
-                      style: TextStyle(fontSize: 11, color: AppTheme.grey),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.grey,
+                      ),
                     ),
                   ],
                 ),
 
                 const Spacer(),
 
-                // Notification
-                Container(
-                  height: 45,
-                  width: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications_none,
-                      color: AppTheme.coffeeDark,
-                    ),
-                  ),
-                ),
+                // Container(
+                //   height: 45,
+                //   width: 45,
+                //   decoration: BoxDecoration(
+                //     color: Colors.white,
+                //     borderRadius: BorderRadius.circular(14),
+                //   ),
+                //   child: IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(
+                //       Icons.notifications_none,
+                //       color: AppTheme.coffeeDark,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
 
             const SizedBox(height: 25),
 
-            // Search
+            // SEARCH
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SearchScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const SearchScreen(),
+                  ),
                 );
               },
               child: Container(
                 height: 52,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: const Row(
                   children: [
-                    Icon(Icons.search, color: AppTheme.grey),
+                    Icon(
+                      Icons.search,
+                      color: AppTheme.grey,
+                    ),
                     SizedBox(width: 12),
                     Text(
                       'Search coffee...',
-                      style: TextStyle(color: AppTheme.grey, fontSize: 14),
+                      style: TextStyle(
+                        color: AppTheme.grey,
+                        fontSize: 14,
+                      ),
                     ),
                   ],
                 ),
@@ -162,7 +204,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // Signature Blend
+            // SIGNATURE BLEND
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(22),
@@ -184,9 +226,7 @@ class HomeContent extends StatelessWidget {
                             letterSpacing: 2,
                           ),
                         ),
-
                         const SizedBox(height: 10),
-
                         const Text(
                           'Velvet\nEspresso',
                           style: TextStyle(
@@ -195,9 +235,7 @@ class HomeContent extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         const SizedBox(height: 8),
-
                         const Text(
                           'A rich handcrafted coffee\nexperience beyond ordinary.',
                           style: TextStyle(
@@ -206,9 +244,7 @@ class HomeContent extends StatelessWidget {
                             height: 1.5,
                           ),
                         ),
-
                         const SizedBox(height: 15),
-
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -234,18 +270,26 @@ class HomeContent extends StatelessWidget {
 
                   const SizedBox(width: 10),
 
-                  // Coffee Image Placeholder
-                  Container(
-                    height: 135,
-                    width: 105,
-                    decoration: BoxDecoration(
-                      color: AppTheme.coffeeLight,
-                      borderRadius: BorderRadius.circular(18),
-                    ),
-                    child: const Icon(
-                      Icons.coffee,
-                      color: Colors.white,
-                      size: 65,
+                  // SIGNATURE IMAGE
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(18),
+                    child: Image.asset(
+                      'assets/images/velvet_espresso.jpg',
+                      height: 135,
+                      width: 105,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          height: 135,
+                          width: 105,
+                          color: AppTheme.coffeeLight,
+                          child: const Icon(
+                            Icons.coffee,
+                            color: Colors.white,
+                            size: 65,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -254,7 +298,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // Explore Categories
+            // CATEGORIES
             const Text(
               'Explore Categories',
               style: TextStyle(
@@ -270,17 +314,56 @@ class HomeContent extends StatelessWidget {
               height: 105,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: const [
-                  CategoryItem(icon: Icons.coffee, title: 'Espresso Bar'),
-                  CategoryItem(icon: Icons.local_cafe, title: 'Bakery'),
-                  CategoryItem(icon: Icons.icecream, title: 'Cold Brew'),
+                children: [
+                  CategoryItem(
+                    image: 'assets/images/velvet_espresso.jpg',
+                    title: 'Espresso Bar',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MenuScreen(
+                            initialCategory: 'Espresso Bar',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  CategoryItem(
+                    image: 'assets/images/velvet_croissant.jpg',
+                    title: 'Bakery',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MenuScreen(
+                            initialCategory: 'Bakery',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  CategoryItem(
+                    image: 'assets/images/cold_brew.jpg',
+                    title: 'Cold Brew',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MenuScreen(
+                            initialCategory: 'Cold Brew',
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
 
             const SizedBox(height: 25),
 
-            // Today's Selection
+            // TODAY'S SELECTION
             Row(
               children: [
                 const Text(
@@ -291,9 +374,7 @@ class HomeContent extends StatelessWidget {
                     color: AppTheme.coffeeDark,
                   ),
                 ),
-
                 const Spacer(),
-
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -305,7 +386,9 @@ class HomeContent extends StatelessWidget {
                   },
                   child: const Text(
                     'View all',
-                    style: TextStyle(color: AppTheme.coffeeDark),
+                    style: TextStyle(
+                      color: AppTheme.coffeeDark,
+                    ),
                   ),
                 ),
               ],
@@ -313,7 +396,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // Products
+            // ROW 1
             Row(
               children: [
                 Expanded(
@@ -321,16 +404,16 @@ class HomeContent extends StatelessWidget {
                     name: 'Italian Roast',
                     price: 249,
                     rating: 4.9,
+                    image: 'assets/images/italian_roast.jpg',
                   ),
                 ),
-
                 const SizedBox(width: 15),
-
                 Expanded(
                   child: CoffeeCard(
                     name: 'Caramel Macchiato',
                     price: 319,
                     rating: 4.8,
+                    image: 'assets/images/caramel_macchiato.jpg',
                   ),
                 ),
               ],
@@ -338,6 +421,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // ROW 2
             Row(
               children: [
                 Expanded(
@@ -345,16 +429,16 @@ class HomeContent extends StatelessWidget {
                     name: 'Velvet Espresso',
                     price: 279,
                     rating: 4.9,
+                    image: 'assets/images/velvet_espresso.jpg',
                   ),
                 ),
-
                 const SizedBox(width: 15),
-
                 Expanded(
                   child: CoffeeCard(
                     name: 'Iced Latte',
                     price: 249,
                     rating: 4.9,
+                    image: 'assets/images/iced_latte.jpg',
                   ),
                 ),
               ],
@@ -366,61 +450,82 @@ class HomeContent extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------
-// CATEGORY ITEM
-// ---------------------------------------------------------
-
 class CategoryItem extends StatelessWidget {
-  final IconData icon;
+  final String image;
   final String title;
+  final VoidCallback onTap;
 
-  const CategoryItem({super.key, required this.icon, required this.title});
+  const CategoryItem({
+    super.key,
+    required this.image,
+    required this.title,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 32, color: AppTheme.coffee),
-
-          const SizedBox(height: 8),
-
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.coffeeDark,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 100,
+        margin: const EdgeInsets.only(right: 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(16),
+              ),
+              child: Image.asset(
+                image,
+                height: 65,
+                width: 100,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 65,
+                    width: 100,
+                    color: AppTheme.cream,
+                    child: const Icon(
+                      Icons.coffee,
+                      color: AppTheme.coffee,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 7),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// ---------------------------------------------------------
-// COFFEE CARD
-// ---------------------------------------------------------
-
 class CoffeeCard extends StatelessWidget {
   final String name;
   final double price;
   final double rating;
+  final String image;
 
   const CoffeeCard({
     super.key,
     required this.name,
     required this.price,
     required this.rating,
+    required this.image,
   });
 
   @override
@@ -430,8 +535,10 @@ class CoffeeCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                ProductDetails(productName: name, price: price),
+            builder: (context) => ProductDetails(
+              productName: name,
+              price: price,
+            ),
           ),
         );
       },
@@ -444,18 +551,28 @@ class CoffeeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 125,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: AppTheme.cream,
-                borderRadius: BorderRadius.circular(14),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Image.asset(
+                image,
+                height: 125,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    height: 125,
+                    width: double.infinity,
+                    color: AppTheme.cream,
+                    child: const Icon(
+                      Icons.coffee,
+                      size: 55,
+                      color: AppTheme.coffee,
+                    ),
+                  );
+                },
               ),
-              child: const Icon(Icons.coffee, size: 55, color: AppTheme.coffee),
             ),
-
             const SizedBox(height: 10),
-
             Text(
               name,
               maxLines: 1,
@@ -466,22 +583,23 @@ class CoffeeCard extends StatelessWidget {
                 color: AppTheme.coffeeDark,
               ),
             ),
-
             const SizedBox(height: 5),
-
             Row(
               children: [
-                const Icon(Icons.star, size: 15, color: Colors.amber),
-
+                const Icon(
+                  Icons.star,
+                  size: 15,
+                  color: Colors.amber,
+                ),
                 const SizedBox(width: 3),
-
                 Text(
                   rating.toString(),
-                  style: const TextStyle(fontSize: 12, color: AppTheme.grey),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.grey,
+                  ),
                 ),
-
                 const Spacer(),
-
                 Text(
                   '₹${price.toInt()}',
                   style: const TextStyle(

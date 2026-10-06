@@ -223,24 +223,18 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 child: Column(
                   children: [
                     _summaryRow('Subtotal', '₹${subtotal.toStringAsFixed(0)}'),
-
                     const SizedBox(height: 12),
-
                     _summaryRow(
                       'Delivery Fee',
                       '₹${deliveryFee.toStringAsFixed(0)}',
                     ),
-
                     const SizedBox(height: 12),
-
                     _summaryRow(
                       'Discount',
                       '-₹${discount.toStringAsFixed(0)}',
                       valueColor: Colors.green,
                     ),
-
                     const Divider(height: 28),
-
                     _summaryRow(
                       'Total',
                       '₹${total.toStringAsFixed(0)}',
@@ -266,7 +260,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     );
                   },
                   child: Text(
-                    'Proceed to Checkout • ₹${total.toStringAsFixed(0)}',
+                    // 'Proceed to Checkout • ₹${total.toStringAsFixed(0)}',
+                    'PLACE ORDER',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -355,9 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ],
           ),
-
           const SizedBox(height: 8),
-
           Text(
             address,
             style: const TextStyle(
@@ -366,9 +359,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               height: 1.5,
             ),
           ),
-
           const SizedBox(height: 8),
-
           Text(
             phone,
             style: const TextStyle(
@@ -469,9 +460,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 }
               },
             ),
-
             const SizedBox(width: 5),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -491,7 +480,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ],
               ),
             ),
-
             Text(
               price,
               style: const TextStyle(
@@ -543,9 +531,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               child: Icon(icon, color: AppTheme.coffee),
             ),
-
             const SizedBox(width: 14),
-
             Expanded(
               child: Text(
                 title,
@@ -555,7 +541,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
             ),
-
             Radio<String>(
               value: value,
               groupValue: selectedPayment,
@@ -621,9 +606,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       child: Column(
         children: [
           Icon(icon, color: AppTheme.coffee, size: 24),
-
           const SizedBox(height: 7),
-
           Text(
             title,
             textAlign: TextAlign.center,
@@ -633,9 +616,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               color: AppTheme.coffeeDark,
             ),
           ),
-
           const SizedBox(height: 3),
-
           Text(
             subtitle,
             textAlign: TextAlign.center,

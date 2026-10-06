@@ -67,7 +67,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.coffee,
+                  color: Color.fromARGB(255, 48, 214, 92),
                 ),
               ),
 
@@ -132,9 +132,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                       color: AppTheme.coffee,
                       size: 35,
                     ),
-
                     const SizedBox(height: 12),
-
                     const Text(
                       'Your coffee is being prepared',
                       textAlign: TextAlign.center,
@@ -144,21 +142,15 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                         color: AppTheme.coffeeDark,
                       ),
                     ),
-
                     const SizedBox(height: 6),
-
                     const Text(
                       'Estimated delivery time: 20 - 25 mins',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13, color: AppTheme.grey),
                     ),
-
                     const SizedBox(height: 18),
-
                     Container(height: 1, color: Colors.grey.shade200),
-
                     const SizedBox(height: 18),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: const [
@@ -182,121 +174,121 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
               const SizedBox(height: 30),
 
               // ---------------- BREW REWARDS ----------------
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppTheme.coffeeDark, AppTheme.coffee],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(22),
-                ),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.card_giftcard_outlined,
-                      color: Colors.white,
-                      size: 38,
-                    ),
+              // Container(
+              //   width: double.infinity,
+              //   padding: const EdgeInsets.all(20),
+              //   decoration: BoxDecoration(
+              //     gradient: LinearGradient(
+              //       colors: [AppTheme.coffeeDark, AppTheme.coffee],
+              //       begin: Alignment.topLeft,
+              //       end: Alignment.bottomRight,
+              //     ),
+              //     borderRadius: BorderRadius.circular(22),
+              //   ),
+              //   child: Column(
+              //     children: [
+              //       const Icon(
+              //         Icons.card_giftcard_outlined,
+              //         color: Colors.white,
+              //         size: 38,
+              //       ),
 
-                    const SizedBox(height: 12),
+              //       const SizedBox(height: 12),
 
-                    const Text(
-                      'Your Brew Rewards',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 21,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+              //       const Text(
+              //         'Your Brew Rewards',
+              //         style: TextStyle(
+              //           color: Colors.white,
+              //           fontSize: 21,
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
 
-                    const SizedBox(height: 6),
+              //       const SizedBox(height: 6),
 
-                    const Text(
-                      'Scratch & Win',
-                      style: TextStyle(color: Colors.white70, fontSize: 15),
-                    ),
+              //       const Text(
+              //         'Scratch & Win',
+              //         style: TextStyle(color: Colors.white70, fontSize: 15),
+              //       ),
 
-                    const SizedBox(height: 18),
+              //       const SizedBox(height: 18),
 
-                    // Scratch Card
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          scratched = true;
-                        });
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        height: 125,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: scratched
-                              ? Colors.white
-                              : AppTheme.coffeeLight,
-                          borderRadius: BorderRadius.circular(18),
-                          border: Border.all(color: Colors.white54, width: 2),
-                        ),
-                        child: Center(
-                          child: scratched
-                              ? const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.stars_rounded,
-                                      color: AppTheme.coffee,
-                                      size: 32,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Congratulations!',
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppTheme.coffeeDark,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'You won 50 Brew Points',
-                                      style: TextStyle(color: AppTheme.grey),
-                                    ),
-                                  ],
-                                )
-                              : const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.touch_app_outlined,
-                                      color: Colors.white,
-                                      size: 32,
-                                    ),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Tap to Scratch',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Reveal your reward',
-                                      style: TextStyle(color: Colors.white70),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              //       // Scratch Card
+              //       GestureDetector(
+              //         onTap: () {
+              //           setState(() {
+              //             scratched = true;
+              //           });
+              //         },
+              //         child: AnimatedContainer(
+              //           duration: const Duration(milliseconds: 300),
+              //           height: 125,
+              //           width: double.infinity,
+              //           decoration: BoxDecoration(
+              //             color: scratched
+              //                 ? Colors.white
+              //                 : AppTheme.coffeeLight,
+              //             borderRadius: BorderRadius.circular(18),
+              //             border: Border.all(color: Colors.white54, width: 2),
+              //           ),
+              //           child: Center(
+              //             child: scratched
+              //                 ? const Column(
+              //                     mainAxisAlignment: MainAxisAlignment.center,
+              //                     children: [
+              //                       Icon(
+              //                         Icons.stars_rounded,
+              //                         color: AppTheme.coffee,
+              //                         size: 32,
+              //                       ),
+              //                       SizedBox(height: 8),
+              //                       Text(
+              //                         'Congratulations!',
+              //                         style: TextStyle(
+              //                           fontSize: 17,
+              //                           fontWeight: FontWeight.bold,
+              //                           color: AppTheme.coffeeDark,
+              //                         ),
+              //                       ),
+              //                       SizedBox(height: 4),
+              //                       Text(
+              //                         'You won 50 Brew Points',
+              //                         style: TextStyle(color: AppTheme.grey),
+              //                       ),
+              //                     ],
+              //                   )
+              //                 : const Column(
+              //                     mainAxisAlignment: MainAxisAlignment.center,
+              //                     children: [
+              //                       Icon(
+              //                         Icons.touch_app_outlined,
+              //                         color: Colors.white,
+              //                         size: 32,
+              //                       ),
+              //                       SizedBox(height: 8),
+              //                       Text(
+              //                         'Tap to Scratch',
+              //                         style: TextStyle(
+              //                           color: Colors.white,
+              //                           fontSize: 17,
+              //                           fontWeight: FontWeight.bold,
+              //                         ),
+              //                       ),
+              //                       SizedBox(height: 4),
+              //                       Text(
+              //                         'Reveal your reward',
+              //                         style: TextStyle(color: Colors.white70),
+              //                       ),
+              //                     ],
+              //                   ),
+              //           ),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
-              const SizedBox(height: 30),
+              // const SizedBox(height: 30),
 
               // ---------------- CONTINUE BUTTON ----------------
               SizedBox(

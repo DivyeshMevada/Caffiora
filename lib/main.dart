@@ -1,7 +1,11 @@
-import 'package:caffiora/screens/staff/staff_login_screen.dart';
+// import 'package:caffiora/screens/staff/staff_login_screen.dart';
+// import 'package:caffiora/screens/customer/contact_screen.dart';
+// import 'package:caffiora/screens/auth/register_screen.dart';
+import 'package:caffiora/screens/splash_screen.dart';
+// import 'package:caffiora/widgets/app_header.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/splash_screen.dart';
+// import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -17,7 +21,7 @@ class CaffioraApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CAFFIORA',
       theme: AppTheme.lightTheme,
-      home: const StaffLoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

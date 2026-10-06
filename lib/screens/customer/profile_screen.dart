@@ -1,35 +1,99 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
+import '../../utils/auth_state.dart';
 
-class ProfileScreen extends StatelessWidget {
+import '../auth/login_screen.dart';
+import 'contact_screen.dart';
+import 'edit_profile_screen.dart';
+import 'my_orders_screen.dart';
+import 'saved_addresses_screen.dart';
+import 'settings_screen.dart';
+
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  // ==========================================================
+  // OPEN EDIT PROFILE
+  // ==========================================================
+
+  Future<void> openEditProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const EditProfileScreen(),
+      ),
+    );
+
+    if (result == true && mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final auth = AuthState.instance;
+
+    final String userName = auth.name.isEmpty ? 'Divyesh' : auth.name;
+
+    final String userEmail =
+        auth.email.isEmpty ? 'divyesh@gmail.com' : auth.email;
+
+    final String userMobile = auth.mobile.isEmpty ? '8320226902' : auth.mobile;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.edit_outlined)),
+          // ==================================================
+          // EDIT BUTTON
+          // ==================================================
+
+          IconButton(
+            onPressed: openEditProfile,
+            icon: const Icon(
+              Icons.edit_outlined,
+            ),
+            tooltip: 'Edit Profile',
+          ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            // Profile
+            // ==================================================
+            // PROFILE CARD
+            // ==================================================
+
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
+                  // PROFILE IMAGE / ICON
+
                   Container(
                     height: 75,
                     width: 75,
@@ -46,27 +110,37 @@ class ProfileScreen extends StatelessWidget {
 
                   const SizedBox(width: 15),
 
-                  const Expanded(
+                  // USER INFORMATION
+
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Raj Patel',
-                          style: TextStyle(
+                          userName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
                             fontSize: 21,
                             fontWeight: FontWeight.bold,
                             color: AppTheme.coffeeDark,
                           ),
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Text(
-                          'rajpatel@gmail.com',
-                          style: TextStyle(color: AppTheme.grey),
+                          userEmail,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppTheme.grey,
+                          ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          '9798347684',
-                          style: TextStyle(color: AppTheme.grey),
+                          userMobile,
+                          style: const TextStyle(
+                            color: AppTheme.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -77,55 +151,29 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // Rewards
+            // ==================================================
+            // STATS
+            // ==================================================
+
             Row(
               children: [
-                Expanded(child: _statCard('1,248', 'Brew Points', Icons.stars)),
-                const SizedBox(width: 12),
                 Expanded(
-                  child: _statCard('16', 'Total Orders', Icons.receipt_long),
+                  child: _statCard(
+                    value: '16',
+                    title: 'Total Orders',
+                    icon: Icons.receipt_long,
+                  ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(child: _statCard('6', 'Favorites', Icons.favorite)),
               ],
             ),
 
-            const SizedBox(height: 20),
-
-            // Membership
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.coffeeDark,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Gold Member',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'You are a Gold Member',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    '252 points away from platinum',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 25),
+
+            // ==================================================
+            // ACCOUNT
+            // ==================================================
+
+            _sectionTitle('Account'),
 
             _profileOption(
               context,
@@ -141,40 +189,28 @@ class ProfileScreen extends StatelessWidget {
               'Manage your delivery addresses',
             ),
 
-            _profileOption(
-              context,
-              Icons.credit_card_outlined,
-              'Payment Methods',
-              'Manage your cards and wallets',
-            ),
+            const SizedBox(height: 15),
+
+            // ==================================================
+            // SUPPORT
+            // ==================================================
+
+            _sectionTitle('Support'),
 
             _profileOption(
               context,
-              Icons.favorite_border,
-              'Wishlist',
-              'Your favorite coffees and items',
+              Icons.contact_support_outlined,
+              'Contact Us',
+              'Get in touch with CAFFIORA',
             ),
 
-            _profileOption(
-              context,
-              Icons.card_giftcard_outlined,
-              'Brew Rewards',
-              'View points, rewards and offers',
-            ),
+            const SizedBox(height: 15),
 
-            _profileOption(
-              context,
-              Icons.local_offer_outlined,
-              'Coupons & Offers',
-              'View your coupons and exclusive offers',
-            ),
+            // ==================================================
+            // PREFERENCES
+            // ==================================================
 
-            _profileOption(
-              context,
-              Icons.help_outline,
-              'Help & Support',
-              'Get help and support',
-            ),
+            _sectionTitle('Preferences'),
 
             _profileOption(
               context,
@@ -185,40 +221,138 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 15),
 
+            // ==================================================
+            // LOGOUT
+            // ==================================================
+
             SizedBox(
               width: double.infinity,
               height: 52,
-              child: OutlinedButton(
+              child: OutlinedButton.icon(
                 onPressed: () {
-                  Navigator.pop(context);
+                  _showLogoutDialog(context);
                 },
-                child: const Text(
+                icon: const Icon(
+                  Icons.logout,
+                  color: AppTheme.coffeeDark,
+                ),
+                label: const Text(
                   'Logout',
                   style: TextStyle(
                     color: AppTheme.coffeeDark,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(
+                    color: AppTheme.coffeeDark,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
               ),
             ),
 
             const SizedBox(height: 25),
+
+            // ==================================================
+            // FOOTER
+            // ==================================================
+
+            const Text(
+              'CAFFIORA',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
+
+            const SizedBox(height: 5),
+
+            const Text(
+              'Brewed Fresh. Served with Elegance.',
+              style: TextStyle(
+                fontSize: 11,
+                color: AppTheme.grey,
+              ),
+            ),
+
+            const SizedBox(height: 5),
+
+            const Text(
+              'Premium Coffee Experience',
+              style: TextStyle(
+                fontSize: 10,
+                color: AppTheme.grey,
+              ),
+            ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),
     );
   }
 
-  Widget _statCard(String value, String title, IconData icon) {
+  // ============================================================
+  // SECTION TITLE
+  // ============================================================
+
+  Widget _sectionTitle(String title) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.only(
+          left: 4,
+          bottom: 10,
+        ),
+        child: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.coffeeDark,
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // STAT CARD
+  // ============================================================
+
+  Widget _statCard({
+    required String value,
+    required String title,
+    required IconData icon,
+  }) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+      padding: const EdgeInsets.symmetric(
+        vertical: 18,
+        horizontal: 8,
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         children: [
-          Icon(icon, color: AppTheme.coffee, size: 25),
+          Icon(
+            icon,
+            color: AppTheme.coffee,
+            size: 25,
+          ),
           const SizedBox(height: 8),
           Text(
             value,
@@ -232,12 +366,19 @@ class ProfileScreen extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 10, color: AppTheme.grey),
+            style: const TextStyle(
+              fontSize: 10,
+              color: AppTheme.grey,
+            ),
           ),
         ],
       ),
     );
   }
+
+  // ============================================================
+  // PROFILE OPTION
+  // ============================================================
 
   Widget _profileOption(
     BuildContext context,
@@ -246,12 +387,24 @@ class ProfileScreen extends StatelessWidget {
     String subtitle,
   ) {
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.025),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
       ),
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 14,
+          vertical: 4,
+        ),
         leading: Container(
           height: 42,
           width: 42,
@@ -259,7 +412,10 @@ class ProfileScreen extends StatelessWidget {
             color: AppTheme.cream,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: AppTheme.coffee),
+          child: Icon(
+            icon,
+            color: AppTheme.coffee,
+          ),
         ),
         title: Text(
           title,
@@ -270,11 +426,141 @@ class ProfileScreen extends StatelessWidget {
         ),
         subtitle: Text(
           subtitle,
-          style: const TextStyle(fontSize: 11, color: AppTheme.grey),
+          style: const TextStyle(
+            fontSize: 11,
+            color: AppTheme.grey,
+          ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 15),
-        onTap: () {},
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 15,
+          color: AppTheme.grey,
+        ),
+        onTap: () {
+          if (title == 'My Orders') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const MyOrdersScreen(),
+              ),
+            );
+          } else if (title == 'Saved Addresses') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SavedAddressesScreen(),
+              ),
+            );
+          } else if (title == 'Contact Us') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const ContactScreen(),
+              ),
+            );
+          } else if (title == 'Settings') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const SettingsScreen(),
+              ),
+            );
+          }
+        },
       ),
+    );
+  }
+
+  // ============================================================
+  // LOGOUT DIALOG
+  // ============================================================
+
+  void _showLogoutDialog(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          title: const Row(
+            children: [
+              Icon(
+                Icons.logout,
+                color: AppTheme.coffeeDark,
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Logout',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
+              ),
+            ],
+          ),
+          content: const Text(
+            'Are you sure you want to logout from CAFFIORA?',
+          ),
+          actions: [
+            // CANCEL
+
+            TextButton(
+              onPressed: () {
+                Navigator.pop(
+                  dialogContext,
+                );
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: AppTheme.grey,
+                ),
+              ),
+            ),
+
+            // LOGOUT
+
+            ElevatedButton(
+              onPressed: () async {
+                await AuthState.instance.logout();
+
+                if (!context.mounted) {
+                  return;
+                }
+
+                Navigator.pop(
+                  dialogContext,
+                );
+
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LoginScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.coffeeDark,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text(
+                'Logout',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

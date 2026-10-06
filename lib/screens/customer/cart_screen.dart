@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
 import 'checkout_screen.dart';
+import 'menu_screen.dart';
 
 class CartScreen extends StatefulWidget {
   final String? addedProduct;
@@ -34,6 +35,7 @@ class _CartScreenState extends State<CartScreen> {
         'milk': 'Whole Milk',
         'sugar': 'Regular',
         'quantity': 1,
+        'image': 'assets/images/italian_roast.jpg',
       },
       {
         'name': 'Iced Latte',
@@ -42,18 +44,56 @@ class _CartScreenState extends State<CartScreen> {
         'milk': 'Whole Milk',
         'sugar': 'Less',
         'quantity': 1,
+        'image': 'assets/images/iced_latte.jpg',
       },
     ];
 
     if (widget.addedProduct != null) {
       items.add({
         'name': widget.addedProduct!,
-        'price': widget.addedPrice ?? 249,
+        'price': widget.addedPrice ?? 249.0,
         'size': 'Medium',
         'milk': 'Whole Milk',
         'sugar': 'Regular',
         'quantity': 1,
+        'image': getProductImage(
+          widget.addedProduct!,
+        ),
       });
+    }
+  }
+
+  // GET IMAGE BASED ON PRODUCT NAME
+  String getProductImage(
+    String productName,
+  ) {
+    switch (productName) {
+      case 'Italian Roast':
+        return 'assets/images/italian_roast.jpg';
+
+      case 'Caramel Macchiato':
+        return 'assets/images/caramel_macchiato.jpg';
+
+      case 'Velvet Espresso':
+        return 'assets/images/velvet_espresso.jpg';
+
+      case 'Velvet Croissant':
+        return 'assets/images/velvet_croissant.jpg';
+
+      case 'Cold Brew':
+        return 'assets/images/cold_brew.jpg';
+
+      case 'Stroopwafel Cupcake':
+        return 'assets/images/stroopwafel_cupcake.jpg';
+
+      case 'Iced Latte':
+        return 'assets/images/iced_latte.jpg';
+
+      case 'Iced Matcha':
+        return 'assets/images/iced_matcha.jpg';
+
+      default:
+        return 'assets/images/italian_roast.jpg';
     }
   }
 
@@ -72,7 +112,7 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   double get discount {
-    return couponController.text.isNotEmpty ? 80 : 0;
+    return couponController.text.trim().isNotEmpty ? 80 : 10;
   }
 
   double get total {
@@ -86,6 +126,7 @@ class _CartScreenState extends State<CartScreen> {
           content: Text('Enter coupon code'),
         ),
       );
+
       return;
     }
 
@@ -93,7 +134,26 @@ class _CartScreenState extends State<CartScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Coupon applied! ₹80 discount'),
+        content: Text(
+          'Coupon applied! ₹80 discount',
+        ),
+      ),
+    );
+  }
+
+  void deleteItem(int index) {
+    final deletedItemName = items[index]['name'];
+
+    setState(() {
+      items.removeAt(index);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '$deletedItemName removed from cart',
+        ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -122,44 +182,29 @@ class _CartScreenState extends State<CartScreen> {
                       color: AppTheme.grey,
                     ),
                   ),
-                  const SizedBox(height: 20),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  // CART ITEMS
                   ...List.generate(
                     items.length,
                     (index) => _cartItem(index),
                   ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    'Coupon Code',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.coffeeDark,
-                    ),
+
+                  const SizedBox(
+                    height: 25,
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: couponController,
-                          decoration: const InputDecoration(
-                            hintText: 'Enter coupon code',
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      ElevatedButton(
-                        onPressed: applyCoupon,
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(90, 52),
-                        ),
-                        child: const Text('Apply'),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 25),
+
+                  // ORDER SUMMARY
                   _orderSummary(),
-                  const SizedBox(height: 20),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+
+                  // CHECKOUT
                   SizedBox(
                     width: double.infinity,
                     height: 55,
@@ -183,7 +228,11 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 25),
+
+                  const SizedBox(
+                    height: 25,
+                  ),
+
                   _benefits(),
                 ],
               ),
@@ -195,7 +244,9 @@ class _CartScreenState extends State<CartScreen> {
     final item = items[index];
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 15),
+      margin: const EdgeInsets.only(
+        bottom: 15,
+      ),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -204,20 +255,34 @@ class _CartScreenState extends State<CartScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 85,
-            width: 75,
-            decoration: BoxDecoration(
-              color: AppTheme.cream,
-              borderRadius: BorderRadius.circular(14),
-            ),
-            child: const Icon(
-              Icons.coffee,
-              size: 40,
-              color: AppTheme.coffee,
+          // PRODUCT IMAGE
+          ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Image.asset(
+              item['image'],
+              height: 85,
+              width: 75,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 85,
+                  width: 75,
+                  color: AppTheme.cream,
+                  child: const Icon(
+                    Icons.coffee,
+                    size: 40,
+                    color: AppTheme.coffee,
+                  ),
+                );
+              },
             ),
           ),
-          const SizedBox(width: 12),
+
+          const SizedBox(
+            width: 12,
+          ),
+
+          // DETAILS
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,7 +295,9 @@ class _CartScreenState extends State<CartScreen> {
                     color: AppTheme.coffeeDark,
                   ),
                 ),
-                const SizedBox(height: 7),
+                const SizedBox(
+                  height: 7,
+                ),
                 Text(
                   'Size: ${item['size']}',
                   style: const TextStyle(
@@ -252,9 +319,12 @@ class _CartScreenState extends State<CartScreen> {
                     color: AppTheme.grey,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(
+                  height: 8,
+                ),
                 Row(
                   children: [
+                    // MINUS
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -268,16 +338,26 @@ class _CartScreenState extends State<CartScreen> {
                       icon: const Icon(
                         Icons.remove_circle_outline,
                         size: 21,
+                        color: AppTheme.coffeeDark,
                       ),
                     ),
-                    const SizedBox(width: 8),
+
+                    const SizedBox(
+                      width: 8,
+                    ),
+
                     Text(
                       '${item['quantity']}',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 8),
+
+                    const SizedBox(
+                      width: 8,
+                    ),
+
+                    // PLUS
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -289,6 +369,29 @@ class _CartScreenState extends State<CartScreen> {
                       icon: const Icon(
                         Icons.add_circle_outline,
                         size: 21,
+                        color: AppTheme.coffeeDark,
+                      ),
+                    ),
+
+                    const SizedBox(
+                      width: 8,
+                    ),
+
+                    // DELETE
+                    InkWell(
+                      onTap: () {
+                        deleteItem(index);
+                      },
+                      borderRadius: BorderRadius.circular(8),
+                      child: const Padding(
+                        padding: EdgeInsets.all(
+                          5,
+                        ),
+                        child: Icon(
+                          Icons.delete_outline,
+                          color: Colors.red,
+                          size: 22,
+                        ),
                       ),
                     ),
                   ],
@@ -296,6 +399,12 @@ class _CartScreenState extends State<CartScreen> {
               ],
             ),
           ),
+
+          const SizedBox(
+            width: 5,
+          ),
+
+          // PRICE
           Text(
             '₹${((item['price'] as double) * (item['quantity'] as int)).toInt()}',
             style: const TextStyle(
@@ -328,7 +437,9 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(
+            height: 15,
+          ),
           _summaryRow(
             'Subtotal',
             '₹${subtotal.toInt()}',
@@ -341,7 +452,9 @@ class _CartScreenState extends State<CartScreen> {
             'Discount',
             '-₹${discount.toInt()}',
           ),
-          const Divider(height: 25),
+          const Divider(
+            height: 25,
+          ),
           _summaryRow(
             'Total',
             '₹${total.toInt()}',
@@ -417,17 +530,65 @@ class _CartScreenState extends State<CartScreen> {
             size: 80,
             color: AppTheme.coffeeLight,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(
+            height: 15,
+          ),
           const Text(
             'Your cart is empty',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
+              color: AppTheme.coffeeDark,
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          const Text(
+            'Add some delicious coffee to your cart.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppTheme.grey,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const MenuScreen(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  14,
+                ),
+              ),
+            ),
+            child: const Text(
+              'Continue Shopping',
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    couponController.dispose();
+    super.dispose();
   }
 }
 
@@ -443,7 +604,9 @@ class _Benefit extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
     return Expanded(
       child: Column(
         children: [
@@ -452,7 +615,9 @@ class _Benefit extends StatelessWidget {
             color: AppTheme.coffee,
             size: 25,
           ),
-          const SizedBox(height: 6),
+          const SizedBox(
+            height: 6,
+          ),
           Text(
             title,
             textAlign: TextAlign.center,
