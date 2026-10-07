@@ -6,6 +6,10 @@ import 'checkout_screen.dart';
 import 'menu_screen.dart';
 
 class CartScreen extends StatefulWidget {
+  // ==========================================================
+  // CALLBACK FOR BROWSE MENU
+  // ==========================================================
+
   final VoidCallback? onBrowseMenu;
 
   const CartScreen({
@@ -202,7 +206,11 @@ class _CartScreenState extends State<CartScreen> {
               width: 92,
               height: 107,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
+              errorBuilder: (
+                context,
+                error,
+                stackTrace,
+              ) {
                 return Container(
                   width: 92,
                   height: 107,
@@ -576,10 +584,7 @@ class _CartScreenState extends State<CartScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ==================================================
             // CART ICON
-            // ==================================================
-
             Container(
               height: 110,
               width: 110,
@@ -596,10 +601,7 @@ class _CartScreenState extends State<CartScreen> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
             // TITLE
-            // ==================================================
-
             const Text(
               'Your Cart is Empty',
               style: TextStyle(
@@ -611,10 +613,7 @@ class _CartScreenState extends State<CartScreen> {
 
             const SizedBox(height: 10),
 
-            // ==================================================
             // DESCRIPTION
-            // ==================================================
-
             const Text(
               'Add your favourite coffee and\n'
               'delicious treats to your cart.',
@@ -634,40 +633,28 @@ class _CartScreenState extends State<CartScreen> {
 
             ElevatedButton(
               onPressed: () {
-                // ==================================================
-                // IMPORTANT
-                // ==================================================
-                // If HomeScreen gives us a callback,
-                // switch directly to Menu tab.
-                //
-                // Otherwise open MenuScreen normally.
-                // ==================================================
-
+                // IMPORTANT:
+                // If HomeScreen callback exists,
+                // open Menu tab of HomeScreen.
                 if (widget.onBrowseMenu != null) {
                   widget.onBrowseMenu!();
-                } else {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const MenuScreen(),
-                    ),
-                  );
+                  return;
                 }
+
+                // Fallback if CartScreen is opened
+                // independently.
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MenuScreen(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
-                minimumSize: const Size(225, 58),
-                backgroundColor: AppTheme.coffeeDark,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
+                minimumSize: const Size(180, 48),
               ),
               child: const Text(
                 'Browse Menu',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
               ),
             ),
           ],

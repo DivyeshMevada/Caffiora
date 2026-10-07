@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../utils/auth_state.dart';
+import '../utils/cart_state.dart';
 import 'customer/home_screen.dart';
-import 'onboarding_screen.dart';
+// import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  const SplashScreen({
+    super.key,
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -18,38 +21,65 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    _checkLogin();
+    checkApp();
   }
 
-  Future<void> _checkLogin() async {
-    // Splash screen display time
+  // ==========================================================
+  // CHECK APP SESSION + RESTORE CART
+  // ==========================================================
+
+  Future<void> checkApp() async {
+    // Small splash delay
     await Future.delayed(
-      const Duration(seconds: 2),
+      const Duration(
+        seconds: 2,
+      ),
     );
 
-    // Check previous login
+    // ========================================================
+    // RESTORE LOGIN SESSION
+    // ========================================================
+
     final bool loggedIn = await AuthState.instance.restoreSession();
 
-    if (!mounted) return;
+    // ========================================================
+    // RESTORE CART
+    // ========================================================
+
+    await CartState.instance.restoreCart();
+
+    // ========================================================
+    // CHECK SCREEN
+    // ========================================================
+
+    if (!mounted) {
+      return;
+    }
 
     if (loggedIn) {
-      // Already logged in
+      // User already logged in
+      // Open Home Screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const HomeScreen(),
+          builder: (context) => const HomeScreen(),
         ),
       );
     } else {
-      // Not logged in
+      // User not logged in
+      // Open Onboarding
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
+          builder: (context) => const LoginScreen(),
         ),
       );
     }
   }
+
+  // ==========================================================
+  // UI
+  // ==========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +89,10 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Logo
+            // ==================================================
+            // LOGO
+            // ==================================================
+
             Container(
               height: 115,
               width: 115,
@@ -74,9 +107,14 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(
+              height: 25,
+            ),
 
-            // App Name
+            // ==================================================
+            // APP NAME
+            // ==================================================
+
             const Text(
               'CAFFIORA',
               style: TextStyle(
@@ -87,7 +125,13 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            const SizedBox(height: 8),
+            const SizedBox(
+              height: 8,
+            ),
+
+            // ==================================================
+            // TAGLINE
+            // ==================================================
 
             const Text(
               'Brewed Fresh. Served with Elegance.',
@@ -98,7 +142,13 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
 
-            const SizedBox(height: 35),
+            const SizedBox(
+              height: 35,
+            ),
+
+            // ==================================================
+            // LOADING
+            // ==================================================
 
             const SizedBox(
               height: 25,
