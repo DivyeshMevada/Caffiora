@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
+import '../../utils/cart_state.dart';
 import 'cart_screen.dart';
 
 class ProductDetails extends StatefulWidget {
@@ -66,12 +67,54 @@ class _ProductDetailsState extends State<ProductDetails> {
   // ==========================================================
 
   void addToCart() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CartScreen(
-          addedProduct: widget.productName,
-          addedPrice: totalPrice,
+    CartState.instance.addItem(
+      name: widget.productName,
+      price: widget.price,
+      size: selectedSize,
+      milk: selectedMilk,
+      sugar: selectedSugar,
+      quantity: quantity,
+    );
+
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 1),
+        backgroundColor: AppTheme.coffeeDark,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        content: Row(
+          children: [
+            const Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                '${widget.productName} added to cart',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        ),
+        action: SnackBarAction(
+          label: 'VIEW CART',
+          textColor: Colors.white,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const CartScreen(),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -101,9 +144,15 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   @override
   Widget build(BuildContext context) {
-    final String productImage = getProductImage(widget.productName);
+    final String productImage = getProductImage(
+      widget.productName,
+    );
 
     return Scaffold(
+      // ======================================================
+      // APP BAR
+      // ======================================================
+
       appBar: AppBar(
         title: const Text(
           'Product Details',
@@ -125,40 +174,77 @@ class _ProductDetailsState extends State<ProductDetails> {
           20,
         ),
         color: Colors.white,
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Total',
-                    style: TextStyle(
-                      color: AppTheme.grey,
+        child: SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              // ==================================================
+              // TOTAL PRICE
+              // ==================================================
+
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total',
+                      style: TextStyle(
+                        color: AppTheme.grey,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '₹${totalPrice.toInt()}',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.coffeeDark,
+                    Text(
+                      '₹${totalPrice.toInt()}',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.coffeeDark,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                onPressed: addToCart,
-                child: const Text(
-                  'Add to Cart',
+                  ],
                 ),
               ),
-            ),
-          ],
+
+              // ==================================================
+              // ADD TO CART BUTTON
+              // ==================================================
+
+              Expanded(
+                flex: 2,
+                child: SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: addToCart,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.coffeeDark,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 20,
+                        ),
+                        SizedBox(width: 7),
+                        Text(
+                          'Add to Cart',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
 
@@ -182,7 +268,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                 height: 280,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
                   return Container(
                     height: 280,
                     width: double.infinity,
@@ -215,37 +305,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
             ),
 
-            const SizedBox(height: 8),
-
-            // ==================================================
-            // RATING
-            // ==================================================
-
-            Row(
-              children: const [
-                Icon(
-                  Icons.star,
-                  color: Colors.amber,
-                  size: 20,
-                ),
-                SizedBox(width: 5),
-                Text(
-                  '4.9',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(width: 8),
-                Text(
-                  '(479 Reviews)',
-                  style: TextStyle(
-                    color: AppTheme.grey,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 15),
+            const SizedBox(height: 12),
 
             // ==================================================
             // PRICE
@@ -398,6 +458,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             Wrap(
               spacing: 10,
+              runSpacing: 10,
               children: [
                 _optionButton(
                   title: 'Regular',
@@ -458,6 +519,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // MINUS
                   IconButton(
                     onPressed: decreaseQuantity,
                     icon: const Icon(
@@ -465,6 +527,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                     ),
                     color: AppTheme.coffeeDark,
                   ),
+
+                  // NUMBER
                   Container(
                     width: 35,
                     alignment: Alignment.center,
@@ -476,6 +540,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                   ),
+
+                  // PLUS
                   IconButton(
                     onPressed: increaseQuantity,
                     icon: const Icon(

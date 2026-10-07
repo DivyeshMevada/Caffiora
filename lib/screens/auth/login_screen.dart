@@ -52,9 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
 
     await AuthState.instance.login(
-      userName: 'Raj Patel',
+      userName: 'Divyesh Mevada',
       userEmail: emailController.text.trim(),
-      userMobile: '9798347684',
+      userMobile: '8320226902',
     );
 
     if (!mounted) return;

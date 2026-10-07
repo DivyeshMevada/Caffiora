@@ -159,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Expanded(
                   child: _statCard(
-                    value: '16',
+                    value: '1',
                     title: 'Total Orders',
                     icon: Icons.receipt_long,
                   ),
@@ -210,16 +210,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // PREFERENCES
             // ==================================================
 
-            _sectionTitle('Preferences'),
+            // _sectionTitle('Preferences'),
 
-            _profileOption(
-              context,
-              Icons.settings_outlined,
-              'Settings',
-              'Manage your app preferences',
-            ),
+            // _profileOption(
+            //   context,
+            //   Icons.settings_outlined,
+            //   'Settings',
+            //   'Manage your app preferences',
+            // ),
 
-            const SizedBox(height: 15),
+            // const SizedBox(height: 15),
 
             // ==================================================
             // LOGOUT

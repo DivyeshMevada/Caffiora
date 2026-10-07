@@ -26,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
     const ProfileScreen(),
   ];
 
+  // ==========================================================
+  // CHANGE BOTTOM TAB
+  // ==========================================================
+
   void changeTab(int index) {
     if (index == selectedIndex) {
       return;
@@ -36,6 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
       tabHistory.add(index);
     });
   }
+
+  // ==========================================================
+  // BACK BUTTON
+  // ==========================================================
 
   Future<void> handleBack() async {
     if (tabHistory.length > 1) {
@@ -52,11 +60,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // ==========================================================
+  // BUILD
+  // ==========================================================
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
+      onPopInvokedWithResult: (
+        didPop,
+        result,
+      ) {
         if (didPop) {
           return;
         }
@@ -65,6 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         body: screens[selectedIndex],
+
+        // ======================================================
+        // BOTTOM NAVIGATION
+        // ======================================================
+
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: selectedIndex,
           type: BottomNavigationBarType.fixed,
@@ -74,23 +94,39 @@ class _HomeScreenState extends State<HomeScreen> {
           onTap: changeTab,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
+              icon: Icon(
+                Icons.home_outlined,
+              ),
+              activeIcon: Icon(
+                Icons.home,
+              ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.menu_book_outlined),
-              activeIcon: Icon(Icons.menu_book),
+              icon: Icon(
+                Icons.menu_book_outlined,
+              ),
+              activeIcon: Icon(
+                Icons.menu_book,
+              ),
               label: 'Menu',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag_outlined),
-              activeIcon: Icon(Icons.shopping_bag),
+              icon: Icon(
+                Icons.shopping_bag_outlined,
+              ),
+              activeIcon: Icon(
+                Icons.shopping_bag,
+              ),
               label: 'Cart',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
+              icon: Icon(
+                Icons.person_outline,
+              ),
+              activeIcon: Icon(
+                Icons.person,
+              ),
               label: 'Profile',
             ),
           ],
@@ -100,8 +136,14 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// ============================================================
+// HOME CONTENT
+// ============================================================
+
 class HomeContent extends StatelessWidget {
-  const HomeContent({super.key});
+  const HomeContent({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +158,10 @@ class HomeContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ==================================================
             // HEADER
+            // ==================================================
+
             Row(
               children: [
                 Column(
@@ -141,30 +186,16 @@ class HomeContent extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const Spacer(),
-
-                // Container(
-                //   height: 45,
-                //   width: 45,
-                //   decoration: BoxDecoration(
-                //     color: Colors.white,
-                //     borderRadius: BorderRadius.circular(14),
-                //   ),
-                //   child: IconButton(
-                //     onPressed: () {},
-                //     icon: const Icon(
-                //       Icons.notifications_none,
-                //       color: AppTheme.coffeeDark,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
 
             const SizedBox(height: 25),
 
+            // ==================================================
             // SEARCH
+            // ==================================================
+
             GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -181,7 +212,9 @@ class HomeContent extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(
+                    15,
+                  ),
                 ),
                 child: const Row(
                   children: [
@@ -204,13 +237,18 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
+            // ==================================================
             // SIGNATURE BLEND
+            // ==================================================
+
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(
                 color: AppTheme.coffeeDark,
-                borderRadius: BorderRadius.circular(22),
+                borderRadius: BorderRadius.circular(
+                  22,
+                ),
               ),
               child: Row(
                 children: [
@@ -226,7 +264,9 @@ class HomeContent extends StatelessWidget {
                             letterSpacing: 2,
                           ),
                         ),
+
                         const SizedBox(height: 10),
+
                         const Text(
                           'Velvet\nEspresso',
                           style: TextStyle(
@@ -235,16 +275,22 @@ class HomeContent extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+
                         const SizedBox(height: 8),
+
                         const Text(
-                          'A rich handcrafted coffee\nexperience beyond ordinary.',
+                          'A rich handcrafted coffee\n'
+                          'experience beyond ordinary.',
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 12,
                             height: 1.5,
                           ),
                         ),
+
                         const SizedBox(height: 15),
+
+                        // EXPLORE BUTTON
                         ElevatedButton(
                           onPressed: () {
                             Navigator.push(
@@ -260,9 +306,14 @@ class HomeContent extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.cream,
                             foregroundColor: AppTheme.coffeeDark,
-                            minimumSize: const Size(130, 42),
+                            minimumSize: const Size(
+                              130,
+                              42,
+                            ),
                           ),
-                          child: const Text('Explore Coffee'),
+                          child: const Text(
+                            'Explore Coffee',
+                          ),
                         ),
                       ],
                     ),
@@ -270,15 +321,24 @@ class HomeContent extends StatelessWidget {
 
                   const SizedBox(width: 10),
 
+                  // ==================================================
                   // SIGNATURE IMAGE
+                  // ==================================================
+
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(
+                      18,
+                    ),
                     child: Image.asset(
                       'assets/images/velvet_espresso.jpg',
                       height: 135,
                       width: 105,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
+                      errorBuilder: (
+                        context,
+                        error,
+                        stackTrace,
+                      ) {
                         return Container(
                           height: 135,
                           width: 105,
@@ -298,7 +358,10 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+            // ==================================================
             // CATEGORIES
+            // ==================================================
+
             const Text(
               'Explore Categories',
               style: TextStyle(
@@ -315,6 +378,7 @@ class HomeContent extends StatelessWidget {
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
+                  // ESPRESSO BAR
                   CategoryItem(
                     image: 'assets/images/velvet_espresso.jpg',
                     title: 'Espresso Bar',
@@ -329,6 +393,8 @@ class HomeContent extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // BAKERY
                   CategoryItem(
                     image: 'assets/images/velvet_croissant.jpg',
                     title: 'Bakery',
@@ -343,6 +409,8 @@ class HomeContent extends StatelessWidget {
                       );
                     },
                   ),
+
+                  // COLD BREW
                   CategoryItem(
                     image: 'assets/images/cold_brew.jpg',
                     title: 'Cold Brew',
@@ -363,7 +431,10 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
+            // ==================================================
             // TODAY'S SELECTION
+            // ==================================================
+
             Row(
               children: [
                 const Text(
@@ -396,14 +467,16 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 10),
 
+            // ==================================================
             // ROW 1
+            // ==================================================
+
             Row(
               children: [
                 Expanded(
                   child: CoffeeCard(
                     name: 'Italian Roast',
                     price: 249,
-                    rating: 4.9,
                     image: 'assets/images/italian_roast.jpg',
                   ),
                 ),
@@ -412,7 +485,6 @@ class HomeContent extends StatelessWidget {
                   child: CoffeeCard(
                     name: 'Caramel Macchiato',
                     price: 319,
-                    rating: 4.8,
                     image: 'assets/images/caramel_macchiato.jpg',
                   ),
                 ),
@@ -421,14 +493,16 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // ==================================================
             // ROW 2
+            // ==================================================
+
             Row(
               children: [
                 Expanded(
                   child: CoffeeCard(
                     name: 'Velvet Espresso',
                     price: 279,
-                    rating: 4.9,
                     image: 'assets/images/velvet_espresso.jpg',
                   ),
                 ),
@@ -437,7 +511,6 @@ class HomeContent extends StatelessWidget {
                   child: CoffeeCard(
                     name: 'Iced Latte',
                     price: 249,
-                    rating: 4.9,
                     image: 'assets/images/iced_latte.jpg',
                   ),
                 ),
@@ -449,6 +522,10 @@ class HomeContent extends StatelessWidget {
     );
   }
 }
+
+// ============================================================
+// CATEGORY ITEM
+// ============================================================
 
 class CategoryItem extends StatelessWidget {
   final String image;
@@ -468,23 +545,33 @@ class CategoryItem extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 100,
-        margin: const EdgeInsets.only(right: 12),
+        margin: const EdgeInsets.only(
+          right: 12,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(
+            16,
+          ),
         ),
         child: Column(
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(16),
+                top: Radius.circular(
+                  16,
+                ),
               ),
               child: Image.asset(
                 image,
                 height: 65,
                 width: 100,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
                   return Container(
                     height: 65,
                     width: 100,
@@ -514,17 +601,19 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
+// ============================================================
+// COFFEE CARD
+// ============================================================
+
 class CoffeeCard extends StatelessWidget {
   final String name;
   final double price;
-  final double rating;
   final String image;
 
   const CoffeeCard({
     super.key,
     required this.name,
     required this.price,
-    required this.rating,
     required this.image,
   });
 
@@ -546,19 +635,31 @@ class CoffeeCard extends StatelessWidget {
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(
+            18,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ==================================================
+            // PRODUCT IMAGE
+            // ==================================================
+
             ClipRRect(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(
+                14,
+              ),
               child: Image.asset(
                 image,
                 height: 125,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
                   return Container(
                     height: 125,
                     width: double.infinity,
@@ -572,7 +673,13 @@ class CoffeeCard extends StatelessWidget {
                 },
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // ==================================================
+            // PRODUCT NAME
+            // ==================================================
+
             Text(
               name,
               maxLines: 1,
@@ -583,32 +690,20 @@ class CoffeeCard extends StatelessWidget {
                 color: AppTheme.coffeeDark,
               ),
             ),
-            const SizedBox(height: 5),
-            Row(
-              children: [
-                const Icon(
-                  Icons.star,
-                  size: 15,
-                  color: Colors.amber,
-                ),
-                const SizedBox(width: 3),
-                Text(
-                  rating.toString(),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.grey,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  '₹${price.toInt()}',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.coffeeDark,
-                  ),
-                ),
-              ],
+
+            const SizedBox(height: 8),
+
+            // ==================================================
+            // PRICE ONLY
+            // ==================================================
+
+            Text(
+              '₹${price.toInt()}',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
             ),
           ],
         ),

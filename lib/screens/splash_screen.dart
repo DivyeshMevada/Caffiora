@@ -1,3 +1,4 @@
+import 'package:caffiora/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
@@ -44,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const OnboardingScreen(),
+          builder: (_) => const LoginScreen(),
         ),
       );
     }

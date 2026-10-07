@@ -21,52 +21,56 @@ class _SearchScreenState extends State<SearchScreen> {
     {
       'name': 'Italian Roast',
       'price': 249.0,
-      'rating': 4.9,
       'category': 'Espresso Bar',
+      'image': 'assets/images/italian_roast.jpg',
     },
     {
       'name': 'Caramel Macchiato',
       'price': 319.0,
-      'rating': 4.8,
       'category': 'Espresso Bar',
+      'image': 'assets/images/caramel_macchiato.jpg',
     },
     {
       'name': 'Velvet Espresso',
       'price': 279.0,
-      'rating': 4.9,
       'category': 'Espresso Bar',
+      'image': 'assets/images/velvet_espresso.jpg',
     },
     {
       'name': 'Velvet Croissant',
       'price': 239.0,
-      'rating': 4.9,
       'category': 'Bakery',
+      'image': 'assets/images/velvet_croissant.jpg',
     },
     {
       'name': 'Cold Brew',
       'price': 249.0,
-      'rating': 4.9,
       'category': 'Cold Brew',
+      'image': 'assets/images/cold_brew.jpg',
     },
     {
       'name': 'Stroopwafel Cupcake',
       'price': 289.0,
-      'rating': 4.7,
       'category': 'Bakery',
+      'image': 'assets/images/stroopwafel_cupcake.jpg',
     },
     {
       'name': 'Iced Latte',
       'price': 249.0,
-      'rating': 4.9,
       'category': 'Cold Brew',
+      'image': 'assets/images/iced_latte.jpg',
     },
     {
       'name': 'Iced Matcha',
       'price': 349.0,
-      'rating': 4.8,
       'category': 'Cold Brew',
+      'image': 'assets/images/iced_matcha.jpg',
     },
   ];
+
+  // ==========================================================
+  // POPULAR SEARCHES
+  // ==========================================================
 
   final List<String> popularSearches = [
     'Espresso',
@@ -76,6 +80,10 @@ class _SearchScreenState extends State<SearchScreen> {
     'Mocha',
     'Americano',
   ];
+
+  // ==========================================================
+  // RECENT SEARCHES
+  // ==========================================================
 
   final List<String> recentSearches = [
     'Velvet Espresso',
@@ -129,6 +137,12 @@ class _SearchScreenState extends State<SearchScreen> {
   void selectSearch(String text) {
     setState(() {
       searchController.text = text;
+
+      searchController.selection = TextSelection.fromPosition(
+        TextPosition(
+          offset: searchController.text.length,
+        ),
+      );
     });
   }
 
@@ -141,6 +155,10 @@ class _SearchScreenState extends State<SearchScreen> {
       searchController.clear();
     });
   }
+
+  // ==========================================================
+  // DISPOSE
+  // ==========================================================
 
   @override
   void dispose() {
@@ -155,17 +173,32 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final results = searchResults;
-    final hasSearch = searchController.text.trim().isNotEmpty;
+
+    final bool hasSearch = searchController.text.trim().isNotEmpty;
 
     return Scaffold(
+      backgroundColor: AppTheme.cream,
+
+      // ======================================================
+      // APP BAR
+      // ======================================================
+
       appBar: AppBar(
+        backgroundColor: AppTheme.cream,
+        elevation: 0,
         title: const Text(
           'Search',
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            color: AppTheme.coffeeDark,
           ),
         ),
       ),
+
+      // ======================================================
+      // BODY
+      // ======================================================
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -179,7 +212,10 @@ class _SearchScreenState extends State<SearchScreen> {
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Search coffee...',
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(
+                  Icons.search,
+                  color: AppTheme.coffee,
+                ),
                 suffixIcon: searchController.text.isNotEmpty
                     ? IconButton(
                         onPressed: clearSearch,
@@ -226,9 +262,9 @@ class _SearchScreenState extends State<SearchScreen> {
             // ==================================================
 
             if (!hasSearch) ...[
-              // ------------------------------------------------
+              // ================================================
               // POPULAR SEARCHES
-              // ------------------------------------------------
+              // ================================================
 
               const Text(
                 'Popular Searches',
@@ -258,9 +294,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 30),
 
-              // ------------------------------------------------
+              // ================================================
               // RECENT SEARCHES
-              // ------------------------------------------------
+              // ================================================
 
               const Text(
                 'Recent Searches',
@@ -293,9 +329,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 20),
 
-              // ------------------------------------------------
+              // ================================================
               // TRENDING TODAY
-              // ------------------------------------------------
+              // ================================================
 
               const Text(
                 'Trending Today',
@@ -308,6 +344,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
               const SizedBox(height: 15),
 
+              // ================================================
+              // TRENDING CARD
+              // ================================================
+
               GestureDetector(
                 onTap: () {
                   openProduct(
@@ -317,7 +357,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 },
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(18),
+                  padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     color: AppTheme.coffeeDark,
                     borderRadius: BorderRadius.circular(
@@ -326,24 +366,46 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   child: Row(
                     children: [
-                      Container(
-                        height: 75,
-                        width: 75,
-                        decoration: BoxDecoration(
-                          color: AppTheme.coffeeLight,
-                          borderRadius: BorderRadius.circular(
-                            15,
-                          ),
+                      // ========================================
+                      // TRENDING IMAGE
+                      // ========================================
+
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          15,
                         ),
-                        child: const Icon(
-                          Icons.coffee,
-                          color: Colors.white,
-                          size: 40,
+                        child: Image.asset(
+                          'assets/images/velvet_espresso.jpg',
+                          height: 80,
+                          width: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (
+                            context,
+                            error,
+                            stackTrace,
+                          ) {
+                            return Container(
+                              height: 80,
+                              width: 80,
+                              color: AppTheme.coffeeLight,
+                              child: const Icon(
+                                Icons.coffee,
+                                color: Colors.white,
+                                size: 40,
+                              ),
+                            );
+                          },
                         ),
                       ),
+
                       const SizedBox(
                         width: 15,
                       ),
+
+                      // ========================================
+                      // TRENDING DETAILS
+                      // ========================================
+
                       const Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,7 +418,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 7),
+                            SizedBox(
+                              height: 7,
+                            ),
                             Text(
                               'Rich • Smooth • Premium',
                               style: TextStyle(
@@ -364,7 +428,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                 fontSize: 12,
                               ),
                             ),
-                            SizedBox(height: 8),
+                            SizedBox(
+                              height: 8,
+                            ),
                             Text(
                               '₹279',
                               style: TextStyle(
@@ -375,6 +441,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           ],
                         ),
                       ),
+
                       const Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.white,
@@ -401,16 +468,29 @@ class _SearchScreenState extends State<SearchScreen> {
     return GestureDetector(
       onTap: () {
         openProduct(
-          product['name'],
-          product['price'],
+          product['name'].toString(),
+          (product['price'] as num).toDouble(),
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
+        margin: const EdgeInsets.only(
+          bottom: 14,
+        ),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(
+            18,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(
+                alpha: 0.035,
+              ),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -418,19 +498,31 @@ class _SearchScreenState extends State<SearchScreen> {
             // PRODUCT IMAGE
             // ==================================================
 
-            Container(
-              height: 85,
-              width: 85,
-              decoration: BoxDecoration(
-                color: AppTheme.cream,
-                borderRadius: BorderRadius.circular(
-                  15,
-                ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                15,
               ),
-              child: const Icon(
-                Icons.coffee,
-                size: 42,
-                color: AppTheme.coffee,
+              child: Image.asset(
+                product['image'].toString(),
+                height: 85,
+                width: 85,
+                fit: BoxFit.cover,
+                errorBuilder: (
+                  context,
+                  error,
+                  stackTrace,
+                ) {
+                  return Container(
+                    height: 85,
+                    width: 85,
+                    color: AppTheme.cream,
+                    child: const Icon(
+                      Icons.coffee,
+                      size: 42,
+                      color: AppTheme.coffee,
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -445,36 +537,20 @@ class _SearchScreenState extends State<SearchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product['name'],
+                    product['name'].toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.coffeeDark,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 16,
-                      ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Text(
-                        '${product['rating']}',
-                        style: const TextStyle(
-                          color: AppTheme.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(
+                    height: 7,
                   ),
-                  const SizedBox(height: 5),
                   Text(
-                    product['category'],
+                    product['category'].toString(),
                     style: const TextStyle(
                       color: AppTheme.grey,
                       fontSize: 12,
@@ -484,6 +560,8 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
 
+            const SizedBox(width: 8),
+
             // ==================================================
             // PRICE + ARROW
             // ==================================================
@@ -492,7 +570,7 @@ class _SearchScreenState extends State<SearchScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '₹${(product['price'] as double).toInt()}',
+                  '₹${(product['price'] as num).toInt()}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -528,7 +606,9 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(
+          18,
+        ),
       ),
       child: Column(
         children: [
@@ -537,7 +617,9 @@ class _SearchScreenState extends State<SearchScreen> {
             size: 55,
             color: AppTheme.coffeeLight,
           ),
-          const SizedBox(height: 15),
+          const SizedBox(
+            height: 15,
+          ),
           const Text(
             'No coffee found',
             style: TextStyle(
@@ -546,11 +628,13 @@ class _SearchScreenState extends State<SearchScreen> {
               color: AppTheme.coffeeDark,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
+          const SizedBox(
+            height: 8,
+          ),
+          const Text(
             'Try searching for another coffee.',
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppTheme.grey,
             ),
           ),
