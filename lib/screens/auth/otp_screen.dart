@@ -28,7 +28,6 @@ class _OTPScreenState extends State<OTPScreen> {
   @override
   void dispose() {
     otpController.dispose();
-
     super.dispose();
   }
 
@@ -36,13 +35,10 @@ class _OTPScreenState extends State<OTPScreen> {
     if (otpController.text.trim() != '123456') {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'Invalid OTP. Use 123456',
-          ),
+          content: Text('Invalid OTP. Use 123456'),
           behavior: SnackBarBehavior.floating,
         ),
       );
-
       return;
     }
 
@@ -50,7 +46,6 @@ class _OTPScreenState extends State<OTPScreen> {
       isLoading = true;
     });
 
-    // Save registration/login
     await AuthState.instance.register(
       userName: widget.name,
       userEmail: widget.email,
@@ -63,7 +58,6 @@ class _OTPScreenState extends State<OTPScreen> {
       isLoading = false;
     });
 
-    // Go directly to Home
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
@@ -77,90 +71,139 @@ class _OTPScreenState extends State<OTPScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Verify OTP'),
+        title: const Text(
+          'Verify OTP',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const SizedBox(height: 50),
-            Container(
-              height: 90,
-              width: 90,
-              decoration: BoxDecoration(
-                color: AppTheme.coffeeDark,
-                borderRadius: BorderRadius.circular(25),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              const SizedBox(height: 50),
+
+              // Shield Check Icon
+              Container(
+                height: 90,
+                width: 90,
+                decoration: BoxDecoration(
+                  color: AppTheme.coffeeDark,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: const Icon(
+                  Icons.verified_user_outlined,
+                  color: Colors.white,
+                  size: 50,
+                ),
               ),
-              child: const Icon(
-                Icons.verified_user_outlined,
-                color: Colors.white,
-                size: 50,
+
+              const SizedBox(height: 25),
+
+              // Verify Your Account
+              const Text(
+                'Verify Your Account',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
               ),
-            ),
-            const SizedBox(height: 25),
-            const Text(
-              'Verify Your Account',
-              style: TextStyle(
-                fontSize: 27,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.coffeeDark,
+
+              const SizedBox(height: 10),
+
+              // OTP Sent Text
+              Text(
+                'OTP sent to ${widget.mobile}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppTheme.grey,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'OTP sent to ${widget.mobile}',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppTheme.grey,
+
+              const SizedBox(height: 35),
+
+              // OTP Input Field
+              TextField(
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                maxLength: 6,
+                textAlign: TextAlign.center,
+                textInputAction: TextInputAction.done,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 8,
+                ),
+                decoration: InputDecoration(
+                  hintText: '000000',
+                  counterText: '',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    borderSide: const BorderSide(
+                      color: AppTheme.coffeeDark,
+                      width: 2,
+                    ),
+                  ),
+                ),
+                onSubmitted: (_) {
+                  if (!isLoading) {
+                    _verifyOTP();
+                  }
+                },
               ),
-            ),
-            const SizedBox(height: 35),
-            TextField(
-              controller: otpController,
-              keyboardType: TextInputType.number,
-              maxLength: 6,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 8,
-              ),
-              decoration: const InputDecoration(
-                hintText: '000000',
-                counterText: '',
-              ),
-            ),
-            const SizedBox(height: 25),
-            SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: isLoading ? null : _verifyOTP,
-                child: isLoading
-                    ? const SizedBox(
-                        height: 24,
-                        width: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
+
+              const SizedBox(height: 25),
+
+              // Verify & Continue Button
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: isLoading ? null : _verifyOTP,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.coffeeDark,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: isLoading
+                      ? const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Verify & Continue',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                      )
-                    : const Text(
-                        'Verify & Continue',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                ),
               ),
-            ),
-            const SizedBox(height: 25),
-            const Text(
-              'Demo OTP: 123456',
-              style: TextStyle(
-                color: AppTheme.grey,
+
+              const SizedBox(height: 25),
+
+              // Demo OTP Text
+              const Text(
+                'Demo OTP: 123456',
+                style: TextStyle(
+                  color: AppTheme.grey,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

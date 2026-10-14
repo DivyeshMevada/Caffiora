@@ -47,6 +47,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final String userMobile = auth.mobile.isEmpty ? '8320226902' : auth.mobile;
 
     return Scaffold(
+      // ========================================================
+      // HEADER
+      // ========================================================
+
       appBar: AppBar(
         title: const Text(
           'Profile',
@@ -55,10 +59,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
         actions: [
-          // ==================================================
-          // EDIT BUTTON
-          // ==================================================
-
           IconButton(
             onPressed: openEditProfile,
             icon: const Icon(
@@ -68,231 +68,231 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            // ==================================================
-            // PROFILE CARD
-            // ==================================================
 
-            Container(
-              width: double.infinity,
+      // ========================================================
+      // BODY
+      // ========================================================
+
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 12,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
-              ),
-              child: Row(
+              child: Column(
                 children: [
-                  // PROFILE IMAGE / ICON
+                  // ==================================================
+                  // PROFILE CARD
+                  // ==================================================
 
                   Container(
-                    height: 75,
-                    width: 75,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppTheme.coffeeDark,
-                      borderRadius: BorderRadius.circular(38),
-                    ),
-                    child: const Icon(
-                      Icons.person,
-                      size: 42,
                       color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 12,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                  ),
-
-                  const SizedBox(width: 15),
-
-                  // USER INFORMATION
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Text(
-                          userName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 21,
-                            fontWeight: FontWeight.bold,
+                        // PROFILE IMAGE / ICON
+
+                        Container(
+                          height: 75,
+                          width: 75,
+                          decoration: BoxDecoration(
                             color: AppTheme.coffeeDark,
+                            borderRadius: BorderRadius.circular(38),
+                          ),
+                          child: const Icon(
+                            Icons.person,
+                            size: 42,
+                            color: Colors.white,
                           ),
                         ),
-                        const SizedBox(height: 5),
-                        Text(
-                          userEmail,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: AppTheme.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          userMobile,
-                          style: const TextStyle(
-                            color: AppTheme.grey,
+
+                        const SizedBox(width: 15),
+
+                        // USER INFORMATION
+
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                userName,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.coffeeDark,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                userEmail,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: AppTheme.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                userMobile,
+                                style: const TextStyle(
+                                  color: AppTheme.grey,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+                  // ==================================================
+                  // TOTAL ORDERS CARD
+                  // ==================================================
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _statCard(
+                          value: '1',
+                          title: 'Total Orders',
+                          icon: Icons.receipt_long,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // ==================================================
+                  // ACCOUNT
+                  // ==================================================
+
+                  _sectionTitle('Account'),
+
+                  _profileOption(
+                    context,
+                    Icons.receipt_long_outlined,
+                    'My Orders',
+                    'View your past and upcoming orders',
+                  ),
+
+                  _profileOption(
+                    context,
+                    Icons.location_on_outlined,
+                    'Saved Addresses',
+                    'Manage your delivery addresses',
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // ==================================================
+                  // SUPPORT
+                  // ==================================================
+
+                  _sectionTitle('Support'),
+
+                  _profileOption(
+                    context,
+                    Icons.contact_support_outlined,
+                    'Contact Us',
+                    'Get in touch with CAFFIORA',
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // ==================================================
+                  // LOGOUT BUTTON
+                  // ==================================================
+
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        _showLogoutDialog(context);
+                      },
+                      icon: const Icon(
+                        Icons.logout,
+                        color: AppTheme.coffeeDark,
+                      ),
+                      label: const Text(
+                        'Logout',
+                        style: TextStyle(
+                          color: AppTheme.coffeeDark,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: AppTheme.coffeeDark,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // ==================================================
+                  // CAFFIORA FOOTER
+                  // ==================================================
+
+                  const Text(
+                    'CAFFIORA',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                      color: AppTheme.coffeeDark,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  const Text(
+                    'Brewed Fresh. Served with Elegance.',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: AppTheme.grey,
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  const Text(
+                    'Premium Coffee Experience',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: AppTheme.grey,
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
+          ),
 
-            const SizedBox(height: 20),
-
-            // ==================================================
-            // STATS
-            // ==================================================
-
-            Row(
-              children: [
-                Expanded(
-                  child: _statCard(
-                    value: '1',
-                    title: 'Total Orders',
-                    icon: Icons.receipt_long,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 25),
-
-            // ==================================================
-            // ACCOUNT
-            // ==================================================
-
-            _sectionTitle('Account'),
-
-            _profileOption(
-              context,
-              Icons.receipt_long_outlined,
-              'My Orders',
-              'View your past and upcoming orders',
-            ),
-
-            _profileOption(
-              context,
-              Icons.location_on_outlined,
-              'Saved Addresses',
-              'Manage your delivery addresses',
-            ),
-
-            const SizedBox(height: 15),
-
-            // ==================================================
-            // SUPPORT
-            // ==================================================
-
-            _sectionTitle('Support'),
-
-            _profileOption(
-              context,
-              Icons.contact_support_outlined,
-              'Contact Us',
-              'Get in touch with CAFFIORA',
-            ),
-
-            const SizedBox(height: 15),
-
-            // ==================================================
-            // PREFERENCES
-            // ==================================================
-
-            // _sectionTitle('Preferences'),
-
-            // _profileOption(
-            //   context,
-            //   Icons.settings_outlined,
-            //   'Settings',
-            //   'Manage your app preferences',
-            // ),
-
-            // const SizedBox(height: 15),
-
-            // ==================================================
-            // LOGOUT
-            // ==================================================
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  _showLogoutDialog(context);
-                },
-                icon: const Icon(
-                  Icons.logout,
-                  color: AppTheme.coffeeDark,
-                ),
-                label: const Text(
-                  'Logout',
-                  style: TextStyle(
-                    color: AppTheme.coffeeDark,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(
-                    color: AppTheme.coffeeDark,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 25),
-
-            // ==================================================
-            // FOOTER
-            // ==================================================
-
-            const Text(
-              'CAFFIORA',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-                color: AppTheme.coffeeDark,
-              ),
-            ),
-
-            const SizedBox(height: 5),
-
-            const Text(
-              'Brewed Fresh. Served with Elegance.',
-              style: TextStyle(
-                fontSize: 11,
-                color: AppTheme.grey,
-              ),
-            ),
-
-            const SizedBox(height: 5),
-
-            const Text(
-              'Premium Coffee Experience',
-              style: TextStyle(
-                fontSize: 10,
-                color: AppTheme.grey,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
-        ),
+          // BOTTOM NAVIGATION
+          // Existing bottom navigation, if any, remains outside
+          // this screen's body content.
+        ],
       ),
     );
   }
@@ -471,9 +471,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ============================================================
-  // LOGOUT DIALOG
-  // ============================================================
+// ============================================================
+// LOGOUT DIALOG
+// ============================================================
 
   void _showLogoutDialog(
     BuildContext context,
@@ -507,12 +507,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           actions: [
             // CANCEL
-
             TextButton(
               onPressed: () {
-                Navigator.pop(
-                  dialogContext,
-                );
+                Navigator.pop(dialogContext);
               },
               child: const Text(
                 'Cancel',
@@ -523,7 +520,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             // LOGOUT
-
             ElevatedButton(
               onPressed: () async {
                 await AuthState.instance.logout();
@@ -532,9 +528,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   return;
                 }
 
-                Navigator.pop(
-                  dialogContext,
-                );
+                Navigator.pop(dialogContext);
 
                 Navigator.pushAndRemoveUntil(
                   context,

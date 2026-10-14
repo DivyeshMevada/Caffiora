@@ -26,9 +26,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final auth = AuthState.instance;
 
     nameController = TextEditingController(text: auth.name);
-
     emailController = TextEditingController(text: auth.email);
-
     mobileController = TextEditingController(text: auth.mobile);
   }
 
@@ -54,28 +52,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       isSaving = true;
     });
 
-    await AuthState.instance.updateProfile(
-      userName: nameController.text.trim(),
-      userEmail: emailController.text.trim(),
-      userMobile: mobileController.text.trim(),
-    );
+    try {
+      await AuthState.instance.updateProfile(
+        userName: nameController.text.trim(),
+        userEmail: emailController.text.trim(),
+        userMobile: mobileController.text.trim(),
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      isSaving = false;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Profile updated successfully!',
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Profile updated successfully!',
+          ),
+          behavior: SnackBarBehavior.floating,
         ),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+      );
 
-    Navigator.pop(context, true);
+      Navigator.pop(context, true);
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Unable to update profile. Please try again.',
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSaving = false;
+        });
+      }
+    }
   }
 
   // ==========================================================
@@ -85,6 +98,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // APP BAR
+
       appBar: AppBar(
         title: const Text(
           'Edit Profile',
@@ -93,6 +108,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
         ),
       ),
+
+      // BODY
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -100,9 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ==================================================
               // PROFILE ICON
-              // ==================================================
 
               Center(
                 child: Container(
@@ -129,9 +145,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 12),
 
+              // WELCOME TEXT
+
               const Center(
                 child: Text(
-                  'Update your profile',
+                  'Welcome to your profile',
                   style: TextStyle(
                     fontSize: 14,
                     color: AppTheme.grey,
@@ -141,9 +159,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
-              // NAME
-              // ==================================================
+              // FULL NAME
 
               const Text(
                 'Full Name',
@@ -185,9 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 20),
 
-              // ==================================================
-              // EMAIL
-              // ==================================================
+              // EMAIL ADDRESS
 
               const Text(
                 'Email Address',
@@ -234,9 +248,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 20),
 
-              // ==================================================
-              // MOBILE
-              // ==================================================
+              // MOBILE NUMBER
 
               const Text(
                 'Mobile Number',
@@ -272,9 +284,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                   if (!RegExp(
                     r'^[0-9]{10}$',
-                  ).hasMatch(
-                    value.trim(),
-                  )) {
+                  ).hasMatch(value.trim())) {
                     return 'Mobile number must be 10 digits';
                   }
 
@@ -284,9 +294,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
-              // SAVE BUTTON
-              // ==================================================
+              // SAVE CHANGES BUTTON
 
               SizedBox(
                 width: double.infinity,
@@ -330,9 +338,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 15),
 
-              // ==================================================
-              // CANCEL
-              // ==================================================
+              // CANCEL BUTTON
 
               SizedBox(
                 width: double.infinity,
@@ -363,9 +369,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
-              // FOOTER
-              // ==================================================
+              // CAFFIORA FOOTER
 
               const Center(
                 child: Text(

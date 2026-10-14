@@ -17,6 +17,8 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // MAIN COLUMN
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -24,7 +26,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
             children: [
               const SizedBox(height: 45),
 
-              // ---------------- SUCCESS ICON ----------------
+              // SUCCESS ICON
               Container(
                 height: 100,
                 width: 100,
@@ -48,7 +50,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
 
               const SizedBox(height: 30),
 
-              // ---------------- SUCCESS TITLE ----------------
+              // ORDER CONFIRMED
               const Text(
                 'Order Confirmed',
                 textAlign: TextAlign.center,
@@ -85,6 +87,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
 
               const SizedBox(height: 16),
 
+              // THANK YOU MESSAGE
               const Text(
                 'Thank you for choosing CAFFIORA.',
                 textAlign: TextAlign.center,
@@ -110,7 +113,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
 
               const SizedBox(height: 35),
 
-              // ---------------- ORDER INFO ----------------
+              // ORDER DETAILS CARD
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -132,7 +135,9 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                       color: AppTheme.coffee,
                       size: 35,
                     ),
+
                     const SizedBox(height: 12),
+
                     const Text(
                       'Your coffee is being prepared',
                       textAlign: TextAlign.center,
@@ -142,21 +147,38 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                         color: AppTheme.coffeeDark,
                       ),
                     ),
+
                     const SizedBox(height: 6),
+
+                    // DELIVERY TIME
                     const Text(
                       'Estimated delivery time: 20 - 25 mins',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: AppTheme.grey),
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.grey,
+                      ),
                     ),
+
                     const SizedBox(height: 18),
-                    Container(height: 1, color: Colors.grey.shade200),
+
+                    Container(
+                      height: 1,
+                      color: Colors.grey.shade200,
+                    ),
+
                     const SizedBox(height: 18),
-                    Row(
+
+                    // ORDER ID
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           'Order ID',
-                          style: TextStyle(color: AppTheme.grey, fontSize: 14),
+                          style: TextStyle(
+                            color: AppTheme.grey,
+                            fontSize: 14,
+                          ),
                         ),
                         Text(
                           '#CF-134',
@@ -173,124 +195,7 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
 
               const SizedBox(height: 30),
 
-              // ---------------- BREW REWARDS ----------------
-              // Container(
-              //   width: double.infinity,
-              //   padding: const EdgeInsets.all(20),
-              //   decoration: BoxDecoration(
-              //     gradient: LinearGradient(
-              //       colors: [AppTheme.coffeeDark, AppTheme.coffee],
-              //       begin: Alignment.topLeft,
-              //       end: Alignment.bottomRight,
-              //     ),
-              //     borderRadius: BorderRadius.circular(22),
-              //   ),
-              //   child: Column(
-              //     children: [
-              //       const Icon(
-              //         Icons.card_giftcard_outlined,
-              //         color: Colors.white,
-              //         size: 38,
-              //       ),
-
-              //       const SizedBox(height: 12),
-
-              //       const Text(
-              //         'Your Brew Rewards',
-              //         style: TextStyle(
-              //           color: Colors.white,
-              //           fontSize: 21,
-              //           fontWeight: FontWeight.bold,
-              //         ),
-              //       ),
-
-              //       const SizedBox(height: 6),
-
-              //       const Text(
-              //         'Scratch & Win',
-              //         style: TextStyle(color: Colors.white70, fontSize: 15),
-              //       ),
-
-              //       const SizedBox(height: 18),
-
-              //       // Scratch Card
-              //       GestureDetector(
-              //         onTap: () {
-              //           setState(() {
-              //             scratched = true;
-              //           });
-              //         },
-              //         child: AnimatedContainer(
-              //           duration: const Duration(milliseconds: 300),
-              //           height: 125,
-              //           width: double.infinity,
-              //           decoration: BoxDecoration(
-              //             color: scratched
-              //                 ? Colors.white
-              //                 : AppTheme.coffeeLight,
-              //             borderRadius: BorderRadius.circular(18),
-              //             border: Border.all(color: Colors.white54, width: 2),
-              //           ),
-              //           child: Center(
-              //             child: scratched
-              //                 ? const Column(
-              //                     mainAxisAlignment: MainAxisAlignment.center,
-              //                     children: [
-              //                       Icon(
-              //                         Icons.stars_rounded,
-              //                         color: AppTheme.coffee,
-              //                         size: 32,
-              //                       ),
-              //                       SizedBox(height: 8),
-              //                       Text(
-              //                         'Congratulations!',
-              //                         style: TextStyle(
-              //                           fontSize: 17,
-              //                           fontWeight: FontWeight.bold,
-              //                           color: AppTheme.coffeeDark,
-              //                         ),
-              //                       ),
-              //                       SizedBox(height: 4),
-              //                       Text(
-              //                         'You won 50 Brew Points',
-              //                         style: TextStyle(color: AppTheme.grey),
-              //                       ),
-              //                     ],
-              //                   )
-              //                 : const Column(
-              //                     mainAxisAlignment: MainAxisAlignment.center,
-              //                     children: [
-              //                       Icon(
-              //                         Icons.touch_app_outlined,
-              //                         color: Colors.white,
-              //                         size: 32,
-              //                       ),
-              //                       SizedBox(height: 8),
-              //                       Text(
-              //                         'Tap to Scratch',
-              //                         style: TextStyle(
-              //                           color: Colors.white,
-              //                           fontSize: 17,
-              //                           fontWeight: FontWeight.bold,
-              //                         ),
-              //                       ),
-              //                       SizedBox(height: 4),
-              //                       Text(
-              //                         'Reveal your reward',
-              //                         style: TextStyle(color: Colors.white70),
-              //                       ),
-              //                     ],
-              //                   ),
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-
-              // const SizedBox(height: 30),
-
-              // ---------------- CONTINUE BUTTON ----------------
+              // CONTINUE SHOPPING BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 54,
@@ -306,13 +211,17 @@ class _OrderSuccessScreenState extends State<OrderSuccessScreen> {
                   },
                   child: const Text(
                     'Continue Shopping',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
 
               const SizedBox(height: 12),
 
+              // VIEW ORDER DETAILS
               TextButton(
                 onPressed: () {
                   Navigator.pop(context);

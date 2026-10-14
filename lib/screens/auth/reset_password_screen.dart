@@ -34,10 +34,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     super.dispose();
   }
 
-  // ==========================================================
-  // RESET PASSWORD
-  // ==========================================================
-
+  // Reset Password
   Future<void> resetPassword() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -105,9 +102,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  'Go to Login',
-                ),
+                child: const Text('Go to Login'),
               ),
             ),
           ],
@@ -115,10 +110,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       },
     );
   }
-
-  // ==========================================================
-  // BUILD
-  // ==========================================================
 
   @override
   Widget build(BuildContext context) {
@@ -141,15 +132,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               children: [
                 const SizedBox(height: 20),
 
-                // ==================================================
-                // ICON
-                // ==================================================
-
+                // Lock Icon
                 Center(
                   child: Container(
                     height: 95,
                     width: 95,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppTheme.coffeeDark,
                       shape: BoxShape.circle,
                     ),
@@ -163,9 +151,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 25),
 
+                // Create New Password
                 const Center(
                   child: Text(
                     'Create New Password',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
@@ -176,6 +166,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 10),
 
+                // Description
                 Center(
                   child: Text(
                     'Create a strong new password for\n'
@@ -191,10 +182,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 35),
 
-                // ==================================================
-                // NEW PASSWORD
-                // ==================================================
-
+                // New Password Label
                 const Text(
                   'New Password',
                   style: TextStyle(
@@ -206,6 +194,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 8),
 
+                // New Password TextField
                 TextFormField(
                   controller: passwordController,
                   obscureText: obscurePassword,
@@ -228,9 +217,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        14,
-                      ),
+                      borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -249,10 +236,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 20),
 
-                // ==================================================
-                // CONFIRM PASSWORD
-                // ==================================================
-
+                // Confirm Password Label
                 const Text(
                   'Confirm Password',
                   style: TextStyle(
@@ -264,6 +248,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 8),
 
+                // Confirm Password TextField
                 TextFormField(
                   controller: confirmPasswordController,
                   obscureText: obscureConfirmPassword,
@@ -286,9 +271,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       ),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(
-                        14,
-                      ),
+                      borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
                     ),
                   ),
@@ -307,10 +290,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 15),
 
-                // ==================================================
-                // PASSWORD RULE
-                // ==================================================
-
+                // Password Info Container
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(14),
@@ -343,10 +323,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 28),
 
-                // ==================================================
-                // RESET BUTTON
-                // ==================================================
-
+                // Reset Password Button
                 SizedBox(
                   width: double.infinity,
                   height: 54,
@@ -356,9 +333,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       backgroundColor: AppTheme.coffeeDark,
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          14,
-                        ),
+                        borderRadius: BorderRadius.circular(14),
                       ),
                     ),
                     child: isSaving
@@ -382,10 +357,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
                 const SizedBox(height: 25),
 
-                // ==================================================
-                // BRAND
-                // ==================================================
-
+                // CAFFIORA Footer
                 const Center(
                   child: Text(
                     'CAFFIORA',
@@ -409,6 +381,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 20),
               ],
             ),
           ),

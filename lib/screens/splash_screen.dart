@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../utils/auth_state.dart';
-import 'onboarding_screen.dart';
 import 'customer/home_screen.dart';
 import 'admin/admin_dashboard.dart';
 import 'staff/staff_dashboard.dart';
@@ -22,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
     checkLogin();
   }
 
+  // CHECK LOGIN SESSION
   Future<void> checkLogin() async {
     await Future.delayed(const Duration(seconds: 2));
 
@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (!mounted) return;
 
+    // OPEN LOGIN IF NOT LOGGED IN
     if (!loggedIn) {
       Navigator.pushReplacement(
         context,
@@ -39,6 +40,7 @@ class _SplashScreenState extends State<SplashScreen> {
       return;
     }
 
+    // CHECK USER ROLE
     final String role = AuthState.instance.role.toLowerCase();
 
     Widget destination;
@@ -58,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
         break;
     }
 
+    // OPEN SELECTED DASHBOARD
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -70,52 +73,64 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.coffeeDark,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 115,
-              width: 115,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(30),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // LOGO CONTAINER + COFFEE ICON
+              Container(
+                height: 115,
+                width: 115,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Icon(
+                  Icons.coffee,
+                  size: 65,
+                  color: AppTheme.coffeeDark,
+                ),
               ),
-              child: const Icon(
-                Icons.coffee,
-                size: 65,
-                color: AppTheme.coffeeDark,
+
+              const SizedBox(height: 25),
+
+              // CAFFIORA TEXT
+              const Text(
+                'CAFFIORA',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 4,
+                ),
               ),
-            ),
-            const SizedBox(height: 25),
-            const Text(
-              'CAFFIORA',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 4,
+
+              const SizedBox(height: 8),
+
+              // TAGLINE TEXT
+              const Text(
+                'Brewed Fresh. Served with Elegance.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Brewed Fresh. Served with Elegance.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white70,
-                fontSize: 13,
+
+              const SizedBox(height: 35),
+
+              // CIRCULAR PROGRESS INDICATOR
+              const SizedBox(
+                height: 25,
+                width: 25,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 35),
-            const SizedBox(
-              height: 25,
-              width: 25,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

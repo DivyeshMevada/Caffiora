@@ -8,9 +8,7 @@ import 'search_screen.dart';
 import 'product_details.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -27,57 +25,38 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    // ========================================================
-    // ALL MAIN TABS
-    // ========================================================
-
     screens = [
       const HomeContent(),
-
       const MenuScreen(),
-
-      // IMPORTANT:
-      // Browse Menu from Empty Cart will select Menu tab
       CartScreen(
         onBrowseMenu: () {
           changeTab(1);
         },
       ),
-
       const ProfileScreen(),
     ];
   }
 
-  // ==========================================================
-  // CHANGE BOTTOM TAB
-  // ==========================================================
-
+  // Change Bottom Tab
   void changeTab(int index) {
-    if (index == selectedIndex) {
-      return;
-    }
+    if (index == selectedIndex) return;
 
     setState(() {
       selectedIndex = index;
 
-      // Avoid duplicate history
       if (tabHistory.isEmpty || tabHistory.last != index) {
         tabHistory.add(index);
       }
     });
   }
 
-  // ==========================================================
-  // BACK BUTTON
-  // ==========================================================
-
+  // Handle Back Button
   Future<void> handleBack() async {
     if (tabHistory.length > 1) {
       setState(() {
         tabHistory.removeLast();
         selectedIndex = tabHistory.last;
       });
-
       return;
     }
 
@@ -86,31 +65,18 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // ==========================================================
-  // BUILD
-  // ==========================================================
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (
-        didPop,
-        result,
-      ) {
-        if (didPop) {
-          return;
-        }
-
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         handleBack();
       },
       child: Scaffold(
         body: screens[selectedIndex],
 
-        // ======================================================
-        // BOTTOM NAVIGATION
-        // ======================================================
-
+        // Bottom Navigation
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: selectedIndex,
           type: BottomNavigationBarType.fixed,
@@ -120,59 +86,24 @@ class _HomeScreenState extends State<HomeScreen> {
           elevation: 10,
           onTap: changeTab,
           items: const [
-            // ==================================================
-            // HOME
-            // ==================================================
-
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home_outlined,
-              ),
-              activeIcon: Icon(
-                Icons.home,
-              ),
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
               label: 'Home',
             ),
-
-            // ==================================================
-            // MENU
-            // ==================================================
-
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.menu_book_outlined,
-              ),
-              activeIcon: Icon(
-                Icons.menu_book,
-              ),
+              icon: Icon(Icons.menu_book_outlined),
+              activeIcon: Icon(Icons.menu_book),
               label: 'Menu',
             ),
-
-            // ==================================================
-            // CART
-            // ==================================================
-
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.shopping_bag_outlined,
-              ),
-              activeIcon: Icon(
-                Icons.shopping_bag,
-              ),
+              icon: Icon(Icons.shopping_bag_outlined),
+              activeIcon: Icon(Icons.shopping_bag),
               label: 'Cart',
             ),
-
-            // ==================================================
-            // PROFILE
-            // ==================================================
-
             BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person_outline,
-              ),
-              activeIcon: Icon(
-                Icons.person,
-              ),
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
               label: 'Profile',
             ),
           ],
@@ -187,27 +118,17 @@ class _HomeScreenState extends State<HomeScreen> {
 // ============================================================
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({
-    super.key,
-  });
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(
-          20,
-          15,
-          20,
-          25,
-        ),
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 25),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==================================================
-            // HEADER
-            // ==================================================
-
+            // CAFFIORA Header
             Row(
               children: [
                 Column(
@@ -238,34 +159,26 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // SEARCH
-            // ==================================================
-
+            // Search Bar
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SearchScreen(),
+                    builder: (_) => const SearchScreen(),
                   ),
                 );
               },
               child: Container(
                 height: 52,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: const Row(
                   children: [
-                    Icon(
-                      Icons.search,
-                      color: AppTheme.grey,
-                    ),
+                    Icon(Icons.search, color: AppTheme.grey),
                     SizedBox(width: 12),
                     Text(
                       'Search coffee...',
@@ -281,10 +194,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // SIGNATURE BLEND
-            // ==================================================
-
+            // Signature Blend Banner
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(22),
@@ -331,7 +241,7 @@ class HomeContent extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ProductDetails(
+                                builder: (_) => const ProductDetails(
                                   productName: 'Velvet Espresso',
                                   price: 279,
                                 ),
@@ -341,25 +251,16 @@ class HomeContent extends StatelessWidget {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.cream,
                             foregroundColor: AppTheme.coffeeDark,
-                            minimumSize: const Size(
-                              130,
-                              42,
-                            ),
+                            minimumSize: const Size(130, 42),
                           ),
-                          child: const Text(
-                            'Explore Coffee',
-                          ),
+                          child: const Text('Explore Coffee'),
                         ),
                       ],
                     ),
                   ),
-
                   const SizedBox(width: 10),
 
-                  // ==================================================
-                  // SIGNATURE IMAGE
-                  // ==================================================
-
+                  // Signature Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(18),
                     child: Image.asset(
@@ -367,11 +268,7 @@ class HomeContent extends StatelessWidget {
                       height: 135,
                       width: 105,
                       fit: BoxFit.cover,
-                      errorBuilder: (
-                        context,
-                        error,
-                        stackTrace,
-                      ) {
+                      errorBuilder: (context, error, stackTrace) {
                         return Container(
                           height: 135,
                           width: 105,
@@ -391,10 +288,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // ==================================================
-            // CATEGORIES
-            // ==================================================
-
+            // Explore Categories
             const Text(
               'Explore Categories',
               style: TextStyle(
@@ -418,7 +312,7 @@ class HomeContent extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MenuScreen(
+                          builder: (_) => const MenuScreen(
                             initialCategory: 'Espresso Bar',
                           ),
                         ),
@@ -432,7 +326,7 @@ class HomeContent extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MenuScreen(
+                          builder: (_) => const MenuScreen(
                             initialCategory: 'Bakery',
                           ),
                         ),
@@ -446,7 +340,7 @@ class HomeContent extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const MenuScreen(
+                          builder: (_) => const MenuScreen(
                             initialCategory: 'Cold Brew',
                           ),
                         ),
@@ -459,10 +353,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // TODAY'S SELECTION
-            // ==================================================
-
+            // Today's Selection
             Row(
               children: [
                 const Text(
@@ -479,7 +370,7 @@ class HomeContent extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const MenuScreen(),
+                        builder: (_) => const MenuScreen(),
                       ),
                     );
                   },
@@ -495,10 +386,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // ==================================================
-            // ROW 1
-            // ==================================================
-
+            // Product Row 1
             Row(
               children: [
                 Expanded(
@@ -521,10 +409,7 @@ class HomeContent extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // ==================================================
-            // ROW 2
-            // ==================================================
-
+            // Product Row 2
             Row(
               children: [
                 Expanded(
@@ -589,11 +474,7 @@ class CategoryItem extends StatelessWidget {
                 height: 65,
                 width: 100,
                 fit: BoxFit.cover,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
+                errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: 65,
                     width: 100,
@@ -646,7 +527,7 @@ class CoffeeCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ProductDetails(
+            builder: (_) => ProductDetails(
               productName: name,
               price: price,
             ),
@@ -662,10 +543,7 @@ class CoffeeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==================================================
-            // PRODUCT IMAGE
-            // ==================================================
-
+            // Product Image
             ClipRRect(
               borderRadius: BorderRadius.circular(14),
               child: Image.asset(
@@ -673,11 +551,7 @@ class CoffeeCard extends StatelessWidget {
                 height: 125,
                 width: double.infinity,
                 fit: BoxFit.cover,
-                errorBuilder: (
-                  context,
-                  error,
-                  stackTrace,
-                ) {
+                errorBuilder: (context, error, stackTrace) {
                   return Container(
                     height: 125,
                     width: double.infinity,
@@ -694,10 +568,7 @@ class CoffeeCard extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // ==================================================
-            // PRODUCT NAME
-            // ==================================================
-
+            // Product Name
             Text(
               name,
               maxLines: 1,
@@ -711,10 +582,7 @@ class CoffeeCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // ==================================================
-            // PRICE
-            // ==================================================
-
+            // Product Price
             Text(
               '₹${price.toInt()}',
               style: const TextStyle(

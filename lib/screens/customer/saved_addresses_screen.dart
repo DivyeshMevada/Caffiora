@@ -59,12 +59,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
           ),
           child: Container(
-            padding: const EdgeInsets.fromLTRB(
-              20,
-              15,
-              20,
-              25,
-            ),
+            padding: const EdgeInsets.fromLTRB(20, 15, 20, 25),
             decoration: const BoxDecoration(
               color: AppTheme.cream,
               borderRadius: BorderRadius.vertical(
@@ -77,6 +72,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // DRAG HANDLE
                     Center(
                       child: Container(
                         width: 45,
@@ -87,7 +83,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 20),
+
+                    // TITLE
                     Text(
                       index == null ? 'Add New Address' : 'Edit Address',
                       style: const TextStyle(
@@ -96,7 +95,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         color: AppTheme.coffeeDark,
                       ),
                     ),
+
                     const SizedBox(height: 20),
+
+                    // ADDRESS TITLE
                     _field(
                       controller: titleController,
                       label: 'Address Title',
@@ -109,7 +111,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 12),
+
+                    // FULL NAME
                     _field(
                       controller: nameController,
                       label: 'Full Name',
@@ -122,7 +127,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 12),
+
+                    // ADDRESS
                     _field(
                       controller: addressController,
                       label: 'Address',
@@ -136,7 +144,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 12),
+
+                    // CITY / STATE / PINCODE
                     _field(
                       controller: cityController,
                       label: 'City / State / Pincode',
@@ -149,7 +160,10 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 12),
+
+                    // PHONE NUMBER
                     _field(
                       controller: phoneController,
                       label: 'Phone Number',
@@ -158,15 +172,16 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                       keyboardType: TextInputType.phone,
                       validator: (value) {
                         if (value == null ||
-                            !RegExp(
-                              r'^[0-9]{10}$',
-                            ).hasMatch(value.trim())) {
+                            !RegExp(r'^[0-9]{10}$').hasMatch(value.trim())) {
                           return 'Enter valid 10 digit number';
                         }
                         return null;
                       },
                     ),
+
                     const SizedBox(height: 20),
+
+                    // SAVE / UPDATE BUTTON
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -317,6 +332,8 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
           ),
         ),
       ),
+
+      // ADD ADDRESS BUTTON
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.coffeeDark,
         foregroundColor: Colors.white,
@@ -325,6 +342,8 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
         },
         child: const Icon(Icons.add),
       ),
+
+      // ADDRESS LIST / EMPTY STATE
       body: addresses.isEmpty
           ? _emptyState()
           : ListView.builder(
@@ -333,10 +352,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
               itemBuilder: (context, index) {
                 final address = addresses[index];
 
-                return _addressCard(
-                  address,
-                  index,
-                );
+                return _addressCard(address, index);
               },
             ),
     );

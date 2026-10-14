@@ -20,10 +20,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String selectedDelivery = 'Standard Delivery';
   String selectedPayment = 'Cash On Delivery';
 
-  // ==========================================================
-  // SAVED ADDRESSES
-  // ==========================================================
-
   List<Map<String, String>> addresses = [
     {
       'name': 'Raj Patel',
@@ -41,73 +37,60 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   int selectedAddressIndex = 0;
 
-  // ==========================================================
-  // DELIVERY FEE
-  // ==========================================================
-
   double get deliveryFee {
     if (selectedDelivery == 'Express Delivery') {
       return 80;
     }
-
     return 60;
   }
 
-  double get subtotal {
-    return widget.subtotalAmount;
-  }
+  double get subtotal => widget.subtotalAmount;
 
-  // ==========================================================
-  // DISCOUNT
-  // ==========================================================
+  double get discount => 80;
 
-  double get discount {
-    return 80;
-  }
+  double get total => subtotal + deliveryFee - discount;
 
-  // ==========================================================
-  // TOTAL
-  // ==========================================================
-
-  double get total {
-    return subtotal + deliveryFee - discount;
-  }
-
-  // ==========================================================
-  // CURRENT ADDRESS
-  // ==========================================================
-
-  Map<String, String> get currentAddress {
-    return addresses[selectedAddressIndex];
-  }
-
-  // ==========================================================
-  // BUILD
-  // ==========================================================
+  Map<String, String> get currentAddress => addresses[selectedAddressIndex];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Checkout',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
+      backgroundColor: AppTheme.cream,
+
+      // MAIN WIDGET TREE
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // HEADER
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: AppTheme.coffeeDark,
+                    ),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const Expanded(
+                    child: Text(
+                      'Checkout',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.coffeeDark,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
               const Text(
                 'Almost there!',
                 style: TextStyle(
@@ -129,10 +112,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 28),
 
-              // ==================================================
               // DELIVERY ADDRESS
-              // ==================================================
-
               const Text(
                 'Delivery Address',
                 style: TextStyle(
@@ -144,6 +124,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 14),
 
+              // ADDRESS CARD
               _addressCard(
                 title: currentAddress['name']!,
                 address: currentAddress['address']!,
@@ -153,10 +134,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 16),
 
-              // ==================================================
               // ADDRESS TYPE BUTTONS
-              // ==================================================
-
               Row(
                 children: [
                   Expanded(
@@ -185,24 +163,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 12),
 
-              // ==================================================
-              // ADD NEW ADDRESS
-              // ==================================================
-
+              // ADD ADDRESS BUTTON
               OutlinedButton.icon(
-                onPressed: () {
-                  _showAddAddressDialog();
-                },
+                onPressed: _showAddAddressDialog,
                 icon: const Icon(Icons.add),
-                label: const Text(
-                  'Add New Address',
-                ),
+                label: const Text('Add New Address'),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppTheme.coffeeDark,
-                  minimumSize: const Size(
-                    double.infinity,
-                    48,
-                  ),
+                  minimumSize: const Size(double.infinity, 48),
                   side: const BorderSide(
                     color: AppTheme.coffeeLight,
                   ),
@@ -214,10 +182,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
               // DELIVERY OPTIONS
-              // ==================================================
-
               const Text(
                 'Delivery Options',
                 style: TextStyle(
@@ -247,10 +212,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
               // PAYMENT METHODS
-              // ==================================================
-
               const Text(
                 'Payment Methods',
                 style: TextStyle(
@@ -270,10 +232,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 30),
 
-              // ==================================================
               // ORDER SUMMARY
-              // ==================================================
-
               const Text(
                 'Order Summary',
                 style: TextStyle(
@@ -292,9 +251,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   borderRadius: BorderRadius.circular(18),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(
-                        alpha: 0.05,
-                      ),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 12,
                       offset: const Offset(0, 5),
                     ),
@@ -331,10 +288,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 25),
 
-              // ==================================================
-              // PLACE ORDER
-              // ==================================================
-
+              // PLACE ORDER BUTTON
               SizedBox(
                 width: double.infinity,
                 height: 54,
@@ -359,10 +313,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               const SizedBox(height: 20),
 
-              // ==================================================
               // TRUST INFORMATION
-              // ==================================================
-
               Row(
                 children: [
                   Expanded(
@@ -397,10 +348,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // ADDRESS CARD
-  // ==========================================================
-
   Widget _addressCard({
     required String title,
     required String address,
@@ -414,9 +362,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: AppTheme.coffeeLight.withValues(
-            alpha: 0.4,
-          ),
+          color: AppTheme.coffeeLight.withValues(alpha: 0.4),
         ),
       ),
       child: Column(
@@ -462,9 +408,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  _showChangeAddressDialog();
-                },
+                onPressed: _showChangeAddressDialog,
                 child: const Text('Change'),
               ),
             ],
@@ -502,10 +446,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // ADDRESS TYPE BUTTON
-  // ==========================================================
-
   Widget _addressTypeButton({
     required String title,
     required IconData icon,
@@ -549,10 +490,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // SELECT ADDRESS BY TYPE
-  // ==========================================================
-
   void _selectAddressByType(String type) {
     final int index = addresses.indexWhere(
       (address) => address['type'] == type,
@@ -575,10 +513,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
-  // ==========================================================
   // DELIVERY OPTION
-  // ==========================================================
-
   Widget _deliveryOption({
     required String title,
     required String subtitle,
@@ -610,10 +545,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               value: value,
               groupValue: selectedDelivery,
               activeColor: AppTheme.coffee,
-              onChanged: (value) {
-                if (value != null) {
+              onChanged: (newValue) {
+                if (newValue != null) {
                   setState(() {
-                    selectedDelivery = value;
+                    selectedDelivery = newValue;
                   });
                 }
               },
@@ -654,10 +589,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // PAYMENT OPTION
-  // ==========================================================
-
   Widget _paymentOption({
     required String title,
     required IconData icon,
@@ -709,10 +641,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               value: value,
               groupValue: selectedPayment,
               activeColor: AppTheme.coffee,
-              onChanged: (value) {
-                if (value != null) {
+              onChanged: (newValue) {
+                if (newValue != null) {
                   setState(() {
-                    selectedPayment = value;
+                    selectedPayment = newValue;
                   });
                 }
               },
@@ -723,10 +655,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // SUMMARY ROW
-  // ==========================================================
-
   Widget _summaryRow(
     String title,
     String value, {
@@ -756,19 +685,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // TRUST ITEM
-  // ==========================================================
-
   Widget _trustItem({
     required IconData icon,
     required String title,
     required String subtitle,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: Column(
         children: [
           Icon(
@@ -800,10 +724,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // ADD NEW ADDRESS DIALOG
-  // ==========================================================
-
   void _showAddAddressDialog() {
     final TextEditingController nameController = TextEditingController();
 
@@ -920,7 +841,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
-
                       return;
                     }
 
@@ -933,9 +853,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                     setState(() {
                       addresses.add(newAddress);
-
                       selectedAddressIndex = addresses.length - 1;
-
                       selectedAddressType = newAddressType;
                     });
 
@@ -960,10 +878,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // DIALOG ADDRESS TYPE
-  // ==========================================================
-
   Widget _dialogAddressType({
     required String title,
     required IconData icon,
@@ -974,9 +889,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: 12,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: selected ? AppTheme.coffeeDark : AppTheme.cream,
           borderRadius: BorderRadius.circular(12),
@@ -1006,10 +919,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  // ==========================================================
   // CHANGE ADDRESS DIALOG
-  // ==========================================================
-
   void _showChangeAddressDialog() {
     showDialog(
       context: context,
@@ -1029,13 +939,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               itemCount: addresses.length,
               itemBuilder: (context, index) {
                 final address = addresses[index];
-
                 final bool selected = selectedAddressIndex == index;
 
                 return Container(
-                  margin: const EdgeInsets.only(
-                    bottom: 10,
-                  ),
+                  margin: const EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
                     color: selected ? AppTheme.cream : Colors.white,
                     borderRadius: BorderRadius.circular(14),
@@ -1048,10 +955,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     onTap: () {
                       setState(() {
                         selectedAddressIndex = index;
-
                         selectedAddressType = address['type']!;
                       });
-
                       Navigator.pop(dialogContext);
                     },
                     leading: Container(
@@ -1084,7 +989,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.coffeeLight.withValues(alpha: 0.12),
+                            color: AppTheme.coffeeLight.withValues(
+                              alpha: 0.12,
+                            ),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -1101,8 +1008,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
-                        '${address['address']}\n'
-                        '${address['phone']}',
+                        '${address['address']}\n${address['phone']}',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppTheme.grey,

@@ -20,10 +20,7 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   String selectedCategory = 'All';
 
-  // ==========================================================
   // PRODUCTS
-  // ==========================================================
-
   final List<Map<String, dynamic>> products = [
     {
       'name': 'Italian Roast',
@@ -75,21 +72,13 @@ class _MenuScreenState extends State<MenuScreen> {
     },
   ];
 
-  // ==========================================================
-  // INIT
-  // ==========================================================
-
   @override
   void initState() {
     super.initState();
-
     selectedCategory = widget.initialCategory;
   }
 
-  // ==========================================================
   // FILTER PRODUCTS
-  // ==========================================================
-
   List<Map<String, dynamic>> get filteredProducts {
     if (selectedCategory == 'All') {
       return products;
@@ -102,23 +91,15 @@ class _MenuScreenState extends State<MenuScreen> {
         .toList();
   }
 
-  // ==========================================================
   // CHANGE CATEGORY
-  // ==========================================================
-
   void changeCategory(String category) {
     setState(() {
       selectedCategory = category;
     });
   }
 
-  // ==========================================================
   // OPEN PRODUCT DETAILS
-  // ==========================================================
-
-  void openProductDetails(
-    Map<String, dynamic> product,
-  ) {
+  void openProductDetails(Map<String, dynamic> product) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -130,56 +111,30 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // ==========================================================
   // ADD TO CART
-  // ==========================================================
-
-  void addToCart(
-    Map<String, dynamic> product,
-  ) {
-    // Add product
+  void addToCart(Map<String, dynamic> product) {
     CartState.instance.addItem(
       name: product['name'],
       price: product['price'],
     );
 
-    // Remove old snackbar
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-    // ========================================================
-    // SAME SNACKBAR AS PRODUCT DETAILS
-    // ========================================================
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 3),
-
         behavior: SnackBarBehavior.floating,
-
         backgroundColor: AppTheme.coffeeDark,
-
-        margin: const EdgeInsets.fromLTRB(
-          8,
-          0,
-          8,
-          12,
-        ),
-
+        margin: const EdgeInsets.fromLTRB(8, 0, 8, 12),
         padding: const EdgeInsets.symmetric(
           horizontal: 14,
           vertical: 12,
         ),
-
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(14),
         ),
-
         content: Row(
           children: [
-            // ==================================================
-            // CHECK CIRCLE
-            // ==================================================
-
             Container(
               width: 28,
               height: 28,
@@ -193,13 +148,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 size: 20,
               ),
             ),
-
             const SizedBox(width: 12),
-
-            // ==================================================
-            // MESSAGE
-            // ==================================================
-
             Expanded(
               child: Text(
                 '${product['name']} added to cart',
@@ -212,11 +161,6 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
           ],
         ),
-
-        // ======================================================
-        // VIEW CART
-        // ======================================================
-
         action: SnackBarAction(
           label: 'VIEW CART',
           textColor: Colors.white,
@@ -233,114 +177,98 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // ==========================================================
   // BUILD
-  // ==========================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.cream,
 
-      // ======================================================
-      // APP BAR
-      // ======================================================
-
-      appBar: AppBar(
-        backgroundColor: AppTheme.cream,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Menu',
-          style: TextStyle(
-            fontSize: 27,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.coffeeDark,
-          ),
-        ),
-      ),
-
-      // ======================================================
       // BODY
-      // ======================================================
-
-      body: Column(
-        children: [
-          // ==================================================
-          // CATEGORY FILTER
-          // ==================================================
-
-          SizedBox(
-            height: 60,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // MENU TITLE
+            Container(
+              width: double.infinity,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  fontSize: 27,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.coffeeDark,
+                ),
               ),
-              children: [
-                _category(
-                  'All',
-                  selectedCategory == 'All',
-                ),
-                _category(
-                  'Espresso Bar',
-                  selectedCategory == 'Espresso Bar',
-                ),
-                _category(
-                  'Bakery',
-                  selectedCategory == 'Bakery',
-                ),
-                _category(
-                  'Cold Brew',
-                  selectedCategory == 'Cold Brew',
-                ),
-              ],
             ),
-          ),
 
-          const SizedBox(height: 12),
-
-          // ==================================================
-          // PRODUCT GRID
-          // ==================================================
-
-          Expanded(
-            child: filteredProducts.isEmpty
-                ? _emptyFilterResult()
-                : GridView.builder(
-                    padding: const EdgeInsets.fromLTRB(
-                      16,
-                      0,
-                      16,
-                      20,
-                    ),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 14,
-                      mainAxisSpacing: 14,
-                      childAspectRatio: 0.68,
-                    ),
-                    itemCount: filteredProducts.length,
-                    itemBuilder: (context, index) {
-                      final product = filteredProducts[index];
-
-                      return _productCard(
-                        context,
-                        product,
-                      );
-                    },
+            // CATEGORY CHIPS
+            SizedBox(
+              height: 60,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                ),
+                children: [
+                  _category(
+                    'All',
+                    selectedCategory == 'All',
                   ),
-          ),
-        ],
+                  _category(
+                    'Espresso Bar',
+                    selectedCategory == 'Espresso Bar',
+                  ),
+                  _category(
+                    'Bakery',
+                    selectedCategory == 'Bakery',
+                  ),
+                  _category(
+                    'Cold Brew',
+                    selectedCategory == 'Cold Brew',
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 12),
+
+            // PRODUCT GRID
+            Expanded(
+              child: filteredProducts.isEmpty
+                  ? _emptyFilterResult()
+                  : GridView.builder(
+                      padding: const EdgeInsets.fromLTRB(
+                        16,
+                        0,
+                        16,
+                        20,
+                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 14,
+                        mainAxisSpacing: 14,
+                        childAspectRatio: 0.68,
+                      ),
+                      itemCount: filteredProducts.length,
+                      itemBuilder: (context, index) {
+                        final product = filteredProducts[index];
+
+                        return _productCard(
+                          context,
+                          product,
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // ==========================================================
   // PRODUCT CARD
-  // ==========================================================
-
   Widget _productCard(
     BuildContext context,
     Map<String, dynamic> product,
@@ -352,24 +280,16 @@ class _MenuScreenState extends State<MenuScreen> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(
-              alpha: 0.045,
-            ),
+            color: Colors.black.withValues(alpha: 0.045),
             blurRadius: 12,
-            offset: const Offset(
-              0,
-              4,
-            ),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ==================================================
           // PRODUCT IMAGE
-          // ==================================================
-
           Expanded(
             child: GestureDetector(
               onTap: () {
@@ -399,10 +319,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
           const SizedBox(height: 10),
 
-          // ==================================================
           // PRODUCT NAME
-          // ==================================================
-
           GestureDetector(
             onTap: () {
               openProductDetails(product);
@@ -421,12 +338,9 @@ class _MenuScreenState extends State<MenuScreen> {
 
           const SizedBox(height: 7),
 
-          // ==================================================
           // PRICE
-          // ==================================================
-
           Text(
-            '₹${product['price'].toInt()}',
+            '₹${(product['price'] as num).toInt()}',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 15,
@@ -436,10 +350,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
           const SizedBox(height: 9),
 
-          // ==================================================
           // ADD TO CART BUTTON
-          // ==================================================
-
           SizedBox(
             width: double.infinity,
             height: 40,
@@ -482,25 +393,15 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // ==========================================================
   // CATEGORY BUTTON
-  // ==========================================================
-
-  Widget _category(
-    String title,
-    bool selected,
-  ) {
+  Widget _category(String title, bool selected) {
     return GestureDetector(
       onTap: () {
         changeCategory(title);
       },
       child: Container(
-        margin: const EdgeInsets.only(
-          right: 10,
-        ),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 22,
-        ),
+        margin: const EdgeInsets.only(right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 22),
         decoration: BoxDecoration(
           color: selected ? AppTheme.coffeeDark : Colors.white,
           borderRadius: BorderRadius.circular(28),
@@ -519,10 +420,7 @@ class _MenuScreenState extends State<MenuScreen> {
     );
   }
 
-  // ==========================================================
   // EMPTY FILTER RESULT
-  // ==========================================================
-
   Widget _emptyFilterResult() {
     return Center(
       child: Column(
@@ -544,8 +442,7 @@ class _MenuScreenState extends State<MenuScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'No items available in '
-            '$selectedCategory',
+            'No items available in $selectedCategory',
             style: const TextStyle(
               color: AppTheme.grey,
             ),
@@ -558,9 +455,7 @@ class _MenuScreenState extends State<MenuScreen> {
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(150, 45),
             ),
-            child: const Text(
-              'View All Products',
-            ),
+            child: const Text('View All Products'),
           ),
         ],
       ),
