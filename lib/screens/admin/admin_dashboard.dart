@@ -86,11 +86,17 @@ class DashboardContent extends StatelessWidget {
           children: [
             Text(
               'CAFFIORA',
-              style: TextStyle(fontWeight: FontWeight.bold, letterSpacing: 1.5),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.5,
+              ),
             ),
             Text(
               'Admin Dashboard',
-              style: TextStyle(fontSize: 12, color: AppTheme.grey),
+              style: TextStyle(
+                fontSize: 12,
+                color: AppTheme.grey,
+              ),
             ),
           ],
         ),
@@ -106,11 +112,9 @@ class DashboardContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --------------------------------------------------
             // WELCOME
-            // --------------------------------------------------
             const Text(
-              'Good Morning, Admin',
+              'Good Morning, om',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.bold,
@@ -121,22 +125,23 @@ class DashboardContent extends StatelessWidget {
             const SizedBox(height: 5),
 
             const Text(
-              'Here is today\'s cafe overview.',
-              style: TextStyle(color: AppTheme.grey, fontSize: 14),
+              "Here is today's cafe overview.",
+              style: TextStyle(
+                color: AppTheme.grey,
+                fontSize: 14,
+              ),
             ),
 
             const SizedBox(height: 22),
 
-            // --------------------------------------------------
             // STATISTICS
-            // --------------------------------------------------
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 1.35,
+              childAspectRatio: 1.15,
               children: [
                 _statCard(
                   title: 'Sales',
@@ -167,9 +172,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 28),
 
-            // --------------------------------------------------
             // QUICK ACTIONS
-            // --------------------------------------------------
             const Text(
               'Quick Actions',
               style: TextStyle(
@@ -188,8 +191,14 @@ class DashboardContent extends StatelessWidget {
                     icon: Icons.add_box_outlined,
                     title: 'Add Product',
                     onTap: () {
+                      // Open Manage page.
+                      Navigator.of(context).maybePop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Add Product selected')),
+                        const SnackBar(
+                          content: Text(
+                            'Select Manage to add a product.',
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -201,7 +210,11 @@ class DashboardContent extends StatelessWidget {
                     title: 'View Orders',
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('View Orders selected')),
+                        const SnackBar(
+                          content: Text(
+                            'Open the Orders tab to view orders.',
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -211,9 +224,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 28),
 
-            // --------------------------------------------------
             // TOP PRODUCTS
-            // --------------------------------------------------
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -225,7 +236,16 @@ class DashboardContent extends StatelessWidget {
                     color: AppTheme.coffeeDark,
                   ),
                 ),
-                TextButton(onPressed: () {}, child: const Text('View All')),
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Open Manage to see all products.'),
+                      ),
+                    );
+                  },
+                  child: const Text('View All'),
+                ),
               ],
             ),
 
@@ -236,6 +256,7 @@ class DashboardContent extends StatelessWidget {
               name: 'Velvet Espresso',
               sold: '248 sold',
               price: '₹279',
+              imagePath: 'assets/images/velvet_espresso.jpg',
               icon: Icons.local_cafe_outlined,
             ),
 
@@ -244,6 +265,7 @@ class DashboardContent extends StatelessWidget {
               name: 'Italian Roast',
               sold: '216 sold',
               price: '₹249',
+              imagePath: 'assets/images/italian_roast.jpg',
               icon: Icons.coffee_outlined,
             ),
 
@@ -252,6 +274,7 @@ class DashboardContent extends StatelessWidget {
               name: 'Caramel Macchiato',
               sold: '189 sold',
               price: '₹319',
+              imagePath: 'assets/images/caramel_macchiato.jpg',
               icon: Icons.local_drink_outlined,
             ),
 
@@ -260,14 +283,13 @@ class DashboardContent extends StatelessWidget {
               name: 'Iced Latte',
               sold: '164 sold',
               price: '₹249',
+              imagePath: 'assets/images/iced_latte.jpg',
               icon: Icons.icecream_outlined,
             ),
 
             const SizedBox(height: 28),
 
-            // --------------------------------------------------
             // RECENT ORDERS
-            // --------------------------------------------------
             const Text(
               'Recent Orders',
               style: TextStyle(
@@ -311,7 +333,7 @@ class DashboardContent extends StatelessWidget {
   }
 
   // ==========================================================
-  // STAT CARD
+  // STATISTICS CARD
   // ==========================================================
 
   Widget _statCard({
@@ -321,7 +343,7 @@ class DashboardContent extends StatelessWidget {
     required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
@@ -334,6 +356,7 @@ class DashboardContent extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -344,35 +367,49 @@ class DashboardContent extends StatelessWidget {
                   color: AppTheme.cream,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, size: 20, color: AppTheme.coffee),
+                child: Icon(
+                  icon,
+                  size: 20,
+                  color: AppTheme.coffee,
+                ),
               ),
               const Spacer(),
-              Text(
-                change,
-                style: const TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    change,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-
-          const Spacer(),
-
+          const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(fontSize: 12, color: AppTheme.grey),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.coffeeDark,
+              fontSize: 12,
+              color: AppTheme.grey,
+            ),
+          ),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
             ),
           ),
         ],
@@ -393,11 +430,16 @@ class DashboardContent extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        padding: const EdgeInsets.symmetric(
+          vertical: 18,
+          horizontal: 12,
+        ),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(
+            color: Colors.grey.shade200,
+          ),
         ),
         child: Row(
           children: [
@@ -407,14 +449,18 @@ class DashboardContent extends StatelessWidget {
                 color: AppTheme.cream,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: AppTheme.coffee, size: 22),
+              child: Icon(
+                icon,
+                color: AppTheme.coffee,
+                size: 22,
+              ),
             ),
-
             const SizedBox(width: 10),
-
             Expanded(
               child: Text(
                 title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 13,
@@ -429,7 +475,7 @@ class DashboardContent extends StatelessWidget {
   }
 
   // ==========================================================
-  // PRODUCT CARD
+  // PRODUCT CARD WITH IMAGE
   // ==========================================================
 
   Widget _productCard({
@@ -437,6 +483,7 @@ class DashboardContent extends StatelessWidget {
     required String name,
     required String sold,
     required String price,
+    required String imagePath,
     required IconData icon,
   }) {
     return Container(
@@ -448,18 +495,32 @@ class DashboardContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Container(
-            height: 48,
-            width: 48,
-            decoration: BoxDecoration(
-              color: AppTheme.cream,
-              borderRadius: BorderRadius.circular(13),
+          // Product image
+          ClipRRect(
+            borderRadius: BorderRadius.circular(13),
+            child: SizedBox(
+              height: 58,
+              width: 58,
+              child: Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: AppTheme.cream,
+                    child: Icon(
+                      icon,
+                      color: AppTheme.coffee,
+                      size: 28,
+                    ),
+                  );
+                },
+              ),
             ),
-            child: Icon(icon, color: AppTheme.coffee),
           ),
 
           const SizedBox(width: 12),
 
+          // Product rank
           Container(
             height: 30,
             width: 30,
@@ -481,12 +542,15 @@ class DashboardContent extends StatelessWidget {
 
           const SizedBox(width: 12),
 
+          // Product details
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppTheme.coffeeDark,
@@ -495,12 +559,18 @@ class DashboardContent extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   sold,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.grey),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppTheme.grey,
+                  ),
                 ),
               ],
             ),
           ),
 
+          const SizedBox(width: 8),
+
+          // Product price
           Text(
             price,
             style: const TextStyle(
@@ -554,9 +624,7 @@ class DashboardContent extends StatelessWidget {
               color: AppTheme.coffee,
             ),
           ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -581,12 +649,15 @@ class DashboardContent extends StatelessWidget {
                   items,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 11, color: AppTheme.grey),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.grey,
+                  ),
                 ),
               ],
             ),
           ),
-
+          const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -599,7 +670,10 @@ class DashboardContent extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),

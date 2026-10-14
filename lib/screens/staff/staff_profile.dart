@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_theme.dart';
+import '../../utils/auth_state.dart';
+import '../auth/login_screen.dart';
 
 class StaffProfile extends StatelessWidget {
   const StaffProfile({super.key});
@@ -12,7 +14,9 @@ class StaffProfile extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -20,13 +24,9 @@ class StaffProfile extends StatelessWidget {
         child: Column(
           children: [
             _profileHeader(),
-
             const SizedBox(height: 22),
-
             _shiftCard(),
-
             const SizedBox(height: 22),
-
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -39,13 +39,9 @@ class StaffProfile extends StatelessWidget {
                 ),
               ),
             ),
-
             const SizedBox(height: 10),
-
             _settingsCard(context),
-
             const SizedBox(height: 20),
-
             SizedBox(
               width: double.infinity,
               height: 52,
@@ -53,7 +49,10 @@ class StaffProfile extends StatelessWidget {
                 onPressed: () {
                   _logout(context);
                 },
-                icon: const Icon(Icons.logout, color: Colors.red),
+                icon: const Icon(
+                  Icons.logout,
+                  color: Colors.red,
+                ),
                 label: const Text(
                   'Log Out',
                   style: TextStyle(
@@ -62,25 +61,32 @@ class StaffProfile extends StatelessWidget {
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: Colors.red.shade200),
+                  side: BorderSide(
+                    color: Colors.red.shade200,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
                 ),
               ),
             ),
-
             const SizedBox(height: 18),
-
             const Text(
               'CAFFIORA Staff Panel',
-              style: TextStyle(fontSize: 11, color: AppTheme.grey),
+              style: TextStyle(
+                fontSize: 11,
+                color: AppTheme.grey,
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  // ==========================================================
+  // PROFILE HEADER
+  // ==========================================================
 
   Widget _profileHeader() {
     return Container(
@@ -98,33 +104,40 @@ class StaffProfile extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
-              border: Border.all(color: AppTheme.coffeeLight, width: 3),
+              border: Border.all(
+                color: AppTheme.coffeeLight,
+                width: 3,
+              ),
             ),
-            child: const Icon(Icons.person, size: 44, color: AppTheme.coffee),
+            child: const Icon(
+              Icons.person,
+              size: 44,
+              color: AppTheme.coffee,
+            ),
           ),
-
           const SizedBox(height: 14),
-
           const Text(
-            'Marco Valente',
+            'Dishant Tilara',
             style: TextStyle(
               color: Colors.white,
               fontSize: 22,
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(height: 5),
-
           const Text(
             'Senior Barista',
-            style: TextStyle(color: Colors.white70, fontSize: 13),
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
+            ),
           ),
-
           const SizedBox(height: 17),
-
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 13,
+              vertical: 7,
+            ),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
@@ -144,6 +157,10 @@ class StaffProfile extends StatelessWidget {
     );
   }
 
+  // ==========================================================
+  // EMPLOYEE DETAILS AND SHIFT
+  // ==========================================================
+
   Widget _shiftCard() {
     return Container(
       width: double.infinity,
@@ -161,11 +178,12 @@ class StaffProfile extends StatelessWidget {
               color: AppTheme.cream,
               borderRadius: BorderRadius.circular(13),
             ),
-            child: const Icon(Icons.badge_outlined, color: AppTheme.coffee),
+            child: const Icon(
+              Icons.badge_outlined,
+              color: AppTheme.coffee,
+            ),
           ),
-
           const SizedBox(width: 13),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,14 +209,15 @@ class StaffProfile extends StatelessWidget {
               ],
             ),
           ),
-
-          Container(height: 40, width: 1, color: Colors.grey.shade200),
-
+          Container(
+            height: 40,
+            width: 1,
+            color: Colors.grey.shade200,
+          ),
           const SizedBox(width: 15),
-
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
+            children: [
               Text(
                 'SHIFT TIMING',
                 style: TextStyle(
@@ -223,6 +242,10 @@ class StaffProfile extends StatelessWidget {
       ),
     );
   }
+
+  // ==========================================================
+  // ACCOUNT SETTINGS
+  // ==========================================================
 
   Widget _settingsCard(BuildContext context) {
     return Container(
@@ -261,6 +284,10 @@ class StaffProfile extends StatelessWidget {
     );
   }
 
+  // ==========================================================
+  // SETTING ITEM
+  // ==========================================================
+
   Widget _settingItem(
     BuildContext context,
     IconData icon,
@@ -269,12 +296,17 @@ class StaffProfile extends StatelessWidget {
   ) {
     return InkWell(
       onTap: () {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('$title selected')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('$title selected'),
+          ),
+        );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 14,
+        ),
         child: Row(
           children: [
             Container(
@@ -284,11 +316,13 @@ class StaffProfile extends StatelessWidget {
                 color: AppTheme.cream,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppTheme.coffee, size: 21),
+              child: Icon(
+                icon,
+                color: AppTheme.coffee,
+                size: 21,
+              ),
             ),
-
             const SizedBox(width: 12),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,21 +338,30 @@ class StaffProfile extends StatelessWidget {
                   const SizedBox(height: 3),
                   Text(
                     subtitle,
-                    style: const TextStyle(fontSize: 10, color: AppTheme.grey),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppTheme.grey,
+                    ),
                   ),
                 ],
               ),
             ),
-
-            const Icon(Icons.chevron_right, color: AppTheme.grey),
+            const Icon(
+              Icons.chevron_right,
+              color: AppTheme.grey,
+            ),
           ],
         ),
       ),
     );
   }
 
+  // ==========================================================
+  // LOGOUT
+  // ==========================================================
+
   void _logout(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
@@ -326,20 +369,41 @@ class StaffProfile extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           title: const Text('Log Out'),
-          content: const Text('Are you sure you want to log out?'),
+          content: const Text(
+            'Are you sure you want to log out?',
+          ),
           actions: [
+            // CANCEL
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogContext);
               },
               child: const Text('Cancel'),
             ),
+
+            // CONFIRM LOGOUT
             ElevatedButton(
-              onPressed: () {
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () async {
+                // Close the confirmation dialog.
                 Navigator.pop(dialogContext);
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Logged out successfully')),
+                // Clear saved login information.
+                await AuthState.instance.logout();
+
+                if (!context.mounted) return;
+
+                // Navigate to LoginScreen and remove
+                // the previous navigation history.
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LoginScreen(),
+                  ),
+                  (route) => false,
                 );
               },
               child: const Text('Log Out'),

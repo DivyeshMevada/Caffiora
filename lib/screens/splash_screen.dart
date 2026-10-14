@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
 import '../utils/auth_state.dart';
-import '../utils/cart_state.dart';
+import 'onboarding_screen.dart';
 import 'customer/home_screen.dart';
-// import 'onboarding_screen.dart';
+import 'admin/admin_dashboard.dart';
+import 'staff/staff_dashboard.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({
-    super.key,
-  });
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -20,66 +19,52 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    checkApp();
+    checkLogin();
   }
 
-  // ==========================================================
-  // CHECK APP SESSION + RESTORE CART
-  // ==========================================================
-
-  Future<void> checkApp() async {
-    // Small splash delay
-    await Future.delayed(
-      const Duration(
-        seconds: 2,
-      ),
-    );
-
-    // ========================================================
-    // RESTORE LOGIN SESSION
-    // ========================================================
+  Future<void> checkLogin() async {
+    await Future.delayed(const Duration(seconds: 2));
 
     final bool loggedIn = await AuthState.instance.restoreSession();
 
-    // ========================================================
-    // RESTORE CART
-    // ========================================================
+    if (!mounted) return;
 
-    await CartState.instance.restoreCart();
-
-    // ========================================================
-    // CHECK SCREEN
-    // ========================================================
-
-    if (!mounted) {
+    if (!loggedIn) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+      );
       return;
     }
 
-    if (loggedIn) {
-      // User already logged in
-      // Open Home Screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ),
-      );
-    } else {
-      // User not logged in
-      // Open Onboarding
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const LoginScreen(),
-        ),
-      );
-    }
-  }
+    final String role = AuthState.instance.role.toLowerCase();
 
-  // ==========================================================
-  // UI
-  // ==========================================================
+    Widget destination;
+
+    switch (role) {
+      case 'admin':
+        destination = const AdminDashboard();
+        break;
+
+      case 'staff':
+        destination = const StaffDashboard();
+        break;
+
+      case 'customer':
+      default:
+        destination = const HomeScreen();
+        break;
+    }
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => destination,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +74,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // ==================================================
-            // LOGO
-            // ==================================================
-
             Container(
               height: 115,
               width: 115,
@@ -106,15 +87,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 color: AppTheme.coffeeDark,
               ),
             ),
-
-            const SizedBox(
-              height: 25,
-            ),
-
-            // ==================================================
-            // APP NAME
-            // ==================================================
-
+            const SizedBox(height: 25),
             const Text(
               'CAFFIORA',
               style: TextStyle(
@@ -124,15 +97,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 letterSpacing: 4,
               ),
             ),
-
-            const SizedBox(
-              height: 8,
-            ),
-
-            // ==================================================
-            // TAGLINE
-            // ==================================================
-
+            const SizedBox(height: 8),
             const Text(
               'Brewed Fresh. Served with Elegance.',
               textAlign: TextAlign.center,
@@ -141,15 +106,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontSize: 13,
               ),
             ),
-
-            const SizedBox(
-              height: 35,
-            ),
-
-            // ==================================================
-            // LOADING
-            // ==================================================
-
+            const SizedBox(height: 35),
             const SizedBox(
               height: 25,
               width: 25,

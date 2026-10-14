@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../theme/app_theme.dart';
 
 class AdminReports extends StatefulWidget {
@@ -12,573 +11,475 @@ class AdminReports extends StatefulWidget {
 class _AdminReportsState extends State<AdminReports> {
   String selectedPeriod = 'Monthly';
 
-  final List<String> periods = ['Today', 'Weekly', 'Monthly'];
-
   final List<Map<String, dynamic>> topProducts = [
     {
       'name': 'Italian Roast',
       'sales': 248,
       'revenue': 61752,
+      'image': 'assets/images/italian_roast.jpg',
       'icon': Icons.coffee,
     },
     {
       'name': 'Caramel Macchiato',
       'sales': 196,
       'revenue': 62524,
+      'image': 'assets/images/caramel_macchiato.jpg',
       'icon': Icons.local_cafe,
     },
     {
       'name': 'Velvet Espresso',
       'sales': 182,
       'revenue': 50778,
+      'image': 'assets/images/velvet_espresso.jpg',
       'icon': Icons.coffee_outlined,
     },
     {
       'name': 'Iced Latte',
       'sales': 165,
       'revenue': 41085,
+      'image': 'assets/images/iced_latte.jpg',
       'icon': Icons.emoji_food_beverage,
     },
     {
       'name': 'Cold Brew',
       'sales': 142,
       'revenue': 35358,
+      'image': 'assets/images/cold_brew.jpg',
       'icon': Icons.local_drink,
     },
   ];
 
+  // Report values for each selected period
+  Map<String, dynamic> get reportData {
+    switch (selectedPeriod) {
+      case 'Today':
+        return {
+          'revenue': '₹12,450',
+          'orders': '42',
+          'average': '₹296',
+          'growth': '+8.5%',
+        };
+      case 'Weekly':
+        return {
+          'revenue': '₹78,650',
+          'orders': '286',
+          'average': '₹275',
+          'growth': '+12.4%',
+        };
+      default:
+        return {
+          'revenue': '₹2,45,680',
+          'orders': '892',
+          'average': '₹276',
+          'growth': '+18.2%',
+        };
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final data = reportData;
+
     return Scaffold(
       backgroundColor: AppTheme.cream,
       appBar: AppBar(
         title: const Text(
-          'Reports',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        actions: [
-          IconButton(
-            onPressed: _showExportMessage,
-            icon: const Icon(Icons.download_outlined),
+          'Reports & Analytics',
+          style: TextStyle(
+            color: AppTheme.coffeeDark,
+            fontWeight: FontWeight.bold,
           ),
-        ],
+        ),
+        backgroundColor: AppTheme.cream,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppTheme.coffeeDark),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(18, 8, 18, 30),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildPeriodSelector(),
+            // Period selector
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Row(
+                children: ['Today', 'Weekly', 'Monthly'].map((period) {
+                  final isSelected = selectedPeriod == period;
+
+                  return Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedPeriod = period;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color:
+                              isSelected ? AppTheme.coffee : Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          period,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color:
+                                isSelected ? Colors.white : AppTheme.coffeeDark,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
 
             const SizedBox(height: 20),
 
-            _buildRevenueHeader(),
-
-            const SizedBox(height: 18),
-
-            _buildRevenueCards(),
+            // Revenue summary
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [
+                    AppTheme.coffeeDark,
+                    AppTheme.coffee,
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'TOTAL REVENUE',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      letterSpacing: 1.5,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    data['revenue'],
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.trending_up,
+                        color: Colors.greenAccent,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${data['growth']} compared to previous period',
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 22),
 
-            _buildSectionTitle('Sales Overview', 'Revenue performance'),
-
-            const SizedBox(height: 12),
-
-            _buildSalesChart(),
+            // Revenue statistic cards
+            Row(
+              children: [
+                Expanded(
+                  child: _statCard(
+                    title: 'Orders',
+                    value: data['orders'],
+                    icon: Icons.shopping_bag_outlined,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _statCard(
+                    title: 'Avg. Order',
+                    value: data['average'],
+                    icon: Icons.currency_rupee,
+                  ),
+                ),
+              ],
+            ),
 
             const SizedBox(height: 24),
 
-            _buildSectionTitle(
+            // Business summary heading
+            const Text(
               'Business Summary',
-              'Key performance indicators',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
             ),
 
             const SizedBox(height: 12),
 
-            _buildBusinessSummary(),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  _summaryRow(
+                    'Total Revenue',
+                    data['revenue'],
+                    Icons.currency_rupee,
+                  ),
+                  const Divider(height: 24),
+                  _summaryRow(
+                    'Total Orders',
+                    data['orders'],
+                    Icons.receipt_long,
+                  ),
+                  const Divider(height: 24),
+                  _summaryRow(
+                    'Average Order Value',
+                    data['average'],
+                    Icons.analytics_outlined,
+                  ),
+                  const Divider(height: 24),
+                  _summaryRow(
+                    'Growth',
+                    data['growth'],
+                    Icons.trending_up,
+                  ),
+                ],
+              ),
+            ),
 
             const SizedBox(height: 24),
 
-            _buildSectionTitle('Top Products', 'Best selling products'),
+            // Top products heading
+            const Text(
+              'Top Products',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
 
-            const SizedBox(height: 12),
+            const SizedBox(height: 6),
+
+            const Text(
+              'Best-selling products by sales and revenue',
+              style: TextStyle(
+                fontSize: 12,
+                color: AppTheme.grey,
+              ),
+            ),
+
+            const SizedBox(height: 14),
 
             _buildTopProducts(),
 
             const SizedBox(height: 24),
 
-            _buildSectionTitle('Report Details', 'Current period statistics'),
+            // Report details
+            const Text(
+              'Report Details',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.coffeeDark,
+              ),
+            ),
 
             const SizedBox(height: 12),
 
-            _buildReportDetails(),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  _summaryRow(
+                    'Selected Period',
+                    selectedPeriod,
+                    Icons.calendar_month,
+                  ),
+                  const Divider(height: 24),
+                  _summaryRow(
+                    'Products Tracked',
+                    '${topProducts.length}',
+                    Icons.inventory_2_outlined,
+                  ),
+                  const Divider(height: 24),
+                  _summaryRow(
+                    'Report Status',
+                    'Available',
+                    Icons.check_circle_outline,
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPeriodSelector() {
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Row(
-        children: periods.map((period) {
-          final bool selected = selectedPeriod == period;
-
-          return Expanded(
-            child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  selectedPeriod = period;
-                });
-              },
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: selected ? AppTheme.coffeeDark : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  period,
-                  style: TextStyle(
-                    color: selected ? Colors.white : AppTheme.coffeeDark,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildRevenueHeader() {
-    String amount;
-
-    if (selectedPeriod == 'Today') {
-      amount = '₹24,550';
-    } else if (selectedPeriod == 'Weekly') {
-      amount = '₹98,850';
-    } else {
-      amount = '₹8,19,350';
-    }
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(22),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.coffeeDark, AppTheme.coffee],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(22),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: 44,
-                width: 44,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.bar_chart_rounded, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  'Total Revenue',
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  '+13.6%',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 20),
-
-          Text(
-            amount,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 5),
-
-          Text(
-            '$selectedPeriod revenue',
-            style: const TextStyle(color: Colors.white70, fontSize: 12),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRevenueCards() {
-    return Row(
-      children: [
-        Expanded(
-          child: _statCard(
-            icon: Icons.today_outlined,
-            title: 'Today',
-            value: '₹24,550',
-            change: '+12%',
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _statCard(
-            icon: Icons.date_range_outlined,
-            title: 'Weekly',
-            value: '₹98,850',
-            change: '+9.8%',
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _statCard(
-            icon: Icons.calendar_month_outlined,
-            title: 'Monthly',
-            value: '₹398,850',
-            change: '+13.6%',
-          ),
-        ),
-      ],
-    );
-  }
-
+  // Small statistic card
   Widget _statCard({
-    required IconData icon,
     required String title,
     required String value,
-    required String change,
+    required IconData icon,
   }) {
     return Container(
-      padding: const EdgeInsets.all(13),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(17),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 34,
-            width: 34,
-            decoration: BoxDecoration(
-              color: AppTheme.cream,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, size: 18, color: AppTheme.coffee),
-          ),
-
-          const SizedBox(height: 10),
-
-          Text(
-            title,
-            style: const TextStyle(fontSize: 11, color: AppTheme.grey),
-          ),
-
-          const SizedBox(height: 4),
-
-          FittedBox(
-            child: Text(
-              value,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.coffeeDark,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            change,
-            style: const TextStyle(
-              color: Colors.green,
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title, String subtitle) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.coffeeDark,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 12, color: AppTheme.grey),
-              ),
-            ],
-          ),
-        ),
-        const Icon(Icons.more_horiz, color: AppTheme.grey),
-      ],
-    );
-  }
-
-  Widget _buildSalesChart() {
-    final List<double> values = [0.35, 0.55, 0.42, 0.72, 0.62, 0.86, 0.78];
-
-    final List<String> labels = [
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun',
-    ];
-
-    return Container(
-      height: 235,
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(18, 20, 18, 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const Text(
-                '₹398,850',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.coffeeDark,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                child: const Text(
-                  '+13.6%',
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 18),
-
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: List.generate(values.length, (index) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: FractionallySizedBox(
-                              heightFactor: values[index],
-                              child: Container(
-                                width: 20,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.coffeeLight,
-                                  borderRadius: const BorderRadius.vertical(
-                                    top: Radius.circular(7),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          labels[index],
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: AppTheme.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBusinessSummary() {
-    return Column(
-      children: [
-        _summaryRow(
-          Icons.receipt_long_outlined,
-          'Total Orders',
-          '1,248',
-          '+11.2%',
-        ),
-        const SizedBox(height: 10),
-        _summaryRow(Icons.people_outline, 'Customers', '423', '+8.5%'),
-        const SizedBox(height: 10),
-        _summaryRow(
-          Icons.shopping_bag_outlined,
-          'Average Order',
-          '₹656',
-          '+4.2%',
-        ),
-        const SizedBox(height: 10),
-        _summaryRow(
-          Icons.star_outline,
-          'Average Rating',
-          '4.8 / 5',
-          'Excellent',
-        ),
-      ],
-    );
-  }
-
-  Widget _summaryRow(IconData icon, String title, String value, String change) {
-    return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 42,
-            width: 42,
-            decoration: BoxDecoration(
-              color: AppTheme.cream,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: AppTheme.coffee, size: 21),
+          Icon(
+            icon,
+            color: AppTheme.coffee,
+            size: 24,
           ),
-
-          const SizedBox(width: 12),
-
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 13, color: AppTheme.grey),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 21,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.coffeeDark,
             ),
           ),
-
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.coffeeDark,
-                ),
-              ),
-              const SizedBox(height: 3),
-              Text(
-                change,
-                style: const TextStyle(
-                  color: Colors.green,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppTheme.grey,
+            ),
           ),
         ],
       ),
     );
   }
 
+  // Business summary row
+  Widget _summaryRow(
+    String title,
+    String value,
+    IconData icon,
+  ) {
+    return Row(
+      children: [
+        Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: AppTheme.cream,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            icon,
+            color: AppTheme.coffee,
+            size: 20,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppTheme.grey,
+            ),
+          ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.coffeeDark,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Product list with image, sales and revenue
   Widget _buildTopProducts() {
     return Container(
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(18),
       ),
-      child: ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: topProducts.length,
-        separatorBuilder: (_, __) =>
-            Divider(height: 1, color: Colors.grey.shade200),
-        itemBuilder: (context, index) {
+      child: Column(
+        children: List.generate(topProducts.length, (index) {
           final product = topProducts[index];
 
           return Padding(
-            padding: const EdgeInsets.all(15),
+            padding: EdgeInsets.only(
+              bottom: index == topProducts.length - 1 ? 0 : 16,
+            ),
             child: Row(
               children: [
-                Container(
-                  height: 46,
-                  width: 46,
-                  decoration: BoxDecoration(
-                    color: AppTheme.cream,
-                    borderRadius: BorderRadius.circular(13),
+                // Product image
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    product['image'],
+                    width: 58,
+                    height: 58,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 58,
+                        height: 58,
+                        decoration: BoxDecoration(
+                          color: AppTheme.cream,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          product['icon'] as IconData,
+                          color: AppTheme.coffee,
+                          size: 28,
+                        ),
+                      );
+                    },
                   ),
-                  child: Icon(product['icon'], color: AppTheme.coffee),
                 ),
 
                 const SizedBox(width: 12),
 
+                // Product name and sales
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -587,15 +488,15 @@ class _AdminReportsState extends State<AdminReports> {
                         product['name'],
                         style: const TextStyle(
                           fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.bold,
                           color: AppTheme.coffeeDark,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 5),
                       Text(
-                        '${product['sales']} orders',
+                        '${product['sales']} items sold',
                         style: const TextStyle(
-                          fontSize: 11,
+                          fontSize: 12,
                           color: AppTheme.grey,
                         ),
                       ),
@@ -603,75 +504,35 @@ class _AdminReportsState extends State<AdminReports> {
                   ),
                 ),
 
-                Text(
-                  '₹${product['revenue']}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.coffeeDark,
-                  ),
+                const SizedBox(width: 8),
+
+                // Product revenue
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      '₹${product['revenue']}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.coffeeDark,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Revenue',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.grey,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
           );
-        },
+        }),
       ),
-    );
-  }
-
-  Widget _buildReportDetails() {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-          _reportRow('Total Revenue', '₹8,19,350'),
-          _reportRow('Today Revenue', '₹24,550'),
-          _reportRow('Weekly Revenue', '₹98,850'),
-          _reportRow('Monthly Revenue', '₹398,850'),
-          _reportRow('Total Orders', '1,248'),
-          _reportRow('Total Customers', '423'),
-          _reportRow('Active Users', '2,489', last: true),
-        ],
-      ),
-    );
-  }
-
-  Widget _reportRow(String title, String value, {bool last = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        border: last
-            ? null
-            : Border(bottom: BorderSide(color: Colors.grey.shade200)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontSize: 13, color: AppTheme.grey),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.coffeeDark,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showExportMessage() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Report export option selected.')),
     );
   }
 }

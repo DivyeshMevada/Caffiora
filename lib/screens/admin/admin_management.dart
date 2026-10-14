@@ -18,55 +18,75 @@ class _AdminManagementState extends State<AdminManagement> {
       'price': 249,
       'category': 'Espresso Bar',
       'stock': 45,
+      'image': 'assets/images/italian_roast.jpg',
     },
     {
       'name': 'Caramel Macchiato',
       'price': 319,
       'category': 'Espresso Bar',
       'stock': 32,
+      'image': 'assets/images/caramel_macchiato.jpg',
     },
     {
       'name': 'Velvet Espresso',
       'price': 279,
       'category': 'Espresso Bar',
       'stock': 28,
+      'image': 'assets/images/velvet_espresso.jpg',
     },
     {
       'name': 'Velvet Croissant',
       'price': 239,
       'category': 'Bakery',
       'stock': 20,
+      'image': 'assets/images/velvet_croissant.jpg',
     },
     {
       'name': 'Cold Brew',
       'price': 249,
       'category': 'Espresso Bar',
       'stock': 38,
+      'image': 'assets/images/cold_brew.jpg',
     },
     {
       'name': 'Stroopwafel Cupcake',
       'price': 289,
       'category': 'Bakery',
       'stock': 18,
+      'image': 'assets/images/stroopwafel_cupcake.jpg',
     },
     {
       'name': 'Iced Latte',
       'price': 249,
       'category': 'Espresso Bar',
       'stock': 41,
+      'image': 'assets/images/iced_latte.jpg',
     },
     {
       'name': 'Iced Matcha',
       'price': 349,
       'category': 'Espresso Bar',
       'stock': 24,
+      'image': 'assets/images/iced_matcha.jpg',
     },
   ];
 
   final List<Map<String, String>> customers = [
-    {'name': 'Raj Patel', 'email': 'rajpatel@gmail.com', 'phone': '9798347684'},
-    {'name': 'Rajiv Kumar', 'email': 'rajiv@gmail.com', 'phone': '9876543210'},
-    {'name': 'Aarav Shah', 'email': 'aarav@gmail.com', 'phone': '9898989898'},
+    {
+      'name': 'Raj Patel',
+      'email': 'rajpatel@gmail.com',
+      'phone': '9798347684',
+    },
+    {
+      'name': 'Rajiv Kumar',
+      'email': 'rajiv@gmail.com',
+      'phone': '9876543210',
+    },
+    {
+      'name': 'Aarav Shah',
+      'email': 'aarav@gmail.com',
+      'phone': '9898989898',
+    },
   ];
 
   final List<Map<String, String>> staff = [
@@ -90,13 +110,11 @@ class _AdminManagementState extends State<AdminManagement> {
     },
   ];
 
-  final List<Map<String, dynamic>> inventory = [
+  final List<Map<String, String>> inventory = [
     {'name': 'Coffee Beans', 'quantity': '12.5 kg', 'target': '20 kg'},
     {'name': 'Milk', 'quantity': '8 units', 'target': '30 units'},
     {'name': 'Cups', 'quantity': '42 pcs', 'target': '1000 pcs'},
   ];
-
-  int selectedSection = 0;
 
   final List<String> sections = [
     'Products',
@@ -106,6 +124,8 @@ class _AdminManagementState extends State<AdminManagement> {
     'Inventory',
     'Pricing',
   ];
+
+  int selectedSection = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -126,17 +146,13 @@ class _AdminManagementState extends State<AdminManagement> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.coffeeDark,
         foregroundColor: Colors.white,
-        onPressed: () {
-          _showAddDialog();
-        },
+        onPressed: _showAddDialog,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  // ==========================================================
   // SECTION SELECTOR
-  // ==========================================================
 
   Widget _buildSectionSelector() {
     return SizedBox(
@@ -149,11 +165,7 @@ class _AdminManagementState extends State<AdminManagement> {
           final selected = selectedSection == index;
 
           return GestureDetector(
-            onTap: () {
-              setState(() {
-                selectedSection = index;
-              });
-            },
+            onTap: () => setState(() => selectedSection = index),
             child: Container(
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -178,38 +190,92 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
-  // SELECTED SECTION
-  // ==========================================================
-
   Widget _buildSelectedSection() {
     switch (selectedSection) {
       case 0:
         return _productsSection();
-
       case 1:
         return _categoriesSection();
-
       case 2:
         return _customersSection();
-
       case 3:
         return _staffSection();
-
       case 4:
         return _inventorySection();
-
       case 5:
         return _pricingSection();
-
       default:
         return _productsSection();
     }
   }
 
-  // ==========================================================
+  // SECTION HEADER
+
+  Widget _sectionHeader({
+    required String title,
+    required String subtitle,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.coffeeDark,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            subtitle,
+            style: const TextStyle(fontSize: 13, color: AppTheme.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // PRODUCT IMAGE
+
+  Widget _productImage(
+    Map<String, dynamic> product, {
+    double size = 65,
+  }) {
+    final imagePath = product['image'] as String?;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: SizedBox(
+        height: size,
+        width: size,
+        child: imagePath == null || imagePath.isEmpty
+            ? _imagePlaceholder()
+            : Image.asset(
+                imagePath,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return _imagePlaceholder();
+                },
+              ),
+      ),
+    );
+  }
+
+  Widget _imagePlaceholder() {
+    return Container(
+      color: AppTheme.cream,
+      child: const Icon(
+        Icons.local_cafe_outlined,
+        color: AppTheme.coffee,
+        size: 30,
+      ),
+    );
+  }
+
   // PRODUCTS
-  // ==========================================================
 
   Widget _productsSection() {
     return ListView(
@@ -219,64 +285,46 @@ class _AdminManagementState extends State<AdminManagement> {
           title: 'Products',
           subtitle: '${products.length} products available',
         ),
-
-        const SizedBox(height: 15),
-
-        ...products.map((product) => _productManagementCard(product)),
+        ...products.map(_productManagementCard),
       ],
     );
   }
 
   Widget _productManagementCard(Map<String, dynamic> product) {
-    final int stock = product['stock'];
+    final int stock = product['stock'] as int;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
         children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: AppTheme.cream,
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Icon(
-              Icons.local_cafe_outlined,
-              color: AppTheme.coffee,
-              size: 30,
-            ),
-          ),
-
-          const SizedBox(width: 13),
-
+          _productImage(product),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  product['name'],
+                  product['name'] as String,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     color: AppTheme.coffeeDark,
-                    fontSize: 15,
+                    fontSize: 14,
                   ),
                 ),
-
                 const SizedBox(height: 4),
-
                 Text(
-                  product['category'],
-                  style: const TextStyle(color: AppTheme.grey, fontSize: 12),
+                  product['category'] as String,
+                  style: const TextStyle(
+                    color: AppTheme.grey,
+                    fontSize: 11,
+                  ),
                 ),
-
                 const SizedBox(height: 6),
-
                 Text(
                   'Stock: $stock',
                   style: TextStyle(
@@ -285,34 +333,34 @@ class _AdminManagementState extends State<AdminManagement> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
+                const SizedBox(height: 5),
+                Text(
+                  '₹${product['price']}',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.coffeeDark,
+                  ),
+                ),
               ],
             ),
           ),
-
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                '₹${product['price']}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppTheme.coffeeDark,
+              IconButton(
+                tooltip: 'Edit product',
+                onPressed: () => _showEditProductDialog(product),
+                icon: const Icon(
+                  Icons.edit_outlined,
+                  color: AppTheme.coffee,
                 ),
               ),
-
-              const SizedBox(height: 8),
-
-              Row(
-                children: [
-                  _smallIconButton(Icons.edit_outlined, () {
-                    _showEditProductDialog(product);
-                  }),
-                  const SizedBox(width: 5),
-                  _smallIconButton(Icons.delete_outline, () {
-                    _deleteProduct(product);
-                  }),
-                ],
+              IconButton(
+                tooltip: 'Delete product',
+                onPressed: () => _deleteProduct(product),
+                icon: const Icon(
+                  Icons.delete_outline,
+                  color: Colors.red,
+                ),
               ),
             ],
           ),
@@ -321,9 +369,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // CATEGORIES
-  // ==========================================================
 
   Widget _categoriesSection() {
     return ListView(
@@ -333,38 +379,30 @@ class _AdminManagementState extends State<AdminManagement> {
           title: 'Categories',
           subtitle: '${categories.length} categories',
         ),
-
-        const SizedBox(height: 18),
-
-        ...categories.asMap().entries.map((entry) {
-          final index = entry.key;
-          final category = entry.value;
+        ...categories.map((category) {
+          final categoryProducts =
+              products.where((p) => p['category'] == category).toList();
 
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(17),
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
             ),
             child: Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppTheme.cream,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    index == 0
-                        ? Icons.local_cafe_outlined
-                        : Icons.bakery_dining_outlined,
-                    color: AppTheme.coffee,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: SizedBox(
+                    height: 58,
+                    width: 58,
+                    child: categoryProducts.isNotEmpty
+                        ? _productImage(categoryProducts.first, size: 58)
+                        : _imagePlaceholder(),
                   ),
                 ),
-
-                const SizedBox(width: 14),
-
+                const SizedBox(width: 13),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +416,7 @@ class _AdminManagementState extends State<AdminManagement> {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${products.where((p) => p['category'] == category).length} products',
+                        '${categoryProducts.length} products',
                         style: const TextStyle(
                           fontSize: 12,
                           color: AppTheme.grey,
@@ -387,17 +425,19 @@ class _AdminManagementState extends State<AdminManagement> {
                     ],
                   ),
                 ),
-
                 IconButton(
-                  onPressed: () {
-                    _showEditCategoryDialog(category);
-                  },
-                  icon: const Icon(Icons.edit_outlined, color: AppTheme.coffee),
+                  onPressed: () => _showEditCategoryDialog(category),
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    color: AppTheme.coffee,
+                  ),
                 ),
-
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  onPressed: () => _deleteCategory(category),
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: Colors.red,
+                  ),
                 ),
               ],
             ),
@@ -407,9 +447,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // CUSTOMERS
-  // ==========================================================
 
   Widget _customersSection() {
     return ListView(
@@ -419,13 +457,10 @@ class _AdminManagementState extends State<AdminManagement> {
           title: 'Customers',
           subtitle: '${customers.length} registered customers',
         ),
-
-        const SizedBox(height: 18),
-
         ...customers.map(
           (customer) => Container(
             margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
@@ -433,7 +468,7 @@ class _AdminManagementState extends State<AdminManagement> {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 25,
+                  radius: 27,
                   backgroundColor: AppTheme.cream,
                   child: Text(
                     customer['name']![0],
@@ -443,9 +478,7 @@ class _AdminManagementState extends State<AdminManagement> {
                     ),
                   ),
                 ),
-
-                const SizedBox(width: 13),
-
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,8 +509,6 @@ class _AdminManagementState extends State<AdminManagement> {
                     ],
                   ),
                 ),
-
-                IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
               ],
             ),
           ),
@@ -486,9 +517,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // STAFF
-  // ==========================================================
 
   Widget _staffSection() {
     return ListView(
@@ -498,13 +527,10 @@ class _AdminManagementState extends State<AdminManagement> {
           title: 'Staff',
           subtitle: '${staff.length} staff members',
         ),
-
-        const SizedBox(height: 18),
-
         ...staff.map(
           (member) => Container(
             margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
@@ -512,7 +538,7 @@ class _AdminManagementState extends State<AdminManagement> {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 28,
+                  radius: 27,
                   backgroundColor: AppTheme.coffeeDark,
                   child: Text(
                     member['name']![0],
@@ -523,9 +549,7 @@ class _AdminManagementState extends State<AdminManagement> {
                     ),
                   ),
                 ),
-
-                const SizedBox(width: 14),
-
+                const SizedBox(width: 13),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -537,9 +561,7 @@ class _AdminManagementState extends State<AdminManagement> {
                           color: AppTheme.coffeeDark,
                         ),
                       ),
-
                       const SizedBox(height: 4),
-
                       Text(
                         member['role']!,
                         style: const TextStyle(
@@ -547,9 +569,7 @@ class _AdminManagementState extends State<AdminManagement> {
                           color: AppTheme.coffee,
                         ),
                       ),
-
                       const SizedBox(height: 4),
-
                       Text(
                         'ID: ${member['id']}',
                         style: const TextStyle(
@@ -557,9 +577,6 @@ class _AdminManagementState extends State<AdminManagement> {
                           color: AppTheme.grey,
                         ),
                       ),
-
-                      const SizedBox(height: 3),
-
                       Text(
                         'Shift: ${member['shift']}',
                         style: const TextStyle(
@@ -570,8 +587,6 @@ class _AdminManagementState extends State<AdminManagement> {
                     ],
                   ),
                 ),
-
-                const Icon(Icons.chevron_right, color: AppTheme.grey),
               ],
             ),
           ),
@@ -580,25 +595,23 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // INVENTORY
-  // ==========================================================
 
   Widget _inventorySection() {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        _sectionHeader(title: 'Inventory', subtitle: 'Current stock overview'),
-
-        const SizedBox(height: 18),
-
+        _sectionHeader(
+          title: 'Inventory',
+          subtitle: 'Current stock overview',
+        ),
         ...inventory.map((item) {
-          final quantity = item['quantity'].toString();
-          final target = item['target'].toString();
+          final quantity = item['quantity']!;
+          final target = item['target']!;
 
           return Container(
-            margin: const EdgeInsets.only(bottom: 15),
-            padding: const EdgeInsets.all(18),
+            margin: const EdgeInsets.only(bottom: 14),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
@@ -608,29 +621,30 @@ class _AdminManagementState extends State<AdminManagement> {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(11),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: AppTheme.cream,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
-                        Icons.inventory_2_outlined,
+                      child: Icon(
+                        item['name'] == 'Coffee Beans'
+                            ? Icons.coffee
+                            : item['name'] == 'Milk'
+                                ? Icons.water_drop_outlined
+                                : Icons.local_cafe_outlined,
                         color: AppTheme.coffee,
                       ),
                     ),
-
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: Text(
-                        item['name'],
+                        item['name']!,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: AppTheme.coffeeDark,
                         ),
                       ),
                     ),
-
                     Text(
                       quantity,
                       style: const TextStyle(
@@ -640,9 +654,7 @@ class _AdminManagementState extends State<AdminManagement> {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 14),
-
                 LinearProgressIndicator(
                   value: _inventoryProgress(quantity, target),
                   minHeight: 7,
@@ -650,15 +662,16 @@ class _AdminManagementState extends State<AdminManagement> {
                   backgroundColor: Colors.grey.shade200,
                   color: AppTheme.coffee,
                 ),
-
                 const SizedBox(height: 8),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
                       'Current Stock',
-                      style: TextStyle(fontSize: 11, color: AppTheme.grey),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.grey,
+                      ),
                     ),
                     Text(
                       'Target: $target',
@@ -679,54 +692,43 @@ class _AdminManagementState extends State<AdminManagement> {
 
   double _inventoryProgress(String quantity, String target) {
     final q = double.tryParse(quantity.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
-
     final t = double.tryParse(target.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 1;
 
-    final result = q / t;
-
-    if (result > 1) {
-      return 1;
-    }
-
-    return result;
+    if (t <= 0) return 0;
+    return (q / t).clamp(0.0, 1.0);
   }
 
-  // ==========================================================
   // PRICING
-  // ==========================================================
 
   Widget _pricingSection() {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        _sectionHeader(title: 'Pricing', subtitle: 'Manage product prices'),
-
-        const SizedBox(height: 18),
-
+        _sectionHeader(
+          title: 'Pricing',
+          subtitle: 'Manage product prices',
+        ),
         ...products.map(
           (product) => Container(
             margin: const EdgeInsets.only(bottom: 10),
-            padding: const EdgeInsets.all(15),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               children: [
-                const Icon(Icons.sell_outlined, color: AppTheme.coffee),
-
+                _productImage(product, size: 50),
                 const SizedBox(width: 12),
-
                 Expanded(
                   child: Text(
-                    product['name'],
+                    product['name'] as String,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppTheme.coffeeDark,
                     ),
                   ),
                 ),
-
                 Text(
                   '₹${product['price']}',
                   style: const TextStyle(
@@ -734,14 +736,13 @@ class _AdminManagementState extends State<AdminManagement> {
                     color: AppTheme.coffeeDark,
                   ),
                 ),
-
-                const SizedBox(width: 5),
-
                 IconButton(
-                  onPressed: () {
-                    _showEditPriceDialog(product);
-                  },
-                  icon: const Icon(Icons.edit_outlined, size: 20),
+                  onPressed: () => _showEditPriceDialog(product),
+                  icon: const Icon(
+                    Icons.edit_outlined,
+                    size: 20,
+                    color: AppTheme.coffee,
+                  ),
                 ),
               ],
             ),
@@ -751,59 +752,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
-  // SECTION HEADER
-  // ==========================================================
-
-  Widget _sectionHeader({required String title, required String subtitle}) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.coffeeDark,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 13, color: AppTheme.grey),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ==========================================================
-  // SMALL ICON BUTTON
-  // ==========================================================
-
-  Widget _smallIconButton(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: AppTheme.cream,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 17, color: AppTheme.coffee),
-      ),
-    );
-  }
-
-  // ==========================================================
-  // ADD DIALOG
-  // ==========================================================
+  // ADD BUTTON ACTION
 
   void _showAddDialog() {
     if (selectedSection == 0) {
@@ -814,126 +763,199 @@ class _AdminManagementState extends State<AdminManagement> {
       _showAddStaffDialog();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Add ${sections[selectedSection]} option selected'),
-        ),
+        SnackBar(content: Text('Add ${sections[selectedSection]} selected')),
       );
     }
   }
 
-  // ==========================================================
   // ADD PRODUCT
-  // ==========================================================
 
   void _showAddProductDialog() {
     final nameController = TextEditingController();
     final priceController = TextEditingController();
+    String selectedCategory = categories.first;
 
     showDialog(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Add Product'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Product Name'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: priceController,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  labelText: 'Price',
-                  prefixText: '₹ ',
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Add Product'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Product Name',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Price',
+                        prefixText: '₹ ',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                      ),
+                      items: categories
+                          .map(
+                            (category) => DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setDialogState(() => selectedCategory = value);
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.trim().isEmpty ||
-                    priceController.text.trim().isEmpty) {
-                  return;
-                }
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final price = int.tryParse(priceController.text.trim());
 
-                setState(() {
-                  products.add({
-                    'name': nameController.text.trim(),
-                    'price': int.tryParse(priceController.text) ?? 0,
-                    'category': 'Espresso Bar',
-                    'stock': 0,
-                  });
-                });
+                    if (name.isEmpty || price == null || price < 0) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Enter a valid name and price'),
+                        ),
+                      );
+                      return;
+                    }
 
-                Navigator.pop(dialogContext);
-              },
-              child: const Text('Add'),
-            ),
-          ],
+                    setState(() {
+                      products.add({
+                        'name': name,
+                        'price': price,
+                        'category': selectedCategory,
+                        'stock': 0,
+                        'image': null,
+                      });
+                    });
+
+                    Navigator.pop(dialogContext);
+                  },
+                  child: const Text('Add'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
-  // ==========================================================
   // EDIT PRODUCT
-  // ==========================================================
 
   void _showEditProductDialog(Map<String, dynamic> product) {
-    final priceController = TextEditingController(
-      text: product['price'].toString(),
-    );
+    final nameController =
+        TextEditingController(text: product['name'].toString());
+    final priceController =
+        TextEditingController(text: product['price'].toString());
+    String selectedCategory = categories.contains(product['category'])
+        ? product['category'] as String
+        : categories.first;
 
     showDialog(
       context: context,
       builder: (dialogContext) {
-        return AlertDialog(
-          title: Text('Edit ${product['name']}'),
-          content: TextField(
-            controller: priceController,
-            keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Price',
-              prefixText: '₹ ',
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  product['price'] =
-                      int.tryParse(priceController.text) ?? product['price'];
-                });
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Edit Product'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Product Name',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: priceController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Price',
+                        prefixText: '₹ ',
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: selectedCategory,
+                      decoration: const InputDecoration(
+                        labelText: 'Category',
+                      ),
+                      items: categories
+                          .map(
+                            (category) => DropdownMenuItem(
+                              value: category,
+                              child: Text(category),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setDialogState(() => selectedCategory = value);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final name = nameController.text.trim();
+                    final price = int.tryParse(priceController.text.trim());
 
-                Navigator.pop(dialogContext);
-              },
-              child: const Text('Save'),
-            ),
-          ],
+                    if (name.isEmpty || price == null || price < 0) return;
+
+                    setState(() {
+                      product['name'] = name;
+                      product['price'] = price;
+                      product['category'] = selectedCategory;
+                    });
+
+                    Navigator.pop(dialogContext);
+                  },
+                  child: const Text('Save'),
+                ),
+              ],
+            );
+          },
         );
       },
     );
   }
 
-  // ==========================================================
   // DELETE PRODUCT
-  // ==========================================================
 
   void _deleteProduct(Map<String, dynamic> product) {
     showDialog(
@@ -941,20 +963,21 @@ class _AdminManagementState extends State<AdminManagement> {
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Delete Product'),
-          content: Text('Are you sure you want to delete ${product['name']}?'),
+          content: Text(
+            'Are you sure you want to delete ${product['name']}?',
+          ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
               onPressed: () {
-                setState(() {
-                  products.remove(product);
-                });
-
+                setState(() => products.remove(product));
                 Navigator.pop(dialogContext);
               },
               child: const Text('Delete'),
@@ -965,9 +988,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // ADD CATEGORY
-  // ==========================================================
 
   void _showAddCategoryDialog() {
     final controller = TextEditingController();
@@ -983,21 +1004,24 @@ class _AdminManagementState extends State<AdminManagement> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                if (controller.text.trim().isEmpty) {
+                final name = controller.text.trim();
+                if (name.isEmpty) return;
+
+                if (categories.contains(name)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Category already exists'),
+                    ),
+                  );
                   return;
                 }
 
-                setState(() {
-                  categories.add(controller.text.trim());
-                });
-
+                setState(() => categories.add(name));
                 Navigator.pop(dialogContext);
               },
               child: const Text('Add'),
@@ -1008,9 +1032,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // EDIT CATEGORY
-  // ==========================================================
 
   void _showEditCategoryDialog(String category) {
     final controller = TextEditingController(text: category);
@@ -1026,20 +1048,24 @@ class _AdminManagementState extends State<AdminManagement> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                final index = categories.indexOf(category);
+                final name = controller.text.trim();
+                if (name.isEmpty) return;
 
-                if (index != -1 && controller.text.trim().isNotEmpty) {
-                  setState(() {
-                    categories[index] = controller.text.trim();
-                  });
-                }
+                setState(() {
+                  final index = categories.indexOf(category);
+                  if (index != -1) categories[index] = name;
+
+                  for (final product in products) {
+                    if (product['category'] == category) {
+                      product['category'] = name;
+                    }
+                  }
+                });
 
                 Navigator.pop(dialogContext);
               },
@@ -1051,9 +1077,48 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
+  // DELETE CATEGORY
+
+  void _deleteCategory(String category) {
+    final hasProducts =
+        products.any((product) => product['category'] == category);
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete Category'),
+          content: Text(
+            hasProducts
+                ? 'This category contains products. Delete it anyway?'
+                : 'Delete $category?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  categories.remove(category);
+                  for (final product in products) {
+                    if (product['category'] == category) {
+                      product['category'] = 'Uncategorized';
+                    }
+                  }
+                });
+                Navigator.pop(dialogContext);
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // ADD STAFF
-  // ==========================================================
 
   void _showAddStaffDialog() {
     final nameController = TextEditingController();
@@ -1080,20 +1145,17 @@ class _AdminManagementState extends State<AdminManagement> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                if (nameController.text.trim().isEmpty) {
-                  return;
-                }
+                final name = nameController.text.trim();
+                if (name.isEmpty) return;
 
                 setState(() {
                   staff.add({
-                    'name': nameController.text.trim(),
+                    'name': name,
                     'role': roleController.text.trim().isEmpty
                         ? 'Staff'
                         : roleController.text.trim(),
@@ -1112,9 +1174,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // ==========================================================
   // EDIT PRICE
-  // ==========================================================
 
   void _showEditPriceDialog(Map<String, dynamic> product) {
     final controller = TextEditingController(text: product['price'].toString());
@@ -1123,7 +1183,7 @@ class _AdminManagementState extends State<AdminManagement> {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text('Change Price'),
+          title: Text('Change ${product['name']} Price'),
           content: TextField(
             controller: controller,
             keyboardType: TextInputType.number,
@@ -1134,21 +1194,16 @@ class _AdminManagementState extends State<AdminManagement> {
           ),
           actions: [
             TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-              },
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
-                final price = int.tryParse(controller.text);
+                final price = int.tryParse(controller.text.trim());
 
-                if (price != null) {
-                  setState(() {
-                    product['price'] = price;
-                  });
-                }
+                if (price == null || price < 0) return;
 
+                setState(() => product['price'] = price);
                 Navigator.pop(dialogContext);
               },
               child: const Text('Save'),

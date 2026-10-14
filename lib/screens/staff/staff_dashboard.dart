@@ -87,9 +87,7 @@ class StaffDashboardHome extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _welcomeCard(),
-
             const SizedBox(height: 20),
-
             const Text(
               'Today Overview',
               style: TextStyle(
@@ -98,9 +96,7 @@ class StaffDashboardHome extends StatelessWidget {
                 color: AppTheme.coffeeDark,
               ),
             ),
-
             const SizedBox(height: 12),
-
             Row(
               children: [
                 Expanded(
@@ -128,9 +124,7 @@ class StaffDashboardHome extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 25),
-
             Row(
               children: [
                 const Expanded(
@@ -146,25 +140,19 @@ class StaffDashboardHome extends StatelessWidget {
                 TextButton(onPressed: () {}, child: const Text('View All')),
               ],
             ),
-
             const SizedBox(height: 8),
-
             _taskCard(
               Icons.local_cafe_outlined,
               'Prepare Cappuccino Mix',
               'Pending',
             ),
-
             const SizedBox(height: 10),
-
             _taskCard(
               Icons.inventory_2_outlined,
               'Restock Coffee Beans',
               'Pending',
             ),
-
             const SizedBox(height: 25),
-
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
@@ -242,7 +230,7 @@ class StaffDashboardHome extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Welcome Back, Marco',
+            'Welcome Back, dishant  ',
             style: TextStyle(
               color: Colors.white,
               fontSize: 23,

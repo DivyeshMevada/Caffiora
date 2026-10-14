@@ -86,7 +86,6 @@ class _AdminOrdersState extends State<AdminOrders> {
       body: Column(
         children: [
           _buildStatusTabs(),
-
           Expanded(
             child: filteredOrders.isEmpty
                 ? _emptyState()
@@ -234,9 +233,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                   color: AppTheme.coffee,
                 ),
               ),
-
               const SizedBox(width: 12),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,7 +257,6 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ],
                 ),
               ),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
                 decoration: BoxDecoration(
@@ -296,9 +292,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                 size: 18,
                 color: AppTheme.coffee,
               ),
-
               const SizedBox(width: 9),
-
               Expanded(
                 child: Text(
                   order['items'],
@@ -329,7 +323,6 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ),
                 ],
               ),
-
               Text(
                 '₹${order['amount']}',
                 style: const TextStyle(
@@ -422,9 +415,7 @@ class _AdminOrdersState extends State<AdminOrders> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
                 Row(
                   children: [
                     Expanded(
@@ -437,27 +428,19 @@ class _AdminOrdersState extends State<AdminOrders> {
                         ),
                       ),
                     ),
-
                     _statusBadge(order['status']),
                   ],
                 ),
-
                 const SizedBox(height: 20),
-
                 _detailRow(Icons.person_outline, 'Customer', order['customer']),
-
                 _detailRow(Icons.access_time, 'Order Time', order['time']),
-
                 _detailRow(Icons.local_cafe_outlined, 'Items', order['items']),
-
                 _detailRow(
                   Icons.currency_rupee,
                   'Total',
                   '₹${order['amount']}',
                 ),
-
                 const SizedBox(height: 20),
-
                 if (order['status'] == 'Preparing')
                   Row(
                     children: [
@@ -570,9 +553,7 @@ class _AdminOrdersState extends State<AdminOrders> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: AppTheme.coffee, size: 21),
-
           const SizedBox(width: 12),
-
           SizedBox(
             width: 85,
             child: Text(
@@ -580,7 +561,6 @@ class _AdminOrdersState extends State<AdminOrders> {
               style: const TextStyle(fontSize: 13, color: AppTheme.grey),
             ),
           ),
-
           Expanded(
             child: Text(
               value,
@@ -617,9 +597,7 @@ class _AdminOrdersState extends State<AdminOrders> {
               color: AppTheme.coffeeLight,
             ),
           ),
-
           const SizedBox(height: 18),
-
           const Text(
             'No Orders Found',
             style: TextStyle(
@@ -628,9 +606,7 @@ class _AdminOrdersState extends State<AdminOrders> {
               color: AppTheme.coffeeDark,
             ),
           ),
-
           const SizedBox(height: 6),
-
           Text(
             'There are no $selectedStatus orders right now.',
             style: const TextStyle(color: AppTheme.grey),
