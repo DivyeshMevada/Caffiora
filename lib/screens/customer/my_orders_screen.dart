@@ -32,58 +32,6 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         },
       ],
     },
-    // {
-    //   'id': '#CF-128',
-    //   'date': '03 Oct 2026',
-    //   'time': '04:15 PM',
-    //   'status': 'Preparing',
-    //   'total': 588.0,
-    //   'items': [
-    //     {
-    //       'name': 'Italian Roast',
-    //       'quantity': 1,
-    //       'price': 249.0,
-    //     },
-    //     {
-    //       'name': 'Iced Latte',
-    //       'quantity': 1,
-    //       'price': 249.0,
-    //     },
-    //   ],
-    // },
-    // {
-    //   'id': '#CF-121',
-    //   'date': '29 Sep 2026',
-    //   'time': '09:45 AM',
-    //   'status': 'Delivered',
-    //   'total': 588.0,
-    //   'items': [
-    //     {
-    //       'name': 'Italian Roast',
-    //       'quantity': 1,
-    //       'price': 249.0,
-    //     },
-    //     {
-    //       'name': 'Caramel Macchiato',
-    //       'quantity': 1,
-    //       'price': 319.0,
-    //     },
-    //   ],
-    // },
-    // {
-    //   'id': '#CF-115',
-    //   'date': '24 Sep 2026',
-    //   'time': '06:20 PM',
-    //   'status': 'Cancelled',
-    //   'total': 279.0,
-    //   'items': [
-    //     {
-    //       'name': 'Velvet Espresso',
-    //       'quantity': 1,
-    //       'price': 279.0,
-    //     },
-    //   ],
-    // },
   ];
 
   List<Map<String, dynamic>> get filteredOrders {
@@ -91,24 +39,17 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
       return orders;
     }
 
-    return orders
-        .where(
-          (order) => order['status'] == selectedFilter,
-        )
-        .toList();
+    return orders.where((order) => order['status'] == selectedFilter).toList();
   }
 
   Color statusColor(String status) {
     switch (status) {
       case 'Delivered':
         return Colors.green;
-
       case 'Preparing':
         return Colors.orange;
-
       case 'Cancelled':
         return Colors.red;
-
       default:
         return AppTheme.coffee;
     }
@@ -118,13 +59,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     switch (status) {
       case 'Delivered':
         return Icons.check_circle_outline;
-
       case 'Preparing':
         return Icons.access_time;
-
       case 'Cancelled':
         return Icons.cancel_outlined;
-
       default:
         return Icons.receipt_long;
     }
@@ -133,59 +71,78 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'My Orders',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          // =========================
-          // FILTER TABS
-          // =========================
-          SizedBox(
-            height: 62,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // HEADER
+            Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
+                horizontal: 8,
+                vertical: 8,
               ),
-              children: [
-                _filterButton('All'),
-                _filterButton('Preparing'),
-                _filterButton('Delivered'),
-                _filterButton('Cancelled'),
-              ],
-            ),
-          ),
-
-          const Divider(height: 1),
-
-          // =========================
-          // ORDERS
-          // =========================
-          Expanded(
-            child: filteredOrders.isEmpty
-                ? _emptyOrders()
-                : ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: filteredOrders.length,
-                    itemBuilder: (context, index) {
-                      final order = filteredOrders[index];
-
-                      return _orderCard(order);
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
                     },
+                    icon: const Icon(Icons.arrow_back),
                   ),
-          ),
-        ],
+                  const Expanded(
+                    child: Text(
+                      'My Orders',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.coffeeDark,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // ORDER FILTER TABS
+            SizedBox(
+              height: 62,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                children: [
+                  _filterButton('All'),
+                  _filterButton('Preparing'),
+                  _filterButton('Delivered'),
+                  _filterButton('Cancelled'),
+                ],
+              ),
+            ),
+
+            const Divider(height: 1),
+
+            // ORDERS LIST
+            Expanded(
+              child: filteredOrders.isEmpty
+                  ? _emptyOrders()
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: filteredOrders.length,
+                      itemBuilder: (context, index) {
+                        final order = filteredOrders[index];
+                        return _orderCard(order);
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
+  // FILTER BUTTON
   Widget _filterButton(String title) {
     final isSelected = selectedFilter == title;
 
@@ -220,6 +177,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     );
   }
 
+  // ORDER CARD
   Widget _orderCard(Map<String, dynamic> order) {
     final status = order['status'] as String;
     final items = order['items'] as List;
@@ -242,9 +200,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // =========================
-            // ORDER HEADER
-            // =========================
+            // ORDER ID AND STATUS
             Row(
               children: [
                 Container(
@@ -316,20 +272,14 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             ),
 
             const SizedBox(height: 15),
-
             const Divider(),
-
             const SizedBox(height: 8),
 
-            // =========================
-            // ITEMS
-            // =========================
+            // ORDER ITEMS AND PRICES
             ...items.map(
               (item) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 7,
-                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 7),
                   child: Row(
                     children: [
                       Container(
@@ -357,7 +307,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                         ),
                       ),
                       Text(
-                        '₹${item['price'].toStringAsFixed(0)}',
+                        '₹${(item['price'] as num).toStringAsFixed(0)}',
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -371,14 +321,10 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
             ),
 
             const SizedBox(height: 8),
-
             const Divider(),
-
             const SizedBox(height: 8),
 
-            // =========================
-            // TOTAL
-            // =========================
+            // TOTAL AMOUNT
             Row(
               children: [
                 const Text(
@@ -390,7 +336,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 ),
                 const Spacer(),
                 Text(
-                  '₹${order['total'].toStringAsFixed(0)}',
+                  '₹${(order['total'] as num).toStringAsFixed(0)}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -402,9 +348,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
 
             const SizedBox(height: 14),
 
-            // =========================
-            // BUTTONS
-            // =========================
+            // VIEW DETAILS AND REORDER
             Row(
               children: [
                 Expanded(
@@ -435,9 +379,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        showMessage(
-                          'Items added to cart',
-                        );
+                        showMessage('Items added to cart');
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 44),
@@ -458,6 +400,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     );
   }
 
+  // EMPTY ORDERS
   Widget _emptyOrders() {
     return Center(
       child: Padding(
@@ -501,6 +444,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     );
   }
 
+  // VIEW ORDER DETAILS
   void _showOrderDetails(Map<String, dynamic> order) {
     final items = order['items'] as List;
 
@@ -544,29 +488,23 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                 const SizedBox(height: 6),
                 Text(
                   '${order['date']} • ${order['time']}',
-                  style: const TextStyle(
-                    color: AppTheme.grey,
-                  ),
+                  style: const TextStyle(color: AppTheme.grey),
                 ),
                 const SizedBox(height: 20),
                 ...items.map(
                   (item) {
                     return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8,
-                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Row(
                         children: [
                           Expanded(
                             child: Text(
                               '${item['name']} × ${item['quantity']}',
-                              style: const TextStyle(
-                                fontSize: 15,
-                              ),
+                              style: const TextStyle(fontSize: 15),
                             ),
                           ),
                           Text(
-                            '₹${item['price'].toStringAsFixed(0)}',
+                            '₹${(item['price'] as num).toStringAsFixed(0)}',
                             style: const TextStyle(
                               fontWeight: FontWeight.w600,
                             ),
@@ -589,7 +527,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     ),
                     const Spacer(),
                     Text(
-                      '₹${order['total'].toStringAsFixed(0)}',
+                      '₹${(order['total'] as num).toStringAsFixed(0)}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -606,9 +544,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    child: const Text(
-                      'Close',
-                    ),
+                    child: const Text('Close'),
                   ),
                 ),
               ],
@@ -619,6 +555,7 @@ class _MyOrdersScreenState extends State<MyOrdersScreen> {
     );
   }
 
+  // MESSAGE
   void showMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

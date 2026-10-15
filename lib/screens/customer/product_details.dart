@@ -27,45 +27,31 @@ class _ProductDetailsState extends State<ProductDetails> {
 
   double get totalPrice => widget.price * quantity;
 
-  // ==========================================================
   // PRODUCT IMAGE
-  // ==========================================================
-
   String getProductImage(String productName) {
     switch (productName) {
       case 'Italian Roast':
         return 'assets/images/italian_roast.jpg';
-
       case 'Caramel Macchiato':
         return 'assets/images/caramel_macchiato.jpg';
-
       case 'Velvet Espresso':
         return 'assets/images/velvet_espresso.jpg';
-
       case 'Velvet Croissant':
         return 'assets/images/velvet_croissant.jpg';
-
       case 'Cold Brew':
         return 'assets/images/cold_brew.jpg';
-
       case 'Stroopwafel Cupcake':
         return 'assets/images/stroopwafel_cupcake.jpg';
-
       case 'Iced Latte':
         return 'assets/images/iced_latte.jpg';
-
       case 'Iced Matcha':
         return 'assets/images/iced_matcha.jpg';
-
       default:
         return 'assets/images/velvet_espresso.jpg';
     }
   }
 
-  // ==========================================================
   // ADD TO CART
-  // ==========================================================
-
   void addToCart() {
     CartState.instance.addItem(
       name: widget.productName,
@@ -88,10 +74,7 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
         content: Row(
           children: [
-            const Icon(
-              Icons.check_circle,
-              color: Colors.white,
-            ),
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
@@ -120,10 +103,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  // ==========================================================
   // QUANTITY
-  // ==========================================================
-
   void increaseQuantity() {
     setState(() {
       quantity++;
@@ -138,10 +118,6 @@ class _ProductDetailsState extends State<ProductDetails> {
     }
   }
 
-  // ==========================================================
-  // BUILD
-  // ==========================================================
-
   @override
   Widget build(BuildContext context) {
     final String productImage = getProductImage(
@@ -149,10 +125,7 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
 
     return Scaffold(
-      // ======================================================
       // APP BAR
-      // ======================================================
-
       appBar: AppBar(
         title: const Text(
           'Product Details',
@@ -162,105 +135,13 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       ),
 
-      // ======================================================
-      // BOTTOM ADD TO CART
-      // ======================================================
-
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.fromLTRB(
-          20,
-          12,
-          20,
-          20,
-        ),
-        color: Colors.white,
-        child: SafeArea(
-          top: false,
-          child: Row(
-            children: [
-              // ==================================================
-              // TOTAL PRICE
-              // ==================================================
-
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Total',
-                      style: TextStyle(
-                        color: AppTheme.grey,
-                        fontSize: 13,
-                      ),
-                    ),
-                    Text(
-                      '₹${totalPrice.toInt()}',
-                      style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.coffeeDark,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // ==================================================
-              // ADD TO CART BUTTON
-              // ==================================================
-
-              Expanded(
-                flex: 2,
-                child: SizedBox(
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: addToCart,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.coffeeDark,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.shopping_cart_outlined,
-                          size: 20,
-                        ),
-                        SizedBox(width: 7),
-                        Text(
-                          'Add to Cart',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-
-      // ======================================================
       // BODY
-      // ======================================================
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==================================================
             // PRODUCT IMAGE
-            // ==================================================
-
             ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: Image.asset(
@@ -292,10 +173,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
             // PRODUCT NAME
-            // ==================================================
-
             Text(
               widget.productName,
               style: const TextStyle(
@@ -307,10 +185,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 12),
 
-            // ==================================================
             // PRICE
-            // ==================================================
-
             Text(
               '₹${widget.price.toInt()}',
               style: const TextStyle(
@@ -322,10 +197,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 15),
 
-            // ==================================================
-            // DESCRIPTION
-            // ==================================================
-
+            // PRODUCT DESCRIPTION
             Text(
               'Rich Italian roast with deep aroma, '
               'bold flavor, and a smooth finish. '
@@ -339,10 +211,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // SIZE
-            // ==================================================
-
+            // SIZE SELECTION
             const Text(
               'Size',
               style: TextStyle(
@@ -390,10 +259,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // MILK
-            // ==================================================
-
+            // MILK SELECTION
             const Text(
               'Milk',
               style: TextStyle(
@@ -441,10 +307,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // SUGAR
-            // ==================================================
-
+            // SUGAR SELECTION
             const Text(
               'Sugar',
               style: TextStyle(
@@ -492,10 +355,7 @@ class _ProductDetailsState extends State<ProductDetails> {
 
             const SizedBox(height: 25),
 
-            // ==================================================
-            // QUANTITY
-            // ==================================================
-
+            // QUANTITY SELECTOR
             const Text(
               'Quantity',
               style: TextStyle(
@@ -519,16 +379,11 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // MINUS
                   IconButton(
                     onPressed: decreaseQuantity,
-                    icon: const Icon(
-                      Icons.remove,
-                    ),
+                    icon: const Icon(Icons.remove),
                     color: AppTheme.coffeeDark,
                   ),
-
-                  // NUMBER
                   Container(
                     width: 35,
                     alignment: Alignment.center,
@@ -540,13 +395,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                       ),
                     ),
                   ),
-
-                  // PLUS
                   IconButton(
                     onPressed: increaseQuantity,
-                    icon: const Icon(
-                      Icons.add,
-                    ),
+                    icon: const Icon(Icons.add),
                     color: AppTheme.coffeeDark,
                   ),
                 ],
@@ -557,13 +408,87 @@ class _ProductDetailsState extends State<ProductDetails> {
           ],
         ),
       ),
+
+      // BOTTOM BAR
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.fromLTRB(
+          20,
+          12,
+          20,
+          20,
+        ),
+        color: Colors.white,
+        child: SafeArea(
+          top: false,
+          child: Row(
+            children: [
+              // TOTAL PRICE
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Total',
+                      style: TextStyle(
+                        color: AppTheme.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                    Text(
+                      '₹${totalPrice.toInt()}',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.coffeeDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // ADD TO CART BUTTON
+              Expanded(
+                flex: 2,
+                child: SizedBox(
+                  height: 52,
+                  child: ElevatedButton(
+                    onPressed: addToCart,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.coffeeDark,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_cart_outlined,
+                          size: 20,
+                        ),
+                        SizedBox(width: 7),
+                        Text(
+                          'Add to Cart',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
-  // ==========================================================
   // OPTION BUTTON
-  // ==========================================================
-
   Widget _optionButton({
     required String title,
     required bool selected,
