@@ -9,8 +9,11 @@ class AdminProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SCAFFOLD
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // APP BAR
       appBar: AppBar(
         backgroundColor: AppTheme.cream,
         elevation: 0,
@@ -22,11 +25,15 @@ class AdminProfile extends StatelessWidget {
           ),
         ),
       ),
+
+      // SINGLE CHILD SCROLL VIEW
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
+
+        // MAIN COLUMN
         child: Column(
           children: [
-            // ADMIN PROFILE HEADER
+            // PROFILE CARD
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(25),
@@ -36,9 +43,12 @@ class AdminProfile extends StatelessWidget {
               ),
               child: const Column(
                 children: [
+                  // CIRCLE AVATAR
                   CircleAvatar(
                     radius: 45,
                     backgroundColor: Colors.white,
+
+                    // ADMIN ICON
                     child: Icon(
                       Icons.admin_panel_settings,
                       size: 48,
@@ -46,6 +56,8 @@ class AdminProfile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 15),
+
+                  // NAME TEXT
                   Text(
                     'OM ',
                     style: TextStyle(
@@ -55,6 +67,8 @@ class AdminProfile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 6),
+
+                  // ROLE TEXT
                   Text(
                     'Administrator',
                     style: TextStyle(
@@ -63,6 +77,8 @@ class AdminProfile extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 15),
+
+                  // ADMIN ACCOUNT BUTTON
                   Chip(
                     label: Text(
                       'ADMIN ACCOUNT',
@@ -80,7 +96,7 @@ class AdminProfile extends StatelessWidget {
 
             const SizedBox(height: 25),
 
-            // ACCOUNT DETAILS
+            // ACCOUNT INFORMATION HEADING
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -95,6 +111,7 @@ class AdminProfile extends StatelessWidget {
 
             const SizedBox(height: 12),
 
+            // ACCOUNT INFORMATION CARD
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
@@ -103,18 +120,23 @@ class AdminProfile extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // NAME ROW
                   _infoRow(
                     Icons.person_outline,
                     'Name',
                     'OM ',
                   ),
                   const Divider(height: 25),
+
+                  // ROLE ROW
                   _infoRow(
                     Icons.security_outlined,
                     'Role',
                     'Administrator',
                   ),
                   const Divider(height: 25),
+
+                  // ORGANIZATION ROW
                   _infoRow(
                     Icons.store_outlined,
                     'Organization',
@@ -156,6 +178,7 @@ class AdminProfile extends StatelessWidget {
 
             const SizedBox(height: 20),
 
+            // ADMIN PANEL FOOTER
             const Text(
               'CAFFIORA Admin Panel',
               style: TextStyle(
@@ -221,18 +244,27 @@ class AdminProfile extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
+        // ALERT DIALOG
         return AlertDialog(
+          // TITLE
           title: const Text('Log Out'),
+
+          // CONTENT TEXT
           content: const Text(
             'Are you sure you want to log out?',
           ),
+
+          // DIALOG ACTIONS
           actions: [
+            // CANCEL BUTTON
             TextButton(
               onPressed: () {
                 Navigator.of(dialogContext).pop();
               },
               child: const Text('Cancel'),
             ),
+
+            // LOG OUT BUTTON
             ElevatedButton(
               onPressed: () async {
                 Navigator.of(dialogContext).pop();

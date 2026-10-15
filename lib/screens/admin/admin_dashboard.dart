@@ -26,8 +26,11 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       body: pages[selectedIndex],
+
+      // BottomNavigationBar
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         backgroundColor: Colors.white,
@@ -78,12 +81,16 @@ class DashboardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // AppBar
       appBar: AppBar(
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // CAFFIORA Text
             Text(
               'CAFFIORA',
               style: TextStyle(
@@ -101,6 +108,7 @@ class DashboardContent extends StatelessWidget {
           ],
         ),
         actions: [
+          // Notification Icon
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.notifications_none_rounded),
@@ -109,9 +117,12 @@ class DashboardContent extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(18),
+
+        // Column
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Welcome Section
             // WELCOME
             const Text(
               'Good Morning, om',
@@ -134,6 +145,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 22),
 
+            // GridView - Sales, Revenue, Orders, Users Cards
             // STATISTICS
             GridView.count(
               crossAxisCount: 2,
@@ -172,6 +184,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 28),
 
+            // Quick Actions
             // QUICK ACTIONS
             const Text(
               'Quick Actions',
@@ -187,6 +200,7 @@ class DashboardContent extends StatelessWidget {
             Row(
               children: [
                 Expanded(
+                  // Add Product Button
                   child: _quickAction(
                     icon: Icons.add_box_outlined,
                     title: 'Add Product',
@@ -205,6 +219,7 @@ class DashboardContent extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
+                  // View Orders Button
                   child: _quickAction(
                     icon: Icons.receipt_long_outlined,
                     title: 'View Orders',
@@ -224,6 +239,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 28),
 
+            // Top Products List
             // TOP PRODUCTS
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -289,6 +305,7 @@ class DashboardContent extends StatelessWidget {
 
             const SizedBox(height: 28),
 
+            // Recent Orders List
             // RECENT ORDERS
             const Text(
               'Recent Orders',

@@ -129,20 +129,28 @@ class _AdminManagementState extends State<AdminManagement> {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // AppBar
       appBar: AppBar(
         title: const Text(
           'Management',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
+
+      // Column
       body: Column(
         children: [
+          // Category Tabs
           _buildSectionSelector(),
           Expanded(child: _buildSelectedSection()),
         ],
       ),
+
+      // FloatingActionButton
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.coffeeDark,
         foregroundColor: Colors.white,
@@ -152,7 +160,7 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // SECTION SELECTOR
+  // CATEGORY TABS
 
   Widget _buildSectionSelector() {
     return SizedBox(
@@ -275,20 +283,25 @@ class _AdminManagementState extends State<AdminManagement> {
     );
   }
 
-  // PRODUCTS
+  // PRODUCTS SECTION
 
   Widget _productsSection() {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
+        // Products Heading
         _sectionHeader(
           title: 'Products',
           subtitle: '${products.length} products available',
         ),
+
+        // Product ListView
         ...products.map(_productManagementCard),
       ],
     );
   }
+
+  // Product Card
 
   Widget _productManagementCard(Map<String, dynamic> product) {
     final int stock = product['stock'] as int;
@@ -302,12 +315,14 @@ class _AdminManagementState extends State<AdminManagement> {
       ),
       child: Row(
         children: [
+          // Product Image
           _productImage(product),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Product Name
                 Text(
                   product['name'] as String,
                   style: const TextStyle(
@@ -317,6 +332,8 @@ class _AdminManagementState extends State<AdminManagement> {
                   ),
                 ),
                 const SizedBox(height: 4),
+
+                // Category Text
                 Text(
                   product['category'] as String,
                   style: const TextStyle(
@@ -325,6 +342,8 @@ class _AdminManagementState extends State<AdminManagement> {
                   ),
                 ),
                 const SizedBox(height: 6),
+
+                // Stock Text
                 Text(
                   'Stock: $stock',
                   style: TextStyle(
@@ -334,6 +353,8 @@ class _AdminManagementState extends State<AdminManagement> {
                   ),
                 ),
                 const SizedBox(height: 5),
+
+                // Price Text
                 Text(
                   '₹${product['price']}',
                   style: const TextStyle(
@@ -346,6 +367,7 @@ class _AdminManagementState extends State<AdminManagement> {
           ),
           Column(
             children: [
+              // Edit IconButton
               IconButton(
                 tooltip: 'Edit product',
                 onPressed: () => _showEditProductDialog(product),
@@ -354,6 +376,8 @@ class _AdminManagementState extends State<AdminManagement> {
                   color: AppTheme.coffee,
                 ),
               ),
+
+              // Delete IconButton
               IconButton(
                 tooltip: 'Delete product',
                 onPressed: () => _deleteProduct(product),
@@ -769,6 +793,7 @@ class _AdminManagementState extends State<AdminManagement> {
   }
 
   // ADD PRODUCT
+  // AlertDialog: Add Product
 
   void _showAddProductDialog() {
     final nameController = TextEditingController();
@@ -781,11 +806,13 @@ class _AdminManagementState extends State<AdminManagement> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
+              // Title: Add Product
               title: const Text('Add Product'),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // TextField: Product Name
                     TextField(
                       controller: nameController,
                       decoration: const InputDecoration(
@@ -793,6 +820,8 @@ class _AdminManagementState extends State<AdminManagement> {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    // TextField: Price
                     TextField(
                       controller: priceController,
                       keyboardType: TextInputType.number,
@@ -802,6 +831,8 @@ class _AdminManagementState extends State<AdminManagement> {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    // DropdownButtonFormField: Category
                     DropdownButtonFormField<String>(
                       value: selectedCategory,
                       decoration: const InputDecoration(
@@ -825,10 +856,13 @@ class _AdminManagementState extends State<AdminManagement> {
                 ),
               ),
               actions: [
+                // Cancel Button
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
                   child: const Text('Cancel'),
                 ),
+
+                // Add Button
                 ElevatedButton(
                   onPressed: () {
                     final name = nameController.text.trim();
@@ -866,6 +900,7 @@ class _AdminManagementState extends State<AdminManagement> {
   }
 
   // EDIT PRODUCT
+  // AlertDialog: Edit Product
 
   void _showEditProductDialog(Map<String, dynamic> product) {
     final nameController =
@@ -882,11 +917,13 @@ class _AdminManagementState extends State<AdminManagement> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
+              // Title: Edit Product
               title: const Text('Edit Product'),
               content: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // TextField: Product Name
                     TextField(
                       controller: nameController,
                       decoration: const InputDecoration(
@@ -894,6 +931,8 @@ class _AdminManagementState extends State<AdminManagement> {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    // TextField: Price
                     TextField(
                       controller: priceController,
                       keyboardType: TextInputType.number,
@@ -903,6 +942,8 @@ class _AdminManagementState extends State<AdminManagement> {
                       ),
                     ),
                     const SizedBox(height: 12),
+
+                    // DropdownButtonFormField: Category
                     DropdownButtonFormField<String>(
                       value: selectedCategory,
                       decoration: const InputDecoration(
@@ -926,10 +967,13 @@ class _AdminManagementState extends State<AdminManagement> {
                 ),
               ),
               actions: [
+                // Cancel Button
                 TextButton(
                   onPressed: () => Navigator.pop(dialogContext),
                   child: const Text('Cancel'),
                 ),
+
+                // Save Button
                 ElevatedButton(
                   onPressed: () {
                     final name = nameController.text.trim();
@@ -956,21 +1000,28 @@ class _AdminManagementState extends State<AdminManagement> {
   }
 
   // DELETE PRODUCT
+  // AlertDialog: Delete Product
 
   void _deleteProduct(Map<String, dynamic> product) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
+          // Title: Delete Product
           title: const Text('Delete Product'),
+
+          // Content Text
           content: Text(
             'Are you sure you want to delete ${product['name']}?',
           ),
           actions: [
+            // Cancel Button
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
+
+            // Delete Button
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,

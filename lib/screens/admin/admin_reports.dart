@@ -80,9 +80,13 @@ class _AdminReportsState extends State<AdminReports> {
   Widget build(BuildContext context) {
     final data = reportData;
 
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // AppBar
       appBar: AppBar(
+        // Reports & Analytics Title
         title: const Text(
           'Reports & Analytics',
           style: TextStyle(
@@ -94,22 +98,29 @@ class _AdminReportsState extends State<AdminReports> {
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.coffeeDark),
       ),
+
+      // SingleChildScrollView
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
+
+        // Main Column
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Period selector
+            // Period Selection Tabs
             Container(
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(14),
               ),
+
+              // Period Selection Row
               child: Row(
                 children: ['Today', 'Weekly', 'Monthly'].map((period) {
                   final isSelected = selectedPeriod == period;
 
+                  // Period Tab
                   return Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -124,6 +135,8 @@ class _AdminReportsState extends State<AdminReports> {
                               isSelected ? AppTheme.coffee : Colors.transparent,
                           borderRadius: BorderRadius.circular(10),
                         ),
+
+                        // Period Text
                         child: Text(
                           period,
                           textAlign: TextAlign.center,
@@ -142,7 +155,7 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 20),
 
-            // Revenue summary
+            // Revenue Summary Card
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(22),
@@ -157,9 +170,12 @@ class _AdminReportsState extends State<AdminReports> {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
+
+              // Revenue Summary Column
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Total Revenue Heading
                   const Text(
                     'TOTAL REVENUE',
                     style: TextStyle(
@@ -170,6 +186,8 @@ class _AdminReportsState extends State<AdminReports> {
                     ),
                   ),
                   const SizedBox(height: 10),
+
+                  // Revenue Amount
                   Text(
                     data['revenue'],
                     style: const TextStyle(
@@ -179,14 +197,19 @@ class _AdminReportsState extends State<AdminReports> {
                     ),
                   ),
                   const SizedBox(height: 10),
+
+                  // Revenue Growth Row
                   Row(
                     children: [
+                      // Trending Icon
                       const Icon(
                         Icons.trending_up,
                         color: Colors.greenAccent,
                         size: 18,
                       ),
                       const SizedBox(width: 6),
+
+                      // Growth Text
                       Text(
                         '${data['growth']} compared to previous period',
                         style: const TextStyle(
@@ -202,9 +225,10 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 22),
 
-            // Revenue statistic cards
+            // Revenue Statistics Cards
             Row(
               children: [
+                // Orders Statistics Card
                 Expanded(
                   child: _statCard(
                     title: 'Orders',
@@ -213,6 +237,8 @@ class _AdminReportsState extends State<AdminReports> {
                   ),
                 ),
                 const SizedBox(width: 12),
+
+                // Average Order Statistics Card
                 Expanded(
                   child: _statCard(
                     title: 'Avg. Order',
@@ -225,7 +251,7 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 24),
 
-            // Business summary heading
+            // Business Summary Heading
             const Text(
               'Business Summary',
               style: TextStyle(
@@ -237,32 +263,42 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 12),
 
+            // Business Summary Container
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
               ),
+
+              // Business Summary Column
               child: Column(
                 children: [
+                  // Total Revenue Row
                   _summaryRow(
                     'Total Revenue',
                     data['revenue'],
                     Icons.currency_rupee,
                   ),
                   const Divider(height: 24),
+
+                  // Total Orders Row
                   _summaryRow(
                     'Total Orders',
                     data['orders'],
                     Icons.receipt_long,
                   ),
                   const Divider(height: 24),
+
+                  // Average Order Value Row
                   _summaryRow(
                     'Average Order Value',
                     data['average'],
                     Icons.analytics_outlined,
                   ),
                   const Divider(height: 24),
+
+                  // Growth Row
                   _summaryRow(
                     'Growth',
                     data['growth'],
@@ -274,7 +310,7 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 24),
 
-            // Top products heading
+            // Top Products Heading
             const Text(
               'Top Products',
               style: TextStyle(
@@ -286,6 +322,7 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 6),
 
+            // Top Products Description
             const Text(
               'Best-selling products by sales and revenue',
               style: TextStyle(
@@ -296,11 +333,12 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 14),
 
+            // Top Products List
             _buildTopProducts(),
 
             const SizedBox(height: 24),
 
-            // Report details
+            // Report Details Heading
             const Text(
               'Report Details',
               style: TextStyle(
@@ -312,26 +350,34 @@ class _AdminReportsState extends State<AdminReports> {
 
             const SizedBox(height: 12),
 
+            // Report Details Container
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
               ),
+
+              // Report Details Column
               child: Column(
                 children: [
+                  // Selected Period Row
                   _summaryRow(
                     'Selected Period',
                     selectedPeriod,
                     Icons.calendar_month,
                   ),
                   const Divider(height: 24),
+
+                  // Products Tracked Row
                   _summaryRow(
                     'Products Tracked',
                     '${topProducts.length}',
                     Icons.inventory_2_outlined,
                   ),
                   const Divider(height: 24),
+
+                  // Report Status Row
                   _summaryRow(
                     'Report Status',
                     'Available',
@@ -348,27 +394,42 @@ class _AdminReportsState extends State<AdminReports> {
     );
   }
 
+  // ==========================================================
+  // STATISTICS CARD
+  // ==========================================================
+  // Container
+  //  └── Column
+  //       ├── Statistics Icon
+  //       ├── Value Text
+  //       └── Title Text
+
   // Small statistic card
   Widget _statCard({
     required String title,
     required String value,
     required IconData icon,
   }) {
+    // Statistics Card Container
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
       ),
+
+      // Statistics Card Column
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Statistics Icon
           Icon(
             icon,
             color: AppTheme.coffee,
             size: 24,
           ),
           const SizedBox(height: 12),
+
+          // Value Text
           Text(
             value,
             style: const TextStyle(
@@ -378,6 +439,8 @@ class _AdminReportsState extends State<AdminReports> {
             ),
           ),
           const SizedBox(height: 4),
+
+          // Title Text
           Text(
             title,
             style: const TextStyle(
@@ -390,6 +453,15 @@ class _AdminReportsState extends State<AdminReports> {
     );
   }
 
+  // ==========================================================
+  // BUSINESS SUMMARY ROW
+  // ==========================================================
+  // Row
+  //  ├── Icon Container
+  //  │    └── Icon
+  //  ├── Title Text
+  //  └── Value Text
+
   // Business summary row
   Widget _summaryRow(
     String title,
@@ -398,6 +470,7 @@ class _AdminReportsState extends State<AdminReports> {
   ) {
     return Row(
       children: [
+        // Icon Container
         Container(
           width: 40,
           height: 40,
@@ -405,6 +478,8 @@ class _AdminReportsState extends State<AdminReports> {
             color: AppTheme.cream,
             borderRadius: BorderRadius.circular(12),
           ),
+
+          // Summary Icon
           child: Icon(
             icon,
             color: AppTheme.coffee,
@@ -412,6 +487,8 @@ class _AdminReportsState extends State<AdminReports> {
           ),
         ),
         const SizedBox(width: 12),
+
+        // Title Text
         Expanded(
           child: Text(
             title,
@@ -421,6 +498,8 @@ class _AdminReportsState extends State<AdminReports> {
             ),
           ),
         ),
+
+        // Value Text
         Text(
           value,
           style: const TextStyle(
@@ -433,25 +512,39 @@ class _AdminReportsState extends State<AdminReports> {
     );
   }
 
+  // ==========================================================
+  // TOP PRODUCTS LIST
+  // ==========================================================
+  // Container
+  //  └── Column
+  //       └── Product Row
+  //            ├── Product Image
+  //            ├── Product Name and Sales
+  //            └── Product Revenue
+
   // Product list with image, sales and revenue
   Widget _buildTopProducts() {
+    // Top Products Container
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
       ),
+
+      // Products Column
       child: Column(
         children: List.generate(topProducts.length, (index) {
           final product = topProducts[index];
 
+          // Product Row
           return Padding(
             padding: EdgeInsets.only(
               bottom: index == topProducts.length - 1 ? 0 : 16,
             ),
             child: Row(
               children: [
-                // Product image
+                // Product Image
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
@@ -459,6 +552,8 @@ class _AdminReportsState extends State<AdminReports> {
                     width: 58,
                     height: 58,
                     fit: BoxFit.cover,
+
+                    // Fallback Product Icon if Image Fails
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         width: 58,
@@ -479,11 +574,12 @@ class _AdminReportsState extends State<AdminReports> {
 
                 const SizedBox(width: 12),
 
-                // Product name and sales
+                // Product Name and Sales
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Product Name
                       Text(
                         product['name'],
                         style: const TextStyle(
@@ -493,6 +589,8 @@ class _AdminReportsState extends State<AdminReports> {
                         ),
                       ),
                       const SizedBox(height: 5),
+
+                      // Sales Count
                       Text(
                         '${product['sales']} items sold',
                         style: const TextStyle(
@@ -506,10 +604,11 @@ class _AdminReportsState extends State<AdminReports> {
 
                 const SizedBox(width: 8),
 
-                // Product revenue
+                // Product Revenue
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    // Revenue Amount
                     Text(
                       '₹${product['revenue']}',
                       style: const TextStyle(
@@ -519,6 +618,8 @@ class _AdminReportsState extends State<AdminReports> {
                       ),
                     ),
                     const SizedBox(height: 5),
+
+                    // Revenue Label
                     const Text(
                       'Revenue',
                       style: TextStyle(

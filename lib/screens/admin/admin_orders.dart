@@ -67,13 +67,19 @@ class _AdminOrdersState extends State<AdminOrders> {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // AppBar
       appBar: AppBar(
+        // Orders Title
         title: const Text(
           'Orders',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
+
+        // Refresh IconButton
         actions: [
           IconButton(
             onPressed: () {
@@ -83,16 +89,23 @@ class _AdminOrdersState extends State<AdminOrders> {
           ),
         ],
       ),
+
+      // Column
       body: Column(
         children: [
+          // Order Status Tabs
           _buildStatusTabs(),
+
+          // Expanded
           Expanded(
+            // Empty State / ListView
             child: filteredOrders.isEmpty
                 ? _emptyState()
                 : ListView.builder(
                     padding: const EdgeInsets.all(18),
                     itemCount: filteredOrders.length,
                     itemBuilder: (context, index) {
+                      // Order Card
                       return _orderCard(filteredOrders[index]);
                     },
                   ),
@@ -103,8 +116,12 @@ class _AdminOrdersState extends State<AdminOrders> {
   }
 
   // ==========================================================
-  // STATUS TABS
+  // ORDER STATUS TABS
   // ==========================================================
+  // Horizontal ListView
+  //  └── Status Container
+  //       ├── Status Text
+  //       └── Order Count
 
   Widget _buildStatusTabs() {
     return SizedBox(
@@ -127,6 +144,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                 selectedStatus = status;
               });
             },
+
+            // Status Container
             child: Container(
               margin: const EdgeInsets.only(right: 9),
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -136,6 +155,7 @@ class _AdminOrdersState extends State<AdminOrders> {
               ),
               child: Row(
                 children: [
+                  // Status Text
                   Text(
                     status,
                     style: TextStyle(
@@ -145,6 +165,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                     ),
                   ),
                   const SizedBox(width: 7),
+
+                  // Order Count
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 6,
@@ -177,6 +199,16 @@ class _AdminOrdersState extends State<AdminOrders> {
   // ==========================================================
   // ORDER CARD
   // ==========================================================
+  // Order Card
+  //  └── Column
+  //       ├── Top Row
+  //       │    ├── Order ID
+  //       │    ├── Customer Name
+  //       │    └── Order Status
+  //       ├── Ordered Items
+  //       ├── Order Time
+  //       ├── Total Amount
+  //       └── Action Button
 
   Widget _orderCard(Map<String, dynamic> order) {
     final String status = order['status'];
@@ -200,6 +232,7 @@ class _AdminOrdersState extends State<AdminOrders> {
         statusColor = AppTheme.grey;
     }
 
+    // Order Card Container
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       padding: const EdgeInsets.all(17),
@@ -214,13 +247,14 @@ class _AdminOrdersState extends State<AdminOrders> {
           ),
         ],
       ),
+
+      // Order Card Column
       child: Column(
         children: [
-          // --------------------------------------------------
-          // TOP ROW
-          // --------------------------------------------------
+          // Top Row: Order ID, Customer Name and Order Status
           Row(
             children: [
+              // Order Icon Container
               Container(
                 height: 48,
                 width: 48,
@@ -234,10 +268,13 @@ class _AdminOrdersState extends State<AdminOrders> {
                 ),
               ),
               const SizedBox(width: 12),
+
+              // Order ID and Customer Name
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Order ID
                     Text(
                       order['id'],
                       style: const TextStyle(
@@ -247,6 +284,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                       ),
                     ),
                     const SizedBox(height: 4),
+
+                    // Customer Name
                     Text(
                       order['customer'],
                       style: const TextStyle(
@@ -257,6 +296,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ],
                 ),
               ),
+
+              // Order Status Badge
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
                 decoration: BoxDecoration(
@@ -277,13 +318,12 @@ class _AdminOrdersState extends State<AdminOrders> {
 
           const SizedBox(height: 15),
 
+          // Divider
           Divider(color: Colors.grey.shade200, height: 1),
 
           const SizedBox(height: 13),
 
-          // --------------------------------------------------
-          // ITEMS
-          // --------------------------------------------------
+          // Ordered Items Row
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -293,6 +333,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                 color: AppTheme.coffee,
               ),
               const SizedBox(width: 9),
+
+              // Ordered Items
               Expanded(
                 child: Text(
                   order['items'],
@@ -307,12 +349,11 @@ class _AdminOrdersState extends State<AdminOrders> {
 
           const SizedBox(height: 12),
 
-          // --------------------------------------------------
-          // AMOUNT / TIME
-          // --------------------------------------------------
+          // Order Time / Total Amount Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              // Order Time
               Row(
                 children: [
                   const Icon(Icons.access_time, size: 16, color: AppTheme.grey),
@@ -323,6 +364,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ),
                 ],
               ),
+
+              // Total Amount
               Text(
                 '₹${order['amount']}',
                 style: const TextStyle(
@@ -336,9 +379,7 @@ class _AdminOrdersState extends State<AdminOrders> {
 
           const SizedBox(height: 14),
 
-          // --------------------------------------------------
-          // ACTION BUTTON
-          // --------------------------------------------------
+          // Action Button
           if (status != 'Completed')
             SizedBox(
               width: double.infinity,
@@ -385,8 +426,19 @@ class _AdminOrdersState extends State<AdminOrders> {
   }
 
   // ==========================================================
-  // ORDER DETAILS
+  // ORDER DETAILS BOTTOM SHEET
   // ==========================================================
+  // showModalBottomSheet
+  //  └── Container
+  //       └── SafeArea
+  //            └── Column
+  //                 ├── Drag Handle
+  //                 ├── Order ID and Status
+  //                 ├── Customer Row
+  //                 ├── Order Time Row
+  //                 ├── Items Row
+  //                 ├── Total Amount Row
+  //                 └── Action Button
 
   void _showOrderDetails(Map<String, dynamic> order) {
     showModalBottomSheet(
@@ -394,17 +446,22 @@ class _AdminOrdersState extends State<AdminOrders> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (sheetContext) {
+        // Bottom Sheet Container
         return Container(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 25),
           decoration: const BoxDecoration(
             color: AppTheme.cream,
             borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
+
+          // SafeArea
           child: SafeArea(
+            // Bottom Sheet Column
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Drag Handle
                 Center(
                   child: Container(
                     height: 4,
@@ -416,6 +473,8 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // Order ID and Status
                 Row(
                   children: [
                     Expanded(
@@ -432,15 +491,25 @@ class _AdminOrdersState extends State<AdminOrders> {
                   ],
                 ),
                 const SizedBox(height: 20),
+
+                // Customer Row
                 _detailRow(Icons.person_outline, 'Customer', order['customer']),
+
+                // Order Time Row
                 _detailRow(Icons.access_time, 'Order Time', order['time']),
+
+                // Items Row
                 _detailRow(Icons.local_cafe_outlined, 'Items', order['items']),
+
+                // Total Amount Row
                 _detailRow(
                   Icons.currency_rupee,
                   'Total',
                   '₹${order['amount']}',
                 ),
                 const SizedBox(height: 20),
+
+                // Action Button
                 if (order['status'] == 'Preparing')
                   Row(
                     children: [
@@ -579,12 +648,18 @@ class _AdminOrdersState extends State<AdminOrders> {
   // ==========================================================
   // EMPTY STATE
   // ==========================================================
+  // Center
+  //  └── Column
+  //       ├── Receipt Icon
+  //       ├── No Orders Found Text
+  //       └── Description Text
 
   Widget _emptyState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Receipt Icon Container
           Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
@@ -598,6 +673,8 @@ class _AdminOrdersState extends State<AdminOrders> {
             ),
           ),
           const SizedBox(height: 18),
+
+          // No Orders Found Text
           const Text(
             'No Orders Found',
             style: TextStyle(
@@ -607,6 +684,8 @@ class _AdminOrdersState extends State<AdminOrders> {
             ),
           ),
           const SizedBox(height: 6),
+
+          // Description Text
           Text(
             'There are no $selectedStatus orders right now.',
             style: const TextStyle(color: AppTheme.grey),
