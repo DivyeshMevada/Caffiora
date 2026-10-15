@@ -60,22 +60,32 @@ class _StaffOrdersState extends State<StaffOrders> {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // Column
       appBar: AppBar(
+        // Text (Orders)
         title: const Text(
           'Orders',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
+
       body: Column(
         children: [
+          // Row (Filter Buttons)
           _buildTabs(),
+
+          // Expanded
           Expanded(
+            // ListView
             child: ListView.builder(
               padding: const EdgeInsets.all(18),
               itemCount: filteredOrders.length,
               itemBuilder: (context, index) {
+                // Order Cards
                 return _orderCard(filteredOrders[index]);
               },
             ),
@@ -85,6 +95,7 @@ class _StaffOrdersState extends State<StaffOrders> {
     );
   }
 
+  // Row (Filter Buttons)
   Widget _buildTabs() {
     return SizedBox(
       height: 60,
@@ -125,6 +136,7 @@ class _StaffOrdersState extends State<StaffOrders> {
     );
   }
 
+  // Order Cards
   Widget _orderCard(Map<String, dynamic> order) {
     final bool completed = order['status'] == 'Completed';
 
@@ -137,6 +149,7 @@ class _StaffOrdersState extends State<StaffOrders> {
       ),
       child: Column(
         children: [
+          // Row (Order Info + Status)
           Row(
             children: [
               Container(
@@ -181,10 +194,12 @@ class _StaffOrdersState extends State<StaffOrders> {
 
           const SizedBox(height: 15),
 
+          // Divider
           Divider(color: Colors.grey.shade200),
 
           const SizedBox(height: 10),
 
+          // Item Details
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -208,6 +223,7 @@ class _StaffOrdersState extends State<StaffOrders> {
 
           const SizedBox(height: 12),
 
+          // Order Amount
           Row(
             children: [
               const Icon(Icons.access_time, size: 15, color: AppTheme.grey),
@@ -230,6 +246,7 @@ class _StaffOrdersState extends State<StaffOrders> {
 
           const SizedBox(height: 14),
 
+          // OutlinedButton
           SizedBox(
             width: double.infinity,
             height: 43,
@@ -258,6 +275,7 @@ class _StaffOrdersState extends State<StaffOrders> {
     );
   }
 
+  // Status Badge
   Widget _statusBadge(String status) {
     Color color;
 

@@ -37,13 +37,9 @@ class _StaffOrderDetailsState extends State<StaffOrderDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _orderHeader(),
-
             const SizedBox(height: 20),
-
             _customerSection(),
-
             const SizedBox(height: 20),
-
             const Text(
               'Order Items',
               style: TextStyle(
@@ -52,25 +48,15 @@ class _StaffOrderDetailsState extends State<StaffOrderDetails> {
                 color: AppTheme.coffeeDark,
               ),
             ),
-
             const SizedBox(height: 12),
-
             _itemCard('Velvet Espresso', 'Premium espresso', 349),
-
             const SizedBox(height: 10),
-
             _itemCard('Iced Matcha', 'Refreshing iced matcha', 279),
-
             const SizedBox(height: 20),
-
             _priceSummary(),
-
             const SizedBox(height: 22),
-
             _statusSelector(),
-
             const SizedBox(height: 20),
-
             if (status == 'Preparing')
               _actionButton('Mark as Ready', () => _updateStatus('Ready'))
             else if (status == 'Ready')

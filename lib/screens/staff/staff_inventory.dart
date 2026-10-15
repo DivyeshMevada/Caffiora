@@ -53,8 +53,11 @@ class _StaffInventoryState extends State<StaffInventory> {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
+
+      // Row (Title + Refresh Icon)
       appBar: AppBar(
         title: const Text(
           'Inventory',
@@ -69,24 +72,35 @@ class _StaffInventoryState extends State<StaffInventory> {
           ),
         ],
       ),
+
+      // Column
       body: Column(
         children: [
+          // Row (Category Filters)
           _categoryTabs(),
 
+          // Expanded
           Expanded(
+            // ListView
             child: ListView.builder(
               padding: const EdgeInsets.all(18),
               itemCount: filteredItems.length,
               itemBuilder: (context, index) {
+                // Inventory Cards
                 return _inventoryCard(filteredItems[index]);
               },
             ),
           ),
         ],
       ),
+
+      // BottomNavigationBar
+      // Dashboard | Orders | Inventory | Profile
+      // This belongs to StaffDashboard.
     );
   }
 
+  // Row (Category Filters)
   Widget _categoryTabs() {
     return SizedBox(
       height: 60,
@@ -127,6 +141,7 @@ class _StaffInventoryState extends State<StaffInventory> {
     );
   }
 
+  // Inventory Cards
   Widget _inventoryCard(Map<String, dynamic> item) {
     final String status = item['status'];
 
@@ -152,6 +167,7 @@ class _StaffInventoryState extends State<StaffInventory> {
       ),
       child: Column(
         children: [
+          // Row (Icon + Item + Status)
           Row(
             children: [
               Container(
@@ -163,9 +179,7 @@ class _StaffInventoryState extends State<StaffInventory> {
                 ),
                 child: Icon(item['icon'], color: AppTheme.coffee, size: 25),
               ),
-
               const SizedBox(width: 13),
-
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +203,6 @@ class _StaffInventoryState extends State<StaffInventory> {
                   ],
                 ),
               ),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
                 decoration: BoxDecoration(
@@ -210,6 +223,7 @@ class _StaffInventoryState extends State<StaffInventory> {
 
           const SizedBox(height: 18),
 
+          // Current Stock
           Row(
             children: [
               const Text(
@@ -230,10 +244,12 @@ class _StaffInventoryState extends State<StaffInventory> {
 
           const SizedBox(height: 9),
 
+          // LinearProgressIndicator
           _progressBar(item),
 
           const SizedBox(height: 8),
 
+          // Target
           Row(
             children: [
               const Text(
@@ -250,6 +266,8 @@ class _StaffInventoryState extends State<StaffInventory> {
 
           if (status != 'IN STOCK') ...[
             const SizedBox(height: 14),
+
+            // Request Reorder Button
             SizedBox(
               width: double.infinity,
               height: 40,
@@ -271,6 +289,7 @@ class _StaffInventoryState extends State<StaffInventory> {
     );
   }
 
+  // LinearProgressIndicator
   Widget _progressBar(Map<String, dynamic> item) {
     double progress;
 

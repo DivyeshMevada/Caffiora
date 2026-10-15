@@ -9,9 +9,11 @@ class StaffProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
       backgroundColor: AppTheme.cream,
       appBar: AppBar(
+        // Text (Profile)
         title: const Text(
           'Profile',
           style: TextStyle(
@@ -19,14 +21,24 @@ class StaffProfile extends StatelessWidget {
           ),
         ),
       ),
+
+      // SingleChildScrollView
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(18, 10, 18, 30),
+
+        // Column
         child: Column(
           children: [
+            // Profile Header
             _profileHeader(),
+
             const SizedBox(height: 22),
+
+            // Employee Information Card
             _shiftCard(),
+
             const SizedBox(height: 22),
+
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
@@ -39,12 +51,19 @@ class StaffProfile extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Settings Container
             _settingsCard(context),
+
             const SizedBox(height: 20),
+
             SizedBox(
               width: double.infinity,
               height: 52,
+
+              // OutlinedButton (Log Out)
               child: OutlinedButton.icon(
                 onPressed: () {
                   _logout(context);
@@ -70,7 +89,9 @@ class StaffProfile extends StatelessWidget {
                 ),
               ),
             ),
+
             const SizedBox(height: 18),
+
             const Text(
               'CAFFIORA Staff Panel',
               style: TextStyle(
@@ -81,6 +102,9 @@ class StaffProfile extends StatelessWidget {
           ],
         ),
       ),
+
+      // BottomNavigationBar is in the parent StaffDashboard.
+      // No BottomNavigationBar widget is added to this file.
     );
   }
 
@@ -98,6 +122,7 @@ class StaffProfile extends StatelessWidget {
       ),
       child: Column(
         children: [
+          // CircleAvatar (implemented with circular Container)
           Container(
             height: 82,
             width: 82,
@@ -115,7 +140,10 @@ class StaffProfile extends StatelessWidget {
               color: AppTheme.coffee,
             ),
           ),
+
           const SizedBox(height: 14),
+
+          // Text (Name)
           const Text(
             'Dishant Tilara',
             style: TextStyle(
@@ -124,7 +152,10 @@ class StaffProfile extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+
           const SizedBox(height: 5),
+
+          // Text (Role)
           const Text(
             'Senior Barista',
             style: TextStyle(
@@ -132,7 +163,9 @@ class StaffProfile extends StatelessWidget {
               fontSize: 13,
             ),
           ),
+
           const SizedBox(height: 17),
+
           Container(
             padding: const EdgeInsets.symmetric(
               horizontal: 13,
@@ -142,6 +175,8 @@ class StaffProfile extends StatelessWidget {
               color: Colors.white.withOpacity(0.12),
               borderRadius: BorderRadius.circular(20),
             ),
+
+            // Text (Staff Member)
             child: const Text(
               'STAFF MEMBER',
               style: TextStyle(
@@ -253,26 +288,35 @@ class StaffProfile extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(19),
       ),
+
+      // ListTile equivalents are implemented using _settingItem.
       child: Column(
         children: [
+          // ListTile - Personal Info
           _settingItem(
             context,
             Icons.person_outline,
             'Personal Info',
             'Manage your personal information',
           ),
+
+          // ListTile - Notifications
           _settingItem(
             context,
             Icons.notifications_none_outlined,
             'Notification Box',
             'Manage staff notifications',
           ),
+
+          // ListTile - Work Schedule
           _settingItem(
             context,
             Icons.schedule_outlined,
             'Work Schedule',
             'View your work schedule',
           ),
+
+          // ListTile - Help
           _settingItem(
             context,
             Icons.help_outline,
@@ -294,6 +338,7 @@ class StaffProfile extends StatelessWidget {
     String title,
     String subtitle,
   ) {
+    // ListTile equivalent (implemented with InkWell and Row)
     return InkWell(
       onTap: () {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -364,15 +409,22 @@ class StaffProfile extends StatelessWidget {
     showDialog<void>(
       context: context,
       builder: (dialogContext) {
+        // AlertDialog
         return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
+
+          // Text (Log Out)
           title: const Text('Log Out'),
+
+          // Text (Confirmation Message)
           content: const Text(
             'Are you sure you want to log out?',
           ),
+
           actions: [
+            // TextButton (Cancel)
             // CANCEL
             TextButton(
               onPressed: () {
@@ -381,6 +433,7 @@ class StaffProfile extends StatelessWidget {
               child: const Text('Cancel'),
             ),
 
+            // ElevatedButton (Log Out)
             // CONFIRM LOGOUT
             ElevatedButton(
               style: ElevatedButton.styleFrom(
