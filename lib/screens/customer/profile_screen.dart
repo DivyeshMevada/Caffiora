@@ -470,7 +470,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
 // ============================================================
 // LOGOUT DIALOG
 // ============================================================
@@ -486,6 +485,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
           ),
+
+          // LOGOUT ICON AND TEXT
           title: const Row(
             children: [
               Icon(
@@ -502,11 +503,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+
+          // ARE YOU SURE TEXT
           content: const Text(
             'Are you sure you want to logout from CAFFIORA?',
           ),
+
+          // CANCEL AND LOGOUT BUTTONS
           actions: [
-            // CANCEL
+            // CANCEL TEXTBUTTON
             TextButton(
               onPressed: () {
                 Navigator.pop(dialogContext);
@@ -519,7 +524,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-            // LOGOUT
+            // ELEVATED BUTTON - LOGOUT
             ElevatedButton(
               onPressed: () async {
                 await AuthState.instance.logout();
